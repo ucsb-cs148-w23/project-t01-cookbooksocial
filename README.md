@@ -1,4 +1,4 @@
-# project-t01-cookbooksocial
+Hello world
 
 Hello world app created with vite
 
