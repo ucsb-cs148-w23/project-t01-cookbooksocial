@@ -1,4 +1,4 @@
-Hello world
+# Hello world
 
 Hello world app created with vite
 
