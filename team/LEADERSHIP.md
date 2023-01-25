@@ -2,7 +2,6 @@
 
 | Date       | Meeting | Name            | Activity                                               |
 | ---------- | ------- | --------------- | ------------------------------------------------------ |
-| Thur 01/12 | Lecture |                 |                                                        |
 | Fri 01/13  | Lab     | Nicolas Johnson | Led team discussion through basic introduction         |
 | Tue 01/18  | Lecture | Will Mori       | Led team discussion through initial project discussion |
 | Fri  01/21 | Lab     | Terry Pi        | Led team discussion through user stories and personas  |
