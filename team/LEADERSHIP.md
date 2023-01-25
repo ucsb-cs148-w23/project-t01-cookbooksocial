@@ -6,4 +6,4 @@
 | Tue 01/18  | Lecture | Will Mori       | Led team discussion through initial project discussion |
 | Fri  01/21 | Lab     | Terry Pi        | Led team discussion through user stories and personas  |
 | Tue 01/24  | Lecture | Bryan Zamora    | Led sprint planning                                    |
-| Fri 01/27  | Lab     | Bryan Zamora    |                                                       |
+| Fri 01/27  | Lab     | Bryan Zamora    | Will lead first retro                                  |
