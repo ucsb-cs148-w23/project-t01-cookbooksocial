@@ -21,6 +21,7 @@
 ### Bryan: N/A
 ### Will: N/A
 ### Daoyi commits to watching the Back-End section of an introductory video during week 3, and the Front-End and Database section during week 4 as well as a FireBase tutorial.
+### Nicolas: N/A
 ### Jacob: N/A
 ### Terry: N/A
 ### Gita commits to working through a React tutorial and watching Back-End section of an introductory video during week 3, and the Front-end and Database section during week 4 as well as a FireBase tutorial.
