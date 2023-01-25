@@ -1,7 +1,10 @@
-# Leadership roles
+# Leadership Log
 
-| Date      | Name              | Activity                                               |
-|-----------|-------------------|--------------------------------------------------------|
-| Mon 10/04 | Chris Gaucho      | Led team discussion to define MVP                      | 
-| Tue 10/05 | Lauren del Playa  | Led team discussion of Sprint01 and learning plan      | 
-| Wed 10/13 | Taylor Chen       | Will lead first Retro                                  | 
+| Date       | Meeting | Name            | Activity                                               |
+| ---------- | ------- | --------------- | ------------------------------------------------------ |
+| Thur 01/12 | Lecture |                 |                                                        |
+| Fri 01/13  | Lab     | Nicolas Johnson | Led team discussion through basic introduction         |
+| Tue 01/18  | Lecture | Will Mori       | Led team discussion through initial project discussion |
+| Fri  01/21 | Lab     | Terry Pi        | Led team discussion through user stories and personas  |
+| Tue 01/24  | Lecture | Bryan Zamora    | Led sprint planning                                    |
+| Fri 01/27  | Lab     | Bryan Zamora    |                                                       |
