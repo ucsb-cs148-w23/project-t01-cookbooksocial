@@ -7,11 +7,18 @@
 
 <h2> User stories: </h2>
 
-[x] Users will be able to upload their own recipe videos, photos, and ideas as a post.
-[x] Users will be able to access a feed which displays different recipe posts
-[x] Users are able to log in and out of the app
-[x] Users will be able to save their favorite posts in their profile
+[ ] Users will be able to upload their own recipe videos, photos, and ideas as a post.
 
+[ ] Users will be able to access a feed which displays different recipe posts
+
+[ ] Users are able to log in and out of the app
+
+[ ] Users will be able to save their favorite posts in their profile
+
+
+<h2> User Roles: </h2>
+
+In cookbook social, users are able to share their recipes with others users on a feed. As well as they are able to see recipes other users have posted in the app.
 
 <h2> Tech Stack: </h2>
 
