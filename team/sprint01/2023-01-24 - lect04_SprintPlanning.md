@@ -1,4 +1,4 @@
-Meeting Time: 2023-01-26
+Meeting Time: 2023-01-24
 
 Type of meeting: Sprint Planning
 
