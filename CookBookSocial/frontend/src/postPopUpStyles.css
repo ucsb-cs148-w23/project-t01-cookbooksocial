@@ -1,0 +1,114 @@
+@charset "utf-8";
+#overlay{
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	background-color:rgba(0,0,0,0.5);
+  
+	display: flex;
+	align-items: center;
+	justify-content: center;
+  
+}
+#content{
+	z-index:2;
+	width: 90vw;
+	padding: 30px;	
+	background-color: rgb(251, 233, 207);
+	overflow-y: scroll;
+	align-items: center;
+	border-radius: 4px;	
+	height: 85vh;
+}
+.putRight{
+	display: flex;
+	justify-content: flex-end;
+}
+.contena {
+    width: 100%;
+    background-color: #eee;
+    display: flex;
+	background-color: rgba(255, 255, 255, 0);
+}
+.popUpTitle{ 
+	color: #E83015; 
+	font-size: 20px; 
+	margin-bottom: 12px; 
+	padding-bottom: 4px; 
+	border-bottom: #E83015 2px solid;	
+}
+.popUpImage {
+    width: auto;
+    height: 300px;
+}
+.popUpDescription {
+	display: inline-block;
+    flex-grow: 1;
+	height: 300px;
+	margin: auto 20px;
+    line-height: 1.5;
+    height:280px;
+    border: 1px solid #999;
+    box-sizing: border-box;
+    background: #f2f2f200;
+	resize: none;
+	border-radius: 5px;
+}
+
+.popUpIngredient{
+	display: inline-block;
+    width: 100%;
+    padding: 0.5em;
+    line-height: 1;
+    height: 2;
+    border: 1px solid #999;
+    box-sizing: border-box;
+    background: #f2f2f200;
+    margin: 0.5em 2px;
+	resize: none;
+	border-radius: 5px;
+}
+.close {	
+	border: none;
+	outline: none;
+	position: absolute;
+	color: #fff;
+	background-color:#db5642;
+	padding: 5px 13px; 
+	border-radius: 10px;		
+	cursor:pointer;
+}
+
+.popUpPost a {
+    background: #ff6767;
+    border-radius: 50px;
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 0 auto;
+    max-width: 260px;
+    padding: 15px 0px 20px;
+    color: #000000;
+    transition: 0.3s ease-in-out;
+    font-weight: 500;
+}
+.popUpPost a:after {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    border-radius: 1px;
+    transition: 0.2s ease-in-out;
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    transform: translateY(-50%);
+}
+.popUpPost a:hover {
+    background: #fa2020;
+    color: #FFF;
+}
+a{
+	text-decoration: none;
+}
