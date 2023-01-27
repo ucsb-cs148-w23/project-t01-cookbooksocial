@@ -10,13 +10,13 @@ export default function Navbars() {
       // Navbar object wrapper as a whole 
         <Navbar bg="dark" variant = "dark" expand="lg">
         <Container>
-          <Navbar.Brand href="/">CookBook Social</Navbar.Brand>
+          <Navbar.Brand href="/home">CookBook Social</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
 
               {/* Setting links for navbar */}
-              <Nav.Link href="/">Home</Nav.Link>
+              <Nav.Link href="/home">Home</Nav.Link>
               <Nav.Link href="profile">Profile</Nav.Link>
               
               {/* Dropdown customization */}
