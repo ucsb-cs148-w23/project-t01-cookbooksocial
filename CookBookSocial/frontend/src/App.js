@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import HomePage from "./pages/HomePage.js";
-
+import LoginPage from "./pages/LoginPage.js";
 
 import { Route, Routes } from "react-router-dom";
 import Navbars from "./components/navbars/Navbars.jsx";
@@ -12,7 +12,7 @@ function App() {
       <Navbars />
       <Routes>
         <Route exact path="/home" element={<HomePage />} />
-
+        <Route exact path="/login" element={<LoginPage />} />
       </Routes>
     </>
   );
