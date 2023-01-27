@@ -1,33 +1,18 @@
 import React, {useState} from 'react';
-import logo from './logo.svg';
+import ExamplePage from './pages/ExamplePage.js';
+
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
-  const [response, setResponse] = useState(null)
+  return(
+    <Router>
+      <Routes>
 
-  fetch('http://localhost:3001/',)
-      .then(res => {
-        //throw error if cannot find server
-        if(res.status >= 400){
-          throw new Error("server responds with error");
-        }
-        return res.json();
-      })
-      .then(res => {
-        // set the state response variable to the string inside the res json object labeled under 'info'
-        console.log(res);
-        setResponse(res['info'])
-      },
-      err => {
-        // catch error 
-        console.log(err);
-      });
+        <Route exact path="/" element={<ExamplePage />} />
 
-
-  return (
-      <header>
-        {response}
-      </header>
-  );
+      </Routes>
+    </Router>
+  )
 }
 
 export default App;
