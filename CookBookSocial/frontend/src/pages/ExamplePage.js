@@ -11,7 +11,7 @@ function ExamplePage(props) {
 
 
     //If you are running the backend server, then this will make a get request from the backend at http://localhost:3001/
-    fetch('http://localhost:3001/'
+    fetch('/api/exampletest/'
         )
         .then(res => {
             //throw error if cannot find server
