@@ -25,3 +25,7 @@
 ### Jacob: N/A
 ### Terry: N/A
 ### Gita commits to working through a React tutorial and watching Back-End section of an introductory video during week 3, and the Front-end and Database section during week 4 as well as a FireBase tutorial.
+
+## Week 4 Learning
+
+- Terry posted [this](https://ucsb-148-w23.slack.com/archives/C04LD26GB0B/p1675384232630679) FERN YouTube tutorial
