@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "cd backend && npm install && node index.js",
-    "heroku-postbuild": "cd frontend && npm install && npm run build"
+    "start": "cd CookBookSocial && cd backend && npm install && node index.js",
+    "heroku-postbuild": "cd CookBookSocial && cd frontend && npm install && npm run build"
   },
   "keywords": [],
   "author": "",
