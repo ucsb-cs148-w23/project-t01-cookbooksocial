@@ -3,9 +3,10 @@ const app = express();
 const path = require('path');
 var cors = require('cors');
 
+const STATIC_FILES_PATH = path.resolve(__dirname, '..', 'frontend', 'build');
 
 // Every time frontend tries to serve this (backend), it will automatically be stored in public folder.
-app.use(express.static(path.join(__dirname + "../frontend/build")));
+app.use(express.static(path.join(STATIC_FILES_PATH)));
 
 // For later setting environment variables, else we use 3001 as default port.
 const port = process.env.PORT || 3001;
