@@ -31,3 +31,4 @@
 ### Week 4 Learning
 
 - Terry posted [this](https://ucsb-148-w23.slack.com/archives/C04LD26GB0B/p1675384232630679) FERN YouTube tutorial
+- Nick posted [this](https://ucsb-148-w23.slack.com/archives/C04LD26GB0B/p1675399049986759) for how to deploy the Express React App to Heroku.
