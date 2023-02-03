@@ -11,10 +11,7 @@ function ExamplePage(props) {
 
 
     //If you are running the backend server, then this will make a get request from the backend at http://localhost:3001/
-    fetch('http://localhost:3001/',
-            {
-                mode: 'no-cors',
-            }
+    fetch('http://localhost:3001/'
         )
         .then(res => {
             //throw error if cannot find server
@@ -22,6 +19,7 @@ function ExamplePage(props) {
                 throw new Error("server responds with error");
             }
             // This is the json received from the backend.
+            console.log(res);
             return res.json();
         })
         .then(res => {
