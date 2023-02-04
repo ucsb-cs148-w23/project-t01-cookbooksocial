@@ -64,12 +64,15 @@ function HomePage() {
 
   //To display the state variable in the html, use the {} curly brackets.  Simple!
   return (
-  <div className='home-page'> 
-      <Button className="new-post-btn" variant="primary">New Post</Button>
-      <ul>
-          {renderRecipePostComponents()}
-      </ul>
-  </div>
+    <div>
+        <Navbars />
+        <div className='home-page'> 
+            <Button className="new-post-btn" variant="primary">New Post</Button>
+            <ul>
+                {renderRecipePostComponents()}
+            </ul>
+        </div>
+    </div>
   );
 }
 
