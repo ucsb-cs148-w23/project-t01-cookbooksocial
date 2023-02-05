@@ -1,5 +1,5 @@
 import express from "express";
-import { VerifyToken } from "./middleware/VerifyToken.js";
+// import { VerifyToken } from "./middleware/VerifyToken.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
@@ -28,7 +28,7 @@ var corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(VerifyToken);
+// app.use(VerifyToken);
 
 // app.get('/api/exampletest', (req, res) => {
 //     console.log("Req found");

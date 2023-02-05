@@ -39,7 +39,7 @@ function RecipePost(props) {
             <h2>{props.title}</h2>
         </header>
         <body>
-            <img src={props.image} alt="NOT FOUND" />
+            <img className='imagePost' src={props.image} alt="NOT FOUND" />
             <p>{props.description}</p>
         </body>
         {showFullRecipe && 
