@@ -3,8 +3,8 @@ import RecipePost from '../../components/recipe_posts/RecipePost';
 import Navbars from "../../components/navbars/Navbars";
 import {Button} from 'react-bootstrap';
 
-import Turkey from '../images/Turkey.jpg'
-import Potatoes from '../images/potatoes.jpg'
+import Turkey from '../../images/turkey.jpg'
+import Potatoes from '../../images/potatoes.jpg'
 import { render } from 'react-dom';
 import './HomePage.css'
 /*

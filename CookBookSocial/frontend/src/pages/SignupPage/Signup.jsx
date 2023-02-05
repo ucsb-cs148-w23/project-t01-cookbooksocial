@@ -37,6 +37,7 @@ export default function Signup() {
         setError("The password is too weak.");
       }
       else {
+        console.log("This happened")
         setError(errorMessage); // Replace the alert with this
       }
       navigate("/register");
