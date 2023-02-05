@@ -10,28 +10,6 @@ import { useAuth } from "../../contexts/AuthContext";
 import styles from "./Navbars.module.css";
 
 export default function Navbars() {
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const user = auth.currentUser;
-        const token = user && (await user.getIdToken());
-
-        const payloadHeader = {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        };
-        const res = await fetch("http://localhost:3001", payloadHeader);
-        console.log(await res.text());
-        console.log("Verification done");
-      } catch (e) {
-        console.log(e);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   const { currentUser, setError, logout } = useAuth();
 
