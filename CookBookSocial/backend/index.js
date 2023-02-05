@@ -4,6 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
 import dotenv from "dotenv";
+import recipeRouter from "./routes/recipe.js";
 
 const app = express();
 
@@ -34,6 +35,8 @@ app.use(cors(corsOptions));
 //     console.log("Req found");
 //     res.json({info:'Hello World'} || {});
 // });
+
+app.use("/recipe", recipeRouter);
 
 app.listen(port, () => {
   console.log(`Example Express app listening at http://localhost:${port}`);
