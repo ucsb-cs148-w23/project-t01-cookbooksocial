@@ -1,0 +1,22 @@
+img {
+    width: 650px;
+}
+
+.post {
+    margin-bottom: 75px;
+    border: solid 1px;
+    cursor: pointer;
+    padding-top: 25px;
+}
+
+.ingredients-header,
+.instructions-header {
+    border-top: solid 3px red;
+    margin-top: 40px;
+    padding-top: 30px;
+    margin-bottom: 30px;
+}
+
+.instructions {
+    margin-bottom: 50px;
+}

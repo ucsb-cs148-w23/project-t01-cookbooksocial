@@ -42,3 +42,10 @@ I think it went well. Everyone continuted to at least one point, and we had some
   based on what you learned today?
   
 Keep things moving and reiterate things people have said.
+
+## Outcome of retro experiment
+
+Date: 2023-02-03
+
+- Looking at the activity in our slack channel we were a lot more proactive to posting new updates throughout the week
+- We have completed the layout, making front end design a lot easier.
