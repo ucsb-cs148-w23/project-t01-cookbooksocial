@@ -1,8 +1,10 @@
 import express from "express";
-import { newRecipe } from "../controllers/recipeController.js";
+import { addRecipe, updateRecipe, deleteRecipe } from "../controllers/recipeController.js";
 
 const recipeRouter = express.Router();
 
-recipeRouter.post("/", newRecipe);
+recipeRouter.post("/", addRecipe);
+recipeRouter.put("/:id", updateRecipe);
+recipeRouter.delete("/:id", deleteRecipe);
 
 export default recipeRouter;
