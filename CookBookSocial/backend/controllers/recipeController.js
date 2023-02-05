@@ -1,14 +1,16 @@
 // newTea function for post tea route
 import db from "../firebase.js";
-import { doc, updateDoc, addDoc, deleteDoc, collection } from "firebase/firestore";
+import { doc, updateDoc, addDoc, deleteDoc, collection, serverTimestamp } from "firebase/firestore";
 
 const addRecipe = async (req, res, next) => {
     try {
         const data = req.body;
+        data.createdAt = serverTimestamp();
         const docRef = await addDoc(collection(db, "recipes"), data);
         res.status(200).send(`Document written with ID: ${docRef.id}`);
     } catch (e) {
         res.status(400).send(e);
+        console.error(e);
     }
 };
 
