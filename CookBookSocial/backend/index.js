@@ -4,6 +4,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
 import dotenv from "dotenv";
+import recipeRouter from "./routes/recipe.js";
+import bodyParser from "body-parser";
 
 const app = express();
 
@@ -22,9 +24,12 @@ app.use(express.static(path.join(STATIC_FILES_PATH)));
 // For later setting environment variables, else we use 3001 as default port.
 const port = process.env.PORT || 3001;
 
+const jsonParser = bodyParser.json();
+app.use(jsonParser);
+
 var corsOptions = {
-  origin: "http://localhost:3000",
-  optionsSuccessStatus: 200,
+    origin: "http://localhost:3000",
+    optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
@@ -35,11 +40,13 @@ app.use(cors(corsOptions));
 //     res.json({info:'Hello World'} || {});
 // });
 
+app.use("/recipe", recipeRouter);
+
 app.listen(port, () => {
-  console.log(`Example Express app listening at http://localhost:${port}`);
+    console.log(`Example Express app listening at http://localhost:${port}`);
 });
 
 //Anything that does not match the above api routes will be rerouted to the static pages (frontend)
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname + "/../frontend/build/index.html"));
+    res.sendFile(path.join(__dirname + "/../frontend/build/index.html"));
 });
