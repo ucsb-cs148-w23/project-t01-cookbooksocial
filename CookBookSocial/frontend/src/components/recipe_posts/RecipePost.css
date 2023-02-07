@@ -1,22 +1,44 @@
 .imagePost {
-    width: 650px;
+    max-width: 650px;
+    max-height: 700px;
+    object-fit: contain;
+    border-radius: 25px;
+}
+
+.post-list{
+    display: grid;
+    justify-content: center;
+    align-items: left;
+}
+
+.post-description{
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: medium;
+    padding-bottom: 20px;
+    
 }
 
 .post {
     margin-bottom: 75px;
-    border: solid 1px;
+    border-radius: 20px;
     cursor: pointer;
     padding-top: 25px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+}
+
+.post:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
 
 .ingredients-header,
 .instructions-header {
-    border-top: solid 3px red;
-    margin-top: 40px;
+    margin-top: 20px;
     padding-top: 30px;
     margin-bottom: 30px;
 }
 
 .instructions {
-    margin-bottom: 50px;
+    padding-bottom: 50px;
 }

@@ -4,10 +4,14 @@
     margin-right: auto;
     margin-top: 10px;
     margin-bottom: 100px;
+
 }
 
 .new-post-btn {
     margin-bottom: 50px;
     position: relative;
     left: 16px;
+    font-size: 25px !important;
+    padding: 20px 40px 20px 40px !important;
+    border-width: 2px !important;
 }

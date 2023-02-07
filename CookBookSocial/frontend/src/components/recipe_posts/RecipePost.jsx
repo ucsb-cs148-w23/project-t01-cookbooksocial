@@ -40,19 +40,19 @@ function RecipePost(props) {
         </header>
         <body>
             <img className='imagePost' src={props.image} alt="NOT FOUND" />
-            <p>{props.description}</p>
+            <p className='post-description'>{props.description}</p>
         </body>
         {showFullRecipe && 
             <footer>
                 <div className="ingredients">
                     <h2 className='ingredients-header'>Ingredients</h2>
-                    <ul>
+                    <ul className='post-list'>
                         {renderIngredients()}
                     </ul>
                 </div>
                 <div className="instructions">
                     <h2 className='instructions-header'>Instructions</h2>
-                    <ol>
+                    <ol className='post-list'> 
                         {renderInstructions()}
                     </ol>
                 </div>

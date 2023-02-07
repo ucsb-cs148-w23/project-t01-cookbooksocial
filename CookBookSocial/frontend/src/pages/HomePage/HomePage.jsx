@@ -39,13 +39,15 @@ function HomePage() {
   "URL_GET_RECIPE_POSTS_DATA" will be replaced by the actual api endpoint for GET once it is created by
   the backend.
   */
-  /*
+
+  const URL_GET_RECIPE_POSTS_DATA = "/api/recipe/all";
+
   useEffect(() => {
       fetch(URL_GET_RECIPE_POSTS_DATA)
           .then((response) => response.json())
           .then((data) => updateRecipePostsList(data))
   }, [])
-  */
+
 
   function renderRecipePostComponents() {
       const arrComponents = []
@@ -67,7 +69,7 @@ function HomePage() {
     <div>
         <Navbars />
         <div className='home-page'> 
-            <Button className="new-post-btn" variant="primary">New Post</Button>
+            <Button className="new-post-btn" variant="outline-primary">New Post</Button>
             <ul>
                 {renderRecipePostComponents()}
             </ul>
