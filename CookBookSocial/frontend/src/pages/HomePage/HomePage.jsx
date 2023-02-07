@@ -65,6 +65,7 @@ function HomePage() {
       return arrComponents
   }
 
+  
 
   //To display the state variable in the html, use the {} curly brackets.  Simple!
   return (
@@ -81,3 +82,4 @@ function HomePage() {
 }
 
 export default HomePage;
+

@@ -116,7 +116,7 @@ const StepLists = (props) => {
   );
 }
 
-// control upload Image (need to fix)
+// control upload image (need to fix)
 const RecipeImage =()=>
 {
 
