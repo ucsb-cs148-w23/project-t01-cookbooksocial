@@ -63,22 +63,21 @@ const IngreLists = (props) => {
 //recipe step 
 const StepLists = (props) => {
   // step List
-  const [stepText, setStepText] = useState("");
 
   // manage input form
   const onChangeStepText = (event) => {
-    setStepText(event.target.value);
+    props.setStepText(event.target.value);
   };
 
   // add step to list 
   const onClickAdd = () => {
-    if (stepText === "") return;
+    if (props.stepText === "") return;
     const newStep = {
-      stepDesc: stepText,
+      stepDesc: props.stepText,
     }
     props.stepList.push(newStep);
     // reset add step form to "" 
-    setStepText("");
+    props.setStepText("");
   };
   //change step description
   const onChangeOldStep = (index,updateText) => {
@@ -108,7 +107,7 @@ const StepLists = (props) => {
         }    
       <div className='stepList'>
         <div className='stepListIndex'>step {props.stepList.length+1}:</div>
-        <textarea className='modalStepDesc' value={stepText} onChange={onChangeStepText} />
+        <textarea className='modalStepDesc' value={props.stepText} onChange={onChangeStepText} />
         <button className='stepListbutton' onClick={onClickAdd}>+</button>
       </div>
     </>
@@ -135,8 +134,9 @@ const RecipeImage =()=>
 }
 
 // send data to database (need to fix)
-const postRrecipe =(title,desc,ingreList,stepList,email)=>
+const postRrecipe = (title,desc,ingreList,stepList,stepText,email)=>
 {
+
   
   return(
     console.log(title,desc,ingreList,stepList,email)
@@ -151,6 +151,31 @@ export function Modal({show, setShow}) {
   const [email, setMail] = useState("e-mail");
   const [ingreList, setIngreList] = useState([]);
   const [stepList, setStepList] = useState([]);
+  const [stepText, setStepText] = useState("");
+
+  function postRrecipe(){
+    // add step Text to List if it is not empty
+    if (stepText != ""){
+    const newStep = {
+      stepDesc: stepText,
+    }
+    stepList.push(newStep);
+    }
+    console.log(title,desc,ingreList,stepList,email)
+
+
+
+    setTitle("recipe name")
+    setDesc("description")
+    setMail("e-mail")
+    setIngreList([])
+    setStepList([])
+    setStepText("")
+
+    setShow(false)
+  }
+
+
 
   if (show) {
     return (
@@ -165,7 +190,7 @@ export function Modal({show, setShow}) {
                 <RecipeImage />
               </div>
               <div className="flex_first-item">
-                <div className="postConfirm"> <a href ="#" onClick={()=>postRrecipe(title,desc,ingreList,stepList,email)} >Post Now</a> </div>
+                <div className="postConfirm"> <a href ="#" onClick={()=>postRrecipe()} >Post Now</a> </div>
                 <div>
                 <p className='modalTitle'>Title</p>
                 <input className='inputTitle' value={title} onChange={(event) => setTitle(event.target.value)} />
@@ -182,7 +207,7 @@ export function Modal({show, setShow}) {
                 <IngreLists ingreList={ingreList} setIngreList={setIngreList}/>
               </div>
               <div className="flex_second-item">
-                <StepLists stepList ={stepList} setStepList={setStepList} />
+                <StepLists stepList ={stepList} setStepList={setStepList} stepText = {stepText} setStepText = {setStepText} />
               </div>
             </div>
           </div>
