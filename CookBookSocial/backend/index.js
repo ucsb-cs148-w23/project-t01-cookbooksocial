@@ -40,7 +40,7 @@ app.use(cors(corsOptions));
 //     res.json({info:'Hello World'} || {});
 // });
 
-app.use("/recipe", recipeRouter);
+app.use("/api/recipe", recipeRouter);
 
 app.listen(port, () => {
     console.log(`Example Express app listening at http://localhost:${port}`);
