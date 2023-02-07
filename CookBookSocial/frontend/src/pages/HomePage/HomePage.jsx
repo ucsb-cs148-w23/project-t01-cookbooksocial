@@ -14,23 +14,7 @@ What does calling useState do? It declares a “state variable”. Our variable 
 function HomePage() {
 
   //state to hold an array of json objects of recipe posts (TWO FILLER POSTS FOR NOW AS EXAMPLES)
-  const [recipePostsList, updateRecipePostsList] = useState([{
-      id: 1,
-      username: "Will Mori",
-      title: "Turkey",
-      image: Turkey,
-      description: "FILLER DESCRIPTION FOR TESTING PURPOSES TURKEY DJLSDJF L:SDJF:SL DFJKSDL:K FJSDL:KFJS: LDKFJ S:LKDFJ: SLDKFJS LDKMJFK SLDF:JS DL:KFJ SDLFJ SDKL:F J:SDLKJF SD:KLFJ S:LDKFJ :SLKD FJS:DLFKJD SL:FKJSD LFKJ",
-      ingredients: ["Turkey Ingredient 1", "Turkey Ingredient 2", "Turkey Ingredient 3", "Turkey Ingredient 4"],
-      instructions: ["Turkey Instruction 1", "Turkey Instruction 2", "Turkey Instruction 3", "Turkey Instruction 4"]
-  }, {
-      id: 2,
-      username: "Bryan Zamora",
-      title: "Potatoes",
-      image: Potatoes,
-      description: "FILLER DESCRIPTION FOR TESTING PURPOSES POTATOES DJLSDJF L:SDJF:SL DFJKSDL:K FJSDL:KFJS: LDKFJ S:LKDFJ: SLDKFJS LDKMJFK SLDF:JS DL:KFJ SDLFJ SDKL:F J:SDLKJF SD:KLFJ S:LDKFJ :SLKD FJS:DLFKJD SL:FKJSD LFKJ",
-      ingredients: ["Potatoes Ingredient 1", "Potatoes Ingredient 2", "Potatoes Ingredient 3", "Potatoes Ingredient 4"],
-      instructions: ["Potatoes Instruction 1", "Potatoes Instruction 2", "Potatoes Instruction 3", "Potatoes Instruction 4"]
-  }])
+  const [recipePostsList, updateRecipePostsList] = useState([])
 
   /*
   This will fetch the list of recipe posts stored in the database 
@@ -53,7 +37,7 @@ function HomePage() {
       const arrComponents = []
       for (let i = 0; i < recipePostsList.length; i++) {
           arrComponents.unshift(
-          <RecipePost username={recipePostsList[i].username}
+          <RecipePost email={recipePostsList[i].email}
                       title={recipePostsList[i].title}
                       image={recipePostsList[i].image}
                       description={recipePostsList[i].description}

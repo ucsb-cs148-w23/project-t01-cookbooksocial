@@ -35,7 +35,7 @@ function RecipePost(props) {
     return (
     <div className="post" onClick={toggleShowFull}> 
         <header className='header'>
-            <h2>{props.username}</h2>
+            <h2>{props.email}</h2>
             <h2>{props.title}</h2>
         </header>
         <body>
