@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import RecipePost from '../../components/recipe_posts/RecipePost';
 import Navbars from "../../components/navbars/Navbars";
+import PostModal from "../../components/postModal/postModal";
+
 import {Button} from 'react-bootstrap';
 
 import Turkey from '../../images/turkey.jpg'
@@ -47,13 +49,12 @@ function HomePage() {
       return arrComponents
   }
 
-
   //To display the state variable in the html, use the {} curly brackets.  Simple!
   return (
     <div>
         <Navbars />
         <div className='home-page'> 
-            <Button className="new-post-btn" variant="outline-primary">New Post</Button>
+            <PostModal></PostModal> 
             <ul>
                 {renderRecipePostComponents()}
             </ul>
@@ -63,3 +64,4 @@ function HomePage() {
 }
 
 export default HomePage;
+
