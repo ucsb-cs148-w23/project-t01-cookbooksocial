@@ -1,4 +1,6 @@
 import express from "express";
+import swaggerJsDoc from "swagger-jsdoc";
+import swaggerUI from "swagger-ui-express";
 // import { VerifyToken } from "./middleware/VerifyToken.js";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -10,9 +12,7 @@ import bodyParser from "body-parser";
 const app = express();
 
 const __filename = fileURLToPath(import.meta.url);
-
 const __dirname = path.dirname(__filename);
-
 const STATIC_FILES_PATH = path.resolve(__dirname, "..", "frontend", "build");
 
 dotenv.config(); // Configure dotenv to access the env variables
@@ -33,12 +33,20 @@ var corsOptions = {
 };
 
 app.use(cors(corsOptions));
-// app.use(VerifyToken);
 
-// app.get('/api/exampletest', (req, res) => {
-//     console.log("Req found");
-//     res.json({info:'Hello World'} || {});
-// });
+// Set up Swagger UI
+const swaggerOptions = {
+    swaggerDefinition: {
+        info: {
+            title: "Serves Up API",
+            version: "1.0.0",
+        },
+    },
+    apis: ["index.js", "./routes/recipe.js"],
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 app.use("/api/recipe", recipeRouter);
 
