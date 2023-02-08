@@ -61,7 +61,7 @@ export default function ProfilePic() {
   return (
     <div className="d-flex justify-content-center">
       <div className="">
-        <div className="text-center">
+        <div className="text-center mb-5">
           <h2 className="mt-4 text-3xl text-center tracking-tight font-light dark:text-white">
             Pick an avatar
           </h2>
@@ -94,7 +94,6 @@ export default function ProfilePic() {
               required
               className="px-3 py-2 border border-gray-300"
               placeholder="Enter a Display Name"
-              defaultValue={currentUser.displayName && currentUser.displayName}
               onChange={(e) => setUsername(e.target.value)}
             />
           </div>

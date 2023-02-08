@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useState, useEffect } from "react";
+import Form from 'react-bootstrap/Form';
 
 import styles from "./Signup.module.css"
 
@@ -52,35 +53,49 @@ export default function Signup() {
         <div className={styles.topText}>
           <h2>Register your account</h2>
         </div>
-        <form onSubmit={handleFormSubmit}>
-          <div>
+
+        <Form onSubmit={handleFormSubmit}>
+
+          <div className={styles.emailBox}>
+            <Form.Group className="mb-3" controlId="email-address">
+              <Form.Label>Email address</Form.Label>
+
+              <div className={styles.inputFields}>
+                <Form.Control
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  placeholder="Enter email"
+                  className=" px-3 py-2 border border-gray-300"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <Form.Text className="text-muted">
+                We'll never share your email with anyone else.
+              </Form.Text>
+            </Form.Group>
+
+          </div>
+          <Form.Group className="mb-3" controlId="password">
+            <Form.Label>Password</Form.Label>
             <div className={styles.inputFields}>
-              <input
-                id="email-address"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                className=" px-3 py-2 border border-gray-300"
-                placeholder="Email address"
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className={styles.inputFields}>
-              <input
-                id="password"
+              <Form.Control
                 name="password"
                 type="password"
                 autoComplete="current-password"
                 required
-                className=" px-3 py-2 border border-gray-300"
+                className="px-3 py-2 border border-gray-300"
                 placeholder="Password"
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="confirmPassword">
+            <Form.Label>Confirm Password</Form.Label>
             <div className={styles.inputFields}>
-              <input
-                id="confirmPassword"
+              <Form.Control
                 name="confirmPassword"
                 type="password"
                 autoComplete="current-password"
@@ -90,7 +105,9 @@ export default function Signup() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </div>
-          </div>
+
+          </Form.Group>
+
           <div className={styles.inputFields}>
             <button
               type="submit"
@@ -110,7 +127,10 @@ export default function Signup() {
               </Link>
             </div>
           </div>
-        </form>
+
+        </Form>
+
+
       </div>
     </div>
   );

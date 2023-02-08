@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Form from 'react-bootstrap/Form';
+
+
 
 import { useAuth } from "../../contexts/AuthContext";
 import styles from "./Login.module.css";
@@ -11,7 +14,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { currentUser, login, setError, loginWithGoogle } = useAuth();
+  const { currentUser, login, setError } = useAuth();
 
   useEffect(() => {
     if (currentUser) {
@@ -41,24 +44,35 @@ export default function Login() {
         <div className={styles.topText}>
           <h2>Login to your account</h2>
         </div>
-        <form onSubmit={handleFormSubmit}>
-          <div>
-            <div className={styles.inputFields}>
-              <input
-                id="email-address"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                className=" px-3 py-2 border border-gray-300"
-                placeholder="Email address"
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
 
+
+        <Form onSubmit={handleFormSubmit}>
+
+          <div className={styles.emailBox}>
+            <Form.Group className="mb-3" controlId="email-address">
+              <Form.Label>Email address</Form.Label>
+
+              <div className={styles.inputFields}>
+                <Form.Control
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  placeholder="Enter email"
+                  className=" px-3 py-2 border border-gray-300"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <Form.Text className="text-muted">
+                We'll never share your email with anyone else.
+              </Form.Text>
+            </Form.Group>
+
+          </div>
+          <Form.Group className="mb-3" controlId="password">
+            <Form.Label>Password</Form.Label>
             <div className={styles.inputFields}>
-              <input
-                id="password"
+              <Form.Control
                 name="password"
                 type="password"
                 autoComplete="current-password"
@@ -68,27 +82,16 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-          </div>
+          </Form.Group>
 
-          <div className={styles.inputFields}>
-            <button
-              type="submit"
-              disabled={loading}
-              className="py-2 px-4 border border-transparent "
-            >
-              Login
-            </button>
-          </div>
 
-          <div className={styles.inputFields}>
-            <button
-              onClick={loginWithGoogle}
-              disabled={loading}
-              className="py-2 px-4 border border-transparent "
-            >
-              Login With Google
-            </button>
-          </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="py-2 px-4 border border-transparent mb-3 mt-3"
+          >
+            Login
+          </button>
 
           <div className="flex items-center justify-between">
             <div className="text-sm">
@@ -97,7 +100,7 @@ export default function Login() {
               </Link>
             </div>
           </div>
-        </form>
+        </Form>
       </div>
     </div>
   );
