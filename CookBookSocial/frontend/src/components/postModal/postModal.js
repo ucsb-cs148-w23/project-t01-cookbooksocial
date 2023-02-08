@@ -1,5 +1,5 @@
 import './postModalStyles.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 
 
@@ -20,10 +20,7 @@ const IngreLists = (props) => {
   const onClickAdd = () => {
     if (ingreText === "") return;
     
-    const newIngre = {
-      ingreName: ingreText,
-    }
-    props.ingreList.push(newIngre);
+    props.ingreList.push(ingreText);
     setIngreText("");
   };
 
@@ -42,7 +39,7 @@ const IngreLists = (props) => {
         <tbody id="ingre-body">  
           {props.ingreList.map((ingre, index) => (
             <tr key = {index}>
-              <td className='modalSub'>{ingre.ingreName}</td>
+              <td className='modalSub'>{ingre}</td>
               <td><button onClick={() => onClickDelete(index)}>-</button></td>
             </tr>
             ))}
@@ -72,17 +69,14 @@ const StepLists = (props) => {
   // add step to list 
   const onClickAdd = () => {
     if (props.stepText === "") return;
-    const newStep = {
-      stepDesc: props.stepText,
-    }
-    props.stepList.push(newStep);
+    props.stepList.push(props.stepText);
     // reset add step form to "" 
     props.setStepText("");
   };
   //change step description
   const onChangeOldStep = (index,updateText) => {
     const ChangedStepList = [...props.stepList];
-    ChangedStepList[index].stepDesc = updateText;
+    ChangedStepList[index] = updateText;
     props.setStepList(ChangedStepList);
   };
 
@@ -100,7 +94,7 @@ const StepLists = (props) => {
           props.stepList.map((step, index) => (
             <div className='stepList' key={index} >
               <div className='stepListIndex'>step {index+1}:</div>
-              <textarea className='modalStepDesc' value={step.stepDesc} onChange={(event) => onChangeOldStep(index,event.target.value)}></textarea>
+              <textarea className='modalStepDesc' value={step} onChange={(event) => onChangeOldStep(index,event.target.value)}></textarea>
               <button className='stepListbutton' onClick={() => onClickDelete(index)}>-</button>              
             </div>
             ))
@@ -115,7 +109,7 @@ const StepLists = (props) => {
   );
 }
 
-// control upload image (need to fix)
+// control upload image (need to code)
 const RecipeImage =()=>
 {
 
@@ -136,6 +130,7 @@ const RecipeImage =()=>
 
 
 export function Modal({show, setShow}) {
+
   const [title, setTitle] = useState("recipe name");
   const [desc, setDesc] = useState("description");
   const [email, setMail] = useState("e-mail");
@@ -143,21 +138,41 @@ export function Modal({show, setShow}) {
   const [stepList, setStepList] = useState([]);
   const [stepText, setStepText] = useState("");
 
+  const [fullRecipeInfo, updateFullRecipeInfo] = useState({
+    title: "",
+    desc: "",
+    image: "",
+    email: "",
+    ingredients: [],
+    instructions: []
+  });
+
+  useEffect(() => {
+    updateFullRecipeInfo({
+      ...fullRecipeInfo,
+      title: title,
+      desc: desc,
+      email: email,
+      ingredients: ingreList,
+      instructions: stepList
+    });
+  }, [title, desc, email, ingreList, stepList,])
+  
+
+
+
   function postRrecipe(){
     // add step Text to step List if it is not empty
     if (stepText != ""){
-    const newStep = {
-      stepDesc: stepText,
-    }
-    stepList.push(newStep);
+    stepList.push( stepText);
     }
     
-    console.log(title,desc,ingreList,stepList,email)
+    console.log(fullRecipeInfo)
 
 
     ///
 
-    /// code to sending a data to firebase
+    /// code to sending a data to firebase (need to code)
 
     ///
 
