@@ -10,34 +10,94 @@ import {
     collection,
     serverTimestamp,
 } from "firebase/firestore";
-import { getStorage, ref } from "firebase/storage";
+import busboy from "busboy";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import {v4 as uuidv4} from 'uuid';
 
 const addRecipe = async (req, res, next) => {
+
+    /*
+    Use bus boy, not formidable.
+
+    */
     try {
-        const data = req.body;
-        data.createdAt = serverTimestamp();
-        const docRef = await addDoc(collection(db, "recipes"), data);
-        res.status(200).send(`Document written with ID: ${docRef.id}`);
+
+        const storage = getStorage();
+        const storageRef = ref(storage, `images/${uuidv4()}`);
+
+        // console.log(storageRef._location.bucket + '/' + storageRef._location.path_);
+
+
+        const bb = busboy({ headers: req.headers });
+
+        let recipe = []
+
+        let imgUrl = ""
+
+        bb.on('field', (name, val, info) => {
+            recipe = JSON.parse(val);
+            recipe['createdAt'] = serverTimestamp();
+            console.log(recipe);
+        });
+
+        bb.on('file', (name, file, info) => {
+            const {filename, encoding, mimeType} = info;
+            console.log(
+                `File [${name}]: filename: %j, encoding: %j, mimeType: %j`,
+                filename,
+                encoding,
+                mimeType
+            );
+
+            file.on('data', (data) => {
+                console.log(`File [${name}] got ${data.length} bytes`);
+
+                const uploadTask = uploadBytesResumable(storageRef, data, {contentType: mimeType});
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                        // Observe state change events such as progress, pause, and resume
+                        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        console.log('Upload is ' + progress + '% done');
+                        switch (snapshot.state) {
+                            case 'paused':
+                                console.log('Upload is paused');
+                                break;
+                            case 'running':
+                                console.log('Upload is running');
+                                break;
+                        }
+                    },
+                    (error) => {
+                        // Handle unsuccessful uploads
+                    },
+                    () => {
+                        // Handle successful uploads on complete
+                        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+                        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                            recipe['image'] = downloadURL;
+                            console.log(downloadURL);
+                            const docRef = await addDoc(collection(db, "recipes"), recipe);
+
+                        });
+                    }
+                );
+            })
+        })
+        bb.on('finish', async function () {
+            console.log('Upload complete');
+            res.writeHead(200, { 'Connection': 'close' });
+            res.end("Finished");
+        });
+        return req.pipe(bb);
+
+
     } catch (e) {
         res.status(400).send(`Error: ${e.message}`);
         console.error(e);
     }
 };
 
-
-const addFile = async (req, res, next) => {
-        const file = req.file;
-        console.log(file);
-        if(!file){
-            const error = new Error('No file');
-            error.httpStatusCode = 400;
-            return next(error);
-        }
-        const storage = getStorage();
-        // const imgRef = ref()
-        res.send(file);
-    
-}
 
 
 
@@ -93,4 +153,4 @@ const getAllRecipes = async (req, res, next) => {
     }
 };
 
-export { addRecipe, updateRecipe, deleteRecipe, getRecipe, getAllRecipes, addFile };
+export { addRecipe, updateRecipe, deleteRecipe, getRecipe, getAllRecipes };

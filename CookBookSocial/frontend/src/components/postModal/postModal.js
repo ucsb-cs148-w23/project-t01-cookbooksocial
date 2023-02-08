@@ -1,7 +1,15 @@
 import './postModalStyles.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
+/*
+To do:
+Need to store all the info that is going to be sent to the backend in one body thing
+This includes the file
+Then need to make sure the file is received in the backend
+Then we can create a reference and everything in the backend for file upload
 
+*/
 
 //add Recipe modal button by adding <PostButton/>
 
@@ -109,36 +117,8 @@ const StepLists = (props) => {
   );
 }
 
-function enterFile(event){
-  const data = new FormData() ;
-  data.append('file', event.target.files[0]);
-
-}
-
-async function uploadFile() {
-  await axios.post("/api/recipe/addFile", data)
-      .then(res => { // then print response status
-        console.log(res.statusText)
-      })
-}
-
-// control upload image (need to fix)
-const RecipeImage =()=>
-{
 
 
-  return(
-    <div>
-      <form>
-        <input type='file' accept="image/png, image/gif, image/jpeg" onChange={enterFile}/>
-        <button onClick={uploadFile}>Upload</button>
-      </form>
-      {
-        <img alt='uploaded file' height="auto" />
-      }
-    </div>
-  );
-}
 
 
 
@@ -149,25 +129,25 @@ export function Modal({show, setShow}) {
   const [email, setMail] = useState("e-mail");
   const [ingreList, setIngreList] = useState([]);
   const [stepList, setStepList] = useState([]);
+  const [image, setImage] = useState([]);
   const [stepText, setStepText] = useState("");
 
   const [fullRecipeInfo, updateFullRecipeInfo] = useState({
     title: "",
-    desc: "",
-    image: "",
+    description: "",
     email: "",
     ingredients: [],
-    instructions: []
+    instructions: [],
   });
 
   useEffect(() => {
     updateFullRecipeInfo({
       ...fullRecipeInfo,
       title: title,
-      desc: desc,
+      description: desc,
       email: email,
       ingredients: ingreList,
-      instructions: stepList
+      instructions: stepList,
     });
   }, [title, desc, email, ingreList, stepList,])
   
@@ -182,6 +162,15 @@ export function Modal({show, setShow}) {
     
     console.log(fullRecipeInfo)
 
+    const formData = new FormData();
+    formData.append('recipe', JSON.stringify(fullRecipeInfo));
+    formData.append('file', image);
+    console.log(image);
+
+    axios.post('/api/recipe/', formData)
+      .then(response => console.log(response));
+
+
 
     ///
 
@@ -189,7 +178,7 @@ export function Modal({show, setShow}) {
 
     ///
 
-
+    setImage([]);
     setTitle("recipe name")
     setDesc("description")
     setMail("e-mail")
@@ -212,7 +201,15 @@ export function Modal({show, setShow}) {
             <div className="flex_first-box">
               <div className="flex_first-item">  </div>
               <div className="flex_first-item">
-                <RecipeImage />
+                
+
+                <div>
+                  <form>
+                    <input type='file' accept="image/png, image/gif, image/jpeg" onChange={(event) => setImage(event.target.files[0])} />
+                  </form>
+                </div>
+
+
               </div>
               <div className="flex_first-item">
                 <div className="postConfirm"> <a href ="#" onClick={()=>postRrecipe()} >Post Now</a> </div>
