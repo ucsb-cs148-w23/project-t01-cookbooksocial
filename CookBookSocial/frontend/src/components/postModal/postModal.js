@@ -2,14 +2,6 @@ import './postModalStyles.css';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-/*
-To do:
-Need to store all the info that is going to be sent to the backend in one body thing
-This includes the file
-Then need to make sure the file is received in the backend
-Then we can create a reference and everything in the backend for file upload
-
-*/
 
 //add Recipe modal button by adding <PostButton/>
 
