@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getAuth, signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, signInWithRedirect } from "firebase/auth";
 import { useAuth } from "../../contexts/AuthContext";
 import styles from "./Login.module.css";
 
