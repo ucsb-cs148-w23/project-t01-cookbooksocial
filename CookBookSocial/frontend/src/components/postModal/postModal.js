@@ -133,16 +133,6 @@ const RecipeImage =()=>
   );
 }
 
-// send data to database (need to fix)
-const postRrecipe = (title,desc,ingreList,stepList,stepText,email)=>
-{
-
-  
-  return(
-    console.log(title,desc,ingreList,stepList,email)
-  )
-}
-
 
 
 export function Modal({show, setShow}) {
@@ -154,15 +144,22 @@ export function Modal({show, setShow}) {
   const [stepText, setStepText] = useState("");
 
   function postRrecipe(){
-    // add step Text to List if it is not empty
+    // add step Text to step List if it is not empty
     if (stepText != ""){
     const newStep = {
       stepDesc: stepText,
     }
     stepList.push(newStep);
     }
+    
     console.log(title,desc,ingreList,stepList,email)
 
+
+    ///
+
+    /// code to sending a data to firebase
+
+    ///
 
 
     setTitle("recipe name")
