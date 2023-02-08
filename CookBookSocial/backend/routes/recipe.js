@@ -5,6 +5,7 @@ import {
     deleteRecipe,
     getRecipe,
     getAllRecipes,
+    addFile,
 } from "../controllers/recipeController.js";
 
 const recipeRouter = express.Router();
@@ -47,6 +48,8 @@ recipeRouter.get("/:id", getRecipe);
  *         description: Returns success message
  */
 recipeRouter.post("/", addRecipe);
+
+recipeRouter.post("/addFile", addFile);
 
 /**
  * @swagger

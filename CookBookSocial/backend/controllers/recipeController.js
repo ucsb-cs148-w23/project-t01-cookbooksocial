@@ -10,6 +10,7 @@ import {
     collection,
     serverTimestamp,
 } from "firebase/firestore";
+import { getStorage, ref } from "firebase/storage";
 
 const addRecipe = async (req, res, next) => {
     try {
@@ -22,6 +23,23 @@ const addRecipe = async (req, res, next) => {
         console.error(e);
     }
 };
+
+
+const addFile = async (req, res, next) => {
+        const file = req.file;
+        console.log(file);
+        if(!file){
+            const error = new Error('No file');
+            error.httpStatusCode = 400;
+            return next(error);
+        }
+        const storage = getStorage();
+        // const imgRef = ref()
+        res.send(file);
+    
+}
+
+
 
 const updateRecipe = async (req, res, next) => {
     try {
@@ -75,4 +93,4 @@ const getAllRecipes = async (req, res, next) => {
     }
 };
 
-export { addRecipe, updateRecipe, deleteRecipe, getRecipe, getAllRecipes };
+export { addRecipe, updateRecipe, deleteRecipe, getRecipe, getAllRecipes, addFile };

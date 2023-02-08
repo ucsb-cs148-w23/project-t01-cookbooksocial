@@ -1,6 +1,6 @@
 import './postModalStyles.css';
 import React, { useState } from 'react';
-
+import axios from 'axios';
 
 
 //add Recipe modal button by adding <PostButton/>
@@ -115,6 +115,19 @@ const StepLists = (props) => {
   );
 }
 
+function enterFile(event){
+  const data = new FormData() ;
+  data.append('file', event.target.files[0]);
+
+}
+
+async function uploadFile() {
+  await axios.post("/api/recipe/addFile", data)
+      .then(res => { // then print response status
+        console.log(res.statusText)
+      })
+}
+
 // control upload image (need to fix)
 const RecipeImage =()=>
 {
@@ -123,8 +136,8 @@ const RecipeImage =()=>
   return(
     <div>
       <form>
-        <input type='file' />
-        <button type='submit'>Upload</button>
+        <input type='file' accept="image/png, image/gif, image/jpeg" onChange={enterFile}/>
+        <button onClick={uploadFile}>Upload</button>
       </form>
       {
         <img alt='uploaded file' height="auto" />
