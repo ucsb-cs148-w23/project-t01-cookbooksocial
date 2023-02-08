@@ -18,6 +18,7 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
+import { getStorage, ref } from "firebase/storage";
 
 const addRecipe = async (req, res, next) => {
   /*
@@ -29,7 +30,7 @@ const addRecipe = async (req, res, next) => {
 
     // const bb = busboy({ headers: req.headers });
 
-    console.log("\nINSIDE OF RECIPE\n")
+    console.log("\nINSIDE OF RECIPE\n");
 
     let recipe = [];
 
@@ -47,6 +48,19 @@ const addRecipe = async (req, res, next) => {
     res.status(400).send(`Error: ${e.message}`);
     console.error(e);
   }
+};
+
+const addFile = async (req, res, next) => {
+  const file = req.file;
+  console.log(file);
+  if (!file) {
+    const error = new Error("No file");
+    error.httpStatusCode = 400;
+    return next(error);
+  }
+  const storage = getStorage();
+  // const imgRef = ref()
+  res.send(file);
 };
 
 const updateRecipe = async (req, res, next) => {
@@ -101,4 +115,11 @@ const getAllRecipes = async (req, res, next) => {
   }
 };
 
-export { addRecipe, updateRecipe, deleteRecipe, getRecipe, getAllRecipes };
+export {
+  addRecipe,
+  updateRecipe,
+  deleteRecipe,
+  getRecipe,
+  getAllRecipes,
+  addFile,
+};

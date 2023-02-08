@@ -5,6 +5,7 @@ import {
     deleteRecipe,
     getRecipe,
     getAllRecipes,
+    addFile,
 } from "../controllers/recipeController.js";
 
 const recipeRouter = express.Router();
