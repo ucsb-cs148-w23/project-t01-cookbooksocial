@@ -229,9 +229,9 @@ export function Modal({ show, setShow }) {
     }
     setIsError(false);
 
-    // console.log("RECIPE INFO: ", fullRecipeInfo);
+    console.log("RECIPE INFO: ", fullRecipeInfo);
 
-    // console.log("IMAGE NAME: ", image.name);
+    console.log("IMAGE NAME: ", image.name);
 
     // Here we are uploading the image first, that way we can make sure the uploaded image is correct
 
