@@ -231,7 +231,6 @@ export function Modal({show, setShow}) {
     setStepList([])
     setStepText("")
     setShow(false)
-    window.location.reload(false);
   }
 
 
