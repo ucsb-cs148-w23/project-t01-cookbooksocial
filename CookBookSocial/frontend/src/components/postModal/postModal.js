@@ -1,7 +1,10 @@
 import "./postModalStyles.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { storage } from "../../config/firebase";
+import { storage, db } from "../../config/firebase";
+
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 //add Recipe modal button by adding <PostButton/>
 
@@ -197,6 +200,18 @@ export function Modal({ show, setShow }) {
     return true;
   }
 
+  async function getiD(stringURL) {
+    const postInfo = fullRecipeInfo;
+    postInfo["createdAt"] = serverTimestamp();
+    postInfo["image"] = stringURL;
+
+    const res = await addDoc(collection(db, "recipes"), postInfo);
+
+    // console.log("INSIDE OF GET ID FUNTION");
+
+    return res;
+  }
+
   function postRrecipe() {
     // add step Text to step List if it is not empty
     if (stepText != "") {
@@ -214,9 +229,9 @@ export function Modal({ show, setShow }) {
     }
     setIsError(false);
 
-    console.log("RECIPE INFO: ", fullRecipeInfo);
+    // console.log("RECIPE INFO: ", fullRecipeInfo);
 
-    console.log("IMAGE NAME: ", image.name);
+    // console.log("IMAGE NAME: ", image.name);
 
     // Here we are uploading the image first, that way we can make sure the uploaded image is correct
 
@@ -224,56 +239,44 @@ export function Modal({ show, setShow }) {
 
     const uploadTask = uploadBytesResumable(storageRef, image);
 
-    async function uploadImage() {
-      return new Promise((resolve, reject) => {
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const progress = Math.round(
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-            );
-            setProgresspercent(progress);
-          },
-          (error) => {
-            console.log("ERROR IN UPLOAD TASK");
-            alert(error);
-            reject(error);
-          },
-          () => {
-            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-              setImgUrl(downloadURL);
-              console.log("IMAGE URL:\n", downloadURL);
-              resolve();
-            });
-          }
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         );
-      });
-    }
-    async function UploadToDb() {
-      await uploadImage();
+        setProgresspercent(progress);
+      },
+      (error) => {
+        console.log("ERROR IN UPLOAD TASK");
+        alert(error);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setImgUrl(downloadURL);
+          let response = getiD(downloadURL);
 
-      console.log("IMAGE UPLOADED");
-      const formData = new FormData();
-      formData.append("recipe", JSON.stringify(fullRecipeInfo));
-      formData.append("image", imgUrl);
-      console.log(image);
+          console.log("This is the response: ", response);
+          response.then(() => {
+            console.log("Upload Completed:\n");
+          });
+        });
+      }
+    );
 
-      axios
-        .post("/api/recipe/", formData)
-        .then((response) => console.log(response));
-    }
+    uploadTask.then(() => {
+      setImage([]);
+      setTitle("");
+      setDesc("");
+      setMail("");
+      setIngreList([]);
+      setStepList([]);
+      setStepText("");
 
-    UploadToDb();
-
-    setImage([]);
-    setTitle("");
-    setDesc("");
-    setMail("");
-    setIngreList([]);
-    setStepList([]);
-    setStepText("");
-    // setShow(false);
-    // window.location.reload(false);
+      console.log("Closing modal");
+      setShow(false);
+      // window.location.reload(false);
+    });
   }
 
   if (show) {
