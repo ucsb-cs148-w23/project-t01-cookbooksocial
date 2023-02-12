@@ -5,6 +5,8 @@ import { storage, db } from "../../config/firebase";
 
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 
+import { useAuth } from "../../contexts/AuthContext";
+
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 //add Recipe modal button by adding <PostButton/>
 
@@ -133,13 +135,15 @@ export function Modal({ show, setShow }) {
   const [image, setImage] = useState([]);
   const [stepText, setStepText] = useState("");
 
+  const { currentUser } = useAuth();
+
   const [imgUrl, setImgUrl] = useState(null);
   const [progresspercent, setProgresspercent] = useState(0);
 
   const [fullRecipeInfo, updateFullRecipeInfo] = useState({
     title: "",
     description: "",
-    email: "",
+    email: currentUser.email,
     ingredients: [],
     instructions: [],
   });
@@ -149,7 +153,7 @@ export function Modal({ show, setShow }) {
       ...fullRecipeInfo,
       title: title,
       description: desc,
-      email: email,
+      email: currentUser.email,
       ingredients: ingreList,
       instructions: stepList,
     });
@@ -221,7 +225,6 @@ export function Modal({ show, setShow }) {
     if (
       !validateTitle() ||
       !validateDescription() ||
-      !validateEmail() ||
       !validateIngredients() ||
       !validateFile()
     ) {
@@ -229,11 +232,10 @@ export function Modal({ show, setShow }) {
     }
     setIsError(false);
 
-    console.log("RECIPE INFO: ", fullRecipeInfo);
-
-    console.log("IMAGE NAME: ", image.name);
+    // console.log("IMAGE NAME: ", image.name);
 
     // Here we are uploading the image first, that way we can make sure the uploaded image is correct
+    console.log("RECIPE INFO: ", fullRecipeInfo);
 
     const storageRef = ref(storage, `images/${image.name}`);
 
@@ -268,7 +270,6 @@ export function Modal({ show, setShow }) {
       setImage([]);
       setTitle("");
       setDesc("");
-      setMail("");
       setIngreList([]);
       setStepList([]);
       setStepText("");
@@ -333,13 +334,6 @@ export function Modal({ show, setShow }) {
                     onChange={(event) => setDesc(event.target.value)}
                     placeholder="Description"
                   ></textarea>
-                  <p className="modalTitle">E-mail</p>
-                  <input
-                    className="inputEmail"
-                    value={email}
-                    onChange={(event) => setMail(event.target.value)}
-                    placeholder="Email"
-                  ></input>
                 </div>
               </div>
             </div>
