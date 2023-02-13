@@ -10,6 +10,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import Testpage from "./pages/TestPage/TestPage";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 import ProfilePic from "./pages/ProfilePicPage/ProfilePic";
+import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import WithPrivateRoute from "./utils/WithPrivateRoute";
 
 function App() {
@@ -39,7 +40,8 @@ function App() {
             element={
               // This adds private routing
               <WithPrivateRoute>
-                <ProfilePic />
+                {/* <ProfilePic /> */}
+                <ProfilePage/>
               </WithPrivateRoute>
             }
           />
