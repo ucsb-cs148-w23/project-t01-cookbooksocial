@@ -56,7 +56,9 @@ function HomePage() {
     <div>
       <Navbars />
       <div className="home-page">
-        <PostModal></PostModal>
+        <div className="newPostCont">
+          <PostModal></PostModal>
+        </div>
         <ul>{renderRecipePostComponents()}</ul>
       </div>
     </div>

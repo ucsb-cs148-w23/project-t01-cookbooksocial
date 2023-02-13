@@ -45,7 +45,12 @@ const IngreLists = (props) => {
               <tr key={index}>
                 <td className="modalSub">{ingre}</td>
                 <td>
-                  <button onClick={() => onClickDelete(index)}>-</button>
+                  <button
+                    className="delIngButton"
+                    onClick={() => onClickDelete(index)}
+                  >
+                    -
+                  </button>
                 </td>
               </tr>
             ))}
@@ -53,8 +58,14 @@ const IngreLists = (props) => {
         }
       </table>
       <div className="add-Ingre">
-        <input value={ingreText} onChange={onChangeIngreText} />
-        <button onClick={onClickAdd}>add</button>
+        <input
+          className="ingInput"
+          value={ingreText}
+          onChange={onChangeIngreText}
+        />
+        <button className="addIngButton" onClick={onClickAdd}>
+          add
+        </button>
       </div>
     </>
   );
@@ -133,6 +144,7 @@ export function Modal({ show, setShow }) {
   const [ingreList, setIngreList] = useState([]);
   const [stepList, setStepList] = useState([]);
   const [image, setImage] = useState([]);
+  const [prevImg, setPrevImg] = useState("");
   const [stepText, setStepText] = useState("");
 
   const { currentUser } = useAuth();
@@ -216,6 +228,22 @@ export function Modal({ show, setShow }) {
     return res;
   }
 
+  function handleImage(pic) {
+    setImage(pic);
+    setPrevImg(URL.createObjectURL(pic));
+  }
+
+  function modalClosing() {
+    setShow(false);
+    setImage([]);
+    setTitle("");
+    setDesc("");
+    setIngreList([]);
+    setStepList([]);
+    setStepText("");
+    setPrevImg("");
+  }
+
   function postRrecipe() {
     // add step Text to step List if it is not empty
     if (stepText != "") {
@@ -258,7 +286,7 @@ export function Modal({ show, setShow }) {
           setImgUrl(downloadURL);
           let response = getiD(downloadURL);
 
-          console.log("This is the response: ", response);
+          // console.log("This is the response: ", response);
           response.then(() => {
             console.log("Upload Completed:\n");
           });
@@ -273,6 +301,7 @@ export function Modal({ show, setShow }) {
       setIngreList([]);
       setStepList([]);
       setStepText("");
+      setPrevImg("");
 
       console.log("Closing modal");
       setShow(false);
@@ -288,10 +317,9 @@ export function Modal({ show, setShow }) {
 
           <div className="container container-column">
             <div className="putLeft">
-              {" "}
               <button
                 className="postModal-close"
-                onClick={() => setShow(false)}
+                onClick={() => modalClosing()}
               >
                 Close
               </button>
@@ -307,19 +335,24 @@ export function Modal({ show, setShow }) {
                       id="postModal-img-input"
                       type="file"
                       accept="image/png, image/gif, image/jpeg"
-                      onChange={(event) => setImage(event.target.files[0])}
+                      onChange={(event) => handleImage(event.target.files[0])}
                     />
                   </form>
+
+                  {prevImg && (
+                    <div className="prevPicContainer">
+                      <img className="prevImage" src={prevImg} />
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="flex_first-item">
                 <div className="postConfirm">
-                  {" "}
                   <a href="#" onClick={() => postRrecipe()}>
                     Post Now
-                  </a>{" "}
+                  </a>
                 </div>
-                <div>
+                <div className="titleContainers">
                   <p className="modalTitle">Title</p>
                   <input
                     className="inputTitle"
@@ -327,14 +360,15 @@ export function Modal({ show, setShow }) {
                     onChange={(event) => setTitle(event.target.value)}
                     placeholder="Recipe Name"
                   />
-                  <p className="modalTitle">Description</p>
-                  <textarea
-                    className="modalRecipeDesc"
-                    value={desc}
-                    onChange={(event) => setDesc(event.target.value)}
-                    placeholder="Description"
-                  ></textarea>
                 </div>
+
+                <p className="modalTitle">Description</p>
+                <textarea
+                  className="modalRecipeDesc"
+                  value={desc}
+                  onChange={(event) => setDesc(event.target.value)}
+                  placeholder="Description"
+                ></textarea>
               </div>
             </div>
             {/* second Part */}
