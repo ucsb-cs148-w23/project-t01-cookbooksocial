@@ -53,6 +53,7 @@ export default function Navbars() {
                 {/* Setting links for navbar */}
                 <Nav.Link href="/home">Home</Nav.Link>
                 <Nav.Link href="profile">Profile</Nav.Link>
+                <Nav.Link href="profile-pic"> Edit Profile</Nav.Link>
                 <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
               </Nav>
             </Navbar.Collapse>

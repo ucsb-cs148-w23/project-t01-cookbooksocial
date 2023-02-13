@@ -40,8 +40,15 @@ function App() {
             element={
               // This adds private routing
               <WithPrivateRoute>
-                {/* <ProfilePic /> */}
                 <ProfilePage/>
+              </WithPrivateRoute>
+            }
+          />
+          <Route
+            exact path ="/profile-pic"
+            element={
+              <WithPrivateRoute>
+                <ProfilePic/>
               </WithPrivateRoute>
             }
           />
