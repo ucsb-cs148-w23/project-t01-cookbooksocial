@@ -52,6 +52,7 @@ return (
       <Navbars />
       <div className='profile-page'> 
           <PostModal></PostModal> 
+          <h1 style={{color: "blue", fontSize: "60px"}}>palceholder to SHOW SAVED RECIPIES</h1>
           <ul>
               {renderProfileRecipePostComponents()}
           </ul>
