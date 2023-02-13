@@ -1,0 +1,13 @@
+.profile-page {
+    max-width: 730px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    margin-bottom: 100px;
+}
+
+/* ul{
+    columns: 3;
+    -webkit-columns: 3;
+    -moz-columns: 3;
+} */
