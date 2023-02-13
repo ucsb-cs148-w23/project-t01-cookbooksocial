@@ -11,12 +11,8 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
+import { getStorage } from "firebase/storage";
+
 
 const addRecipe = async (req, res, next) => {
   /*

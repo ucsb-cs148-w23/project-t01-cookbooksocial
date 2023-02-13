@@ -38,9 +38,8 @@ export default function Navbars() {
       {currentUser && (
         <Navbar bg="dark" variant="dark" expand="lg">
           <Container>
-            <Navbar.Brand href="/home">CookBook Social</Navbar.Brand>
+            <Navbar.Brand href="/home">ServesUp</Navbar.Brand>
             <div className={styles.usernameText}>
-              {" "}
               Hello {username ? username : "No username"}
             </div>
             <img
