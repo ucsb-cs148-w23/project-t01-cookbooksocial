@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getAuth, signInWithRedirect,GoogleAuthProvider} from "firebase/auth";
+import { getAuth, signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
 import { useAuth } from "../../contexts/AuthContext";
 import styles from "./Login.module.css";
 
@@ -16,7 +16,7 @@ export default function Login() {
       navigate("/home");
     }
   }, [currentUser, navigate]);
-  
+
   async function handleFormSubmit(e) {
     e.preventDefault();
     try {
@@ -27,7 +27,7 @@ export default function Login() {
     } catch (e) {
       setError("Failed to login");
     }
-    
+
     setLoading(false);
   }
   const auth = getAuth();
@@ -35,70 +35,70 @@ export default function Login() {
   async function GoogleRedrct() {
     signInWithRedirect(auth, provider);
   }
-  
+
   return (
     <div className="">
-    <div className="">
-    <div className={styles.topText}>
-    <h2>Login to your account</h2>
-    </div>
-    <form onSubmit={handleFormSubmit}>
-    <div>
-    <div className={styles.inputFields}>
-    <input
-    id="email-address"
-    name="email"
-    type="email"
-    autoComplete="email"
-    required
-    className=" px-3 py-2 border border-gray-300"
-    placeholder="Email address"
-    onChange={(e) => setEmail(e.target.value)}
-    />
-    </div>
-    
-    <div className={styles.inputFields}>
-    <input
-    id="password"
-    name="password"
-    type="password"
-    autoComplete="current-password"
-    required
-    className="px-3 py-2 border border-gray-300"
-    placeholder="Password"
-    onChange={(e) => setPassword(e.target.value)}
-    />
-    </div>
-    </div>
-    
-    <div className={styles.inputFields}>
-    <button
-    type="submit"
-    disabled={loading}
-    className="py-2 px-4 border border-transparent "
-            >
-              Login
-            </button>
+      <div className="">
+        <div className={styles.topText}>
+          <h2>Login to your account</h2>
+        </div>
+        <form onSubmit={handleFormSubmit}>
+          <div>
+            <div className={styles.inputFields}>
+              <input
+                id="email-address"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                className=" px-3 py-2 border border-gray-300"
+                placeholder="Email address"
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+
+            <div className={styles.inputFields}>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                required
+                className="px-3 py-2 border border-gray-300"
+                placeholder="Password"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
           </div>
 
           <div className={styles.inputFields}>
             <button
-              onClick={GoogleRedrct}
+              type="submit"
               disabled={loading}
               className="py-2 px-4 border border-transparent "
             >
-              Login With Google
+              Login
             </button>
           </div>
-
-          <div className="flex items-center justify-between">
-            <div className="text-sm">
-              <Link to="/register" className="text-blue-600 ">
-                Don't have an account? Register
-              </Link>
-            </div>
-          </div>
         </form>
+
+        <div className={styles.inputFields}>
+          <button
+            onClick={GoogleRedrct}
+            disabled={loading}
+            className="py-2 px-4 border border-transparent "
+          >
+            Login With Google
+          </button>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="text-sm">
+            <Link to="/register" className="text-blue-600 ">
+              Don't have an account? Register
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );
