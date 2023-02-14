@@ -30,7 +30,7 @@ export default function Signup() {
       setError(""); // Remove error when trying to register
       setLoading(true);
       await register(email, password);
-      navigate("/profile");
+      navigate("/edit-profile");
     } catch (e) {
       let errorMessage = e.code
       if (errorMessage === "auth/weak-password") {

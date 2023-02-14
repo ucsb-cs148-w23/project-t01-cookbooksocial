@@ -2,12 +2,11 @@ import "./App.css";
 
 import React from "react";
 
-import { Route, Routes, redirect, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import HomePage from "./pages/HomePage/HomePage";
 import Signup from "./pages/SignupPage/Signup";
 import Login from "./pages/LoginPage/Login";
 import { AuthProvider } from "./contexts/AuthContext";
-import Testpage from "./pages/TestPage/TestPage";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 import ProfilePic from "./pages/ProfilePicPage/ProfilePic";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
@@ -33,7 +32,6 @@ function App() {
 
           <Route exact path="/register" element={<Signup />} />
 
-          <Route exact path="/test" element={<Testpage />} />
           <Route
             exact
             path="/profile"
@@ -45,7 +43,7 @@ function App() {
             }
           />
           <Route
-            exact path ="/profile-pic"
+            exact path ="/edit-profile"
             element={
               <WithPrivateRoute>
                 <ProfilePic/>
