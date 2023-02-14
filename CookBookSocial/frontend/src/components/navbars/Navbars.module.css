@@ -4,7 +4,28 @@
   margin-right: 5%;
 }
 
-.usernameText{
-    color: white;
-    margin-right: 2%;
+.usernameText {
+  color: white;
+  margin-right: 2%;
 }
+
+.navColor {
+  background-color: #db5642;
+}
+
+
+.navLinks {
+  color: white;
+  font-family: sans-serif;
+}
+
+.navLinks:hover {
+  color: black;
+  transition: 0.4s;
+}
+
+.titlePage{
+  color: white;
+  font-size: 25px;
+}
+

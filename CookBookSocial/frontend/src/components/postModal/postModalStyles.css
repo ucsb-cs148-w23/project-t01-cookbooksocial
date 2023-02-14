@@ -191,8 +191,7 @@
 }
 
 .postConfirm a {
-    background: rgb(251, 233, 207);
-    background: linear-gradient(137deg, rgba(251, 233, 207, 1) 0%, rgba(255, 103, 103, 1) 60%);
+	background-color:#db5642;
     border-radius: 50px;
     position: relative;
     display: flex;
@@ -201,7 +200,7 @@
     margin: 0 auto;
     max-width: 260px;
     padding: 15px 0px 20px;
-    color: #000000;
+    color: white;
     transition: 0.5s ease-in-out;
     font-weight: 500;
 }
@@ -216,7 +215,7 @@
     transform: translateY(-50%);
 }
 .postConfirm a:hover {
-    color: #FFF;
+    color: black;
 }
 a{
 	text-decoration: none;
