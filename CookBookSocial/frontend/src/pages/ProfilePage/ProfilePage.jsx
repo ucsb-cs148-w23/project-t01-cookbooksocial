@@ -47,7 +47,7 @@ function ProfilePage() {
     if (arrComponents.size === 0) {
       return (
         <h1 style={{ color: "blue", fontSize: "60px" }}>
-          palceholder to SHOW SAVED RECIPIES
+          You currently do not have posts
         </h1>
       );
     } else {

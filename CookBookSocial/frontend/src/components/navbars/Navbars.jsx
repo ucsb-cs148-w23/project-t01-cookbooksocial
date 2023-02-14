@@ -34,11 +34,13 @@ export default function Navbars() {
     // Navbar object wrapper as a whole
     <>
       {currentUser && (
-        <Navbar bg="dark" variant="dark" expand="lg">
+        <Navbar className={styles.navColor} expand="lg">
           <Container>
-            <Navbar.Brand href="/home">ServesUp</Navbar.Brand>
+            <Navbar.Brand href="/home">
+              <text className={styles.titlePage}> ServesUp</text>
+            </Navbar.Brand>
             <div className={styles.usernameText}>
-              Hello {username ? username : "No username"}
+              Hello! {username ? username : "No username"}
             </div>
             <img
               src={currentUser.photoURL}
@@ -49,10 +51,18 @@ export default function Navbars() {
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="me-auto">
                 {/* Setting links for navbar */}
-                <Nav.Link href="/home">Home</Nav.Link>
-                <Nav.Link href="/profile">Profile</Nav.Link>
-                <Nav.Link href="/edit-profile"> Edit Profile</Nav.Link>
-                <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+                <Nav.Link href="/home">
+                  <text className={styles.navLinks}>Home</text>
+                </Nav.Link>
+                <Nav.Link href="/profile">
+                  <text className={styles.navLinks}>Profile</text>
+                </Nav.Link>
+                <Nav.Link href="/edit-profile">
+                  <text className={styles.navLinks}>Edit Profile </text>
+                </Nav.Link>
+                <Nav.Link onClick={handleLogout}>
+                  <text className={styles.navLinks}>Logout </text>
+                </Nav.Link>
               </Nav>
             </Navbar.Collapse>
           </Container>
