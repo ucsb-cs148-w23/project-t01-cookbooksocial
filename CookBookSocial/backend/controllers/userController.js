@@ -5,6 +5,7 @@ const addUser = async (req, res, next) => {
     try {
         const uid = req.params.id;
         const data = req.body;
+        data["createdAt"] = serverTimestamp();
         await setDoc(doc(db, "users", uid), data);
         res.status(200).send(`User added with with uid: ${uid}`);
     } catch (e) {
