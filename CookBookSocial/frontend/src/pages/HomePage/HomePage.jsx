@@ -1,38 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import RecipePost from '../../components/recipe_posts/RecipePost';
+import React, { useEffect, useState } from "react";
+import RecipePost from "../../components/recipe_posts/RecipePost";
 import Navbars from "../../components/navbars/Navbars";
 import PostModal from "../../components/postModal/postModal";
 
-import {Button} from 'react-bootstrap';
-
-import Turkey from '../../images/turkey.jpg'
-import Potatoes from '../../images/potatoes.jpg'
-import { render } from 'react-dom';
-import './HomePage.css'
+import "./HomePage.css";
 /*
 What does calling useState do? It declares a “state variable”. Our variable is called response but we could call it anything else, like banana. This is a way to “preserve” some values between the function calls. Normally, variables “disappear” when the function exits but state variables are preserved by React.
 */
 
 function HomePage() {
-
   //state to hold an array of json objects of recipe posts (TWO FILLER POSTS FOR NOW AS EXAMPLES)
-  const [recipePostsList, updateRecipePostsList] = useState([{
-      id: 1,
-      username: "Will Mori",
-      title: "Turkey",
-      image: Turkey,
-      description: "FILLER DESCRIPTION FOR TESTING PURPOSES TURKEY DJLSDJF L:SDJF:SL DFJKSDL:K FJSDL:KFJS: LDKFJ S:LKDFJ: SLDKFJS LDKMJFK SLDF:JS DL:KFJ SDLFJ SDKL:F J:SDLKJF SD:KLFJ S:LDKFJ :SLKD FJS:DLFKJD SL:FKJSD LFKJ",
-      ingredients: ["Turkey Ingredient 1", "Turkey Ingredient 2", "Turkey Ingredient 3", "Turkey Ingredient 4"],
-      instructions: ["Turkey Instruction 1", "Turkey Instruction 2", "Turkey Instruction 3", "Turkey Instruction 4"]
-  }, {
-      id: 2,
-      username: "Bryan Zamora",
-      title: "Potatoes",
-      image: Potatoes,
-      description: "FILLER DESCRIPTION FOR TESTING PURPOSES POTATOES DJLSDJF L:SDJF:SL DFJKSDL:K FJSDL:KFJS: LDKFJ S:LKDFJ: SLDKFJS LDKMJFK SLDF:JS DL:KFJ SDLFJ SDKL:F J:SDLKJF SD:KLFJ S:LDKFJ :SLKD FJS:DLFKJD SL:FKJSD LFKJ",
-      ingredients: ["Potatoes Ingredient 1", "Potatoes Ingredient 2", "Potatoes Ingredient 3", "Potatoes Ingredient 4"],
-      instructions: ["Potatoes Instruction 1", "Potatoes Instruction 2", "Potatoes Instruction 3", "Potatoes Instruction 4"]
-  }])
+  const [recipePostsList, updateRecipePostsList] = useState([]);
 
   /*
   This will fetch the list of recipe posts stored in the database 
@@ -45,39 +23,41 @@ function HomePage() {
   const URL_GET_RECIPE_POSTS_DATA = "/api/recipe/all";
 
   useEffect(() => {
-      fetch(URL_GET_RECIPE_POSTS_DATA)
-          .then((response) => response.json())
-          .then((data) => updateRecipePostsList(data))
-  }, [])
-
+    fetch(URL_GET_RECIPE_POSTS_DATA)
+      .then((response) => response.json())
+      .then((data) => updateRecipePostsList(data));
+  }, []);
 
   function renderRecipePostComponents() {
-      const arrComponents = []
-      for (let i = 0; i < recipePostsList.length; i++) {
-          arrComponents.unshift(
-          <RecipePost username={recipePostsList[i].username}
-                      title={recipePostsList[i].title}
-                      image={recipePostsList[i].image}
-                      description={recipePostsList[i].description}
-                      ingredients={recipePostsList[i].ingredients}
-                      instructions={recipePostsList[i].instructions} />)
-      }
-      return arrComponents
+    const arrComponents = [];
+    for (let i = 0; i < recipePostsList.length; i++) {
+      arrComponents.unshift(
+        <RecipePost
+          key={i}
+          email={recipePostsList[i].email}
+          title={recipePostsList[i].title}
+          image={recipePostsList[i].image}
+          description={recipePostsList[i].description}
+          ingredients={recipePostsList[i].ingredients}
+          instructions={recipePostsList[i].instructions}
+        />
+      );
+    }
+    return arrComponents;
   }
 
   //To display the state variable in the html, use the {} curly brackets.  Simple!
   return (
     <div>
-        <Navbars />
-        <div className='home-page'> 
-            <PostModal></PostModal> 
-            <ul>
-                {renderRecipePostComponents()}
-            </ul>
+      <Navbars />
+      <div className="home-page">
+        <div className="newPostCont">
+          <PostModal></PostModal>
         </div>
+        <ul>{renderRecipePostComponents()}</ul>
+      </div>
     </div>
   );
 }
 
 export default HomePage;
-

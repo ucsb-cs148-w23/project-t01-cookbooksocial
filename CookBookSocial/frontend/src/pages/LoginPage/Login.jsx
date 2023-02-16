@@ -1,18 +1,15 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import { getAuth, signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
 import { useAuth } from "../../contexts/AuthContext";
 import styles from "./Login.module.css";
 
 export default function Login() {
   const navigate = useNavigate();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
   const { currentUser, login, setError, loginWithGoogle } = useAuth();
-
   useEffect(() => {
     if (currentUser) {
       console.log("User detected")
@@ -22,7 +19,6 @@ export default function Login() {
 
   async function handleFormSubmit(e) {
     e.preventDefault();
-
     try {
       setError("");
       setLoading(true);
@@ -33,6 +29,11 @@ export default function Login() {
     }
 
     setLoading(false);
+  }
+  const auth = getAuth();
+  const provider = new GoogleAuthProvider();
+  async function GoogleRedrct() {
+    signInWithRedirect(auth, provider);
   }
 
   return (
@@ -79,25 +80,25 @@ export default function Login() {
               Login
             </button>
           </div>
-
-          <div className={styles.inputFields}>
-            <button
-              onClick={loginWithGoogle}
-              disabled={loading}
-              className="py-2 px-4 border border-transparent "
-            >
-              Login With Google
-            </button>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="text-sm">
-              <Link to="/register" className="text-blue-600 ">
-                Don't have an account? Register
-              </Link>
-            </div>
-          </div>
         </form>
+
+        <div className={styles.inputFields}>
+          <button
+            onClick={GoogleRedrct}
+            disabled={loading}
+            className="py-2 px-4 border border-transparent "
+          >
+            Login With Google
+          </button>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="text-sm">
+            <Link to="/register" className="text-blue-600 ">
+              Don't have an account? Register
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -8,24 +8,34 @@
 	background-color:rgba(0,0,0,0.5);
   
 	display: flex;
-	align-items: center;
+	align-items: top;
 	justify-content: center;
   
 }
 #content{
 	z-index:2;
 	width: 90vw;
-	padding: 18px;	
-	background-color: rgb(251, 233, 207);
+    margin-top: 10vh;
+	padding: 40px 10px 40px 10px;	
+    background: rgb(251, 233, 207);
+    background: linear-gradient(137deg, rgba(251, 233, 207, 1) 15%, rgba(189, 228, 219, 1) 75%, rgba(0, 212, 255, 1) 100%);
 	overflow-y: scroll;
 	align-items: center;
 	border-radius: 4px;	
-	height: 85vh;
+	height:fit-content;
+    border-radius: 20px;
+    height: 85vh;
+
 }
 .putLeft{
 	display: flex;
 	justify-content: flex-start;
 }
+
+#postModal-img-input{
+    color:#ff6767;
+}
+
 .modalTitle{ 
 	color: #E83015; 
 	font-size: 20px; 
@@ -70,9 +80,10 @@
 	width: 10%;
 } 
 .flex_first-item:nth-child(2) {
-	display: inline-block;
-    background-color:  #0040ffe3; 
+	display: flex;
+    justify-content: center;
 	width: 50%;
+    margin-top: 64px;
 }
 .flex_first-item:nth-child(3) {
     background-color: #3f51b500; 
@@ -167,19 +178,20 @@
 
 
 
-.close {	
+.postModal-close {	
+    margin-top: 20px;
 	border: none;
 	outline: none;
 	position: absolute;
 	color: #fff;
 	background-color:#db5642;
-	padding: 5px 13px; 
+	padding: 8px 20px; 
 	border-radius: 10px;		
 	cursor:pointer;
 }
 
 .postConfirm a {
-    background: #ff6767;
+	background-color:#db5642;
     border-radius: 50px;
     position: relative;
     display: flex;
@@ -188,8 +200,8 @@
     margin: 0 auto;
     max-width: 260px;
     padding: 15px 0px 20px;
-    color: #000000;
-    transition: 0.3s ease-in-out;
+    color: white;
+    transition: 0.5s ease-in-out;
     font-weight: 500;
 }
 .postConfirm a:after {
@@ -203,9 +215,36 @@
     transform: translateY(-50%);
 }
 .postConfirm a:hover {
-    background: #fa2020;
-    color: #FFF;
+    color: black;
 }
 a{
 	text-decoration: none;
+}
+
+.prevImage {
+    width: 45%;
+    height: 45%;
+}
+
+.prevPicContainer {
+    margin-top: 5%;
+    max-width: 350px;
+    max-height: 350px;
+}
+
+.addIngButton{
+    margin-top: 4%;
+}
+
+.delIngButton {
+    margin-left: 10px;
+}
+
+.ingInput{
+    margin-top: 4%;
+}
+
+.titleContainers {
+    margin-top: 5%;
+    margin-bottom: 5%;
 }

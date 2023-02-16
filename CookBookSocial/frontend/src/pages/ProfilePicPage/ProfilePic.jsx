@@ -46,7 +46,7 @@ export default function ProfilePic() {
       setLoading(true);
       const user = currentUser;
       const profile = {
-        displayName: username,
+        displayName: username ? username : currentUser.displayName,
         photoURL: avatars[selectedAvatar],
       };
       await updateUserProfile(user, profile);

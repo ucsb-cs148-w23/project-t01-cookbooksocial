@@ -33,4 +33,18 @@ To download this app and to use it: navigate to the server folder and run 'npm i
 
 
 
+---
 
+# How to run this app
+
+## Steps
+
+1. Clone this Repo
+2. Make sure you have `npm` installed
+3. CD into the client folder, then type: `npm i` in terminal
+4. Open a new terminal and CD into server folder, then again use: `npm i`
+5. Again in the server terminal type: `npm i nodemon`
+6. Fill in the variable values in the .env file (you are provided a copy named as, ".env.COPY" )
+7. In the terminal with the frontend folder, type: `npm run build`
+8. Type, `npm start`
+9. in the terminal with the backend folder, type: `nodemon` 

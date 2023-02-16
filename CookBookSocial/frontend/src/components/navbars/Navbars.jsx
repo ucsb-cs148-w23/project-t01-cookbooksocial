@@ -2,15 +2,12 @@ import React, { useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
 import { useNavigate } from "react-router-dom";
-import auth from "../../config/firebase";
 
 import { useAuth } from "../../contexts/AuthContext";
 import styles from "./Navbars.module.css";
 
 export default function Navbars() {
-
   const { currentUser, setError, logout } = useAuth();
 
   const navigate = useNavigate();
@@ -37,12 +34,13 @@ export default function Navbars() {
     // Navbar object wrapper as a whole
     <>
       {currentUser && (
-        <Navbar bg="dark" variant="dark" expand="lg">
+        <Navbar className={styles.navColor} expand="lg">
           <Container>
-            <Navbar.Brand href="/home">CookBook Social</Navbar.Brand>
+            <Navbar.Brand href="/home">
+              <text className={styles.titlePage}> ServesUp</text>
+            </Navbar.Brand>
             <div className={styles.usernameText}>
-              {" "}
-              Hello {username ? username : "No username"}
+              Hello! {username ? username : "No username"}
             </div>
             <img
               src={currentUser.photoURL}
@@ -53,24 +51,18 @@ export default function Navbars() {
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="me-auto">
                 {/* Setting links for navbar */}
-                <Nav.Link href="/home">Home</Nav.Link>
-                <Nav.Link href="profile">Profile</Nav.Link>
-                <Navbar.Text onClick={handleLogout}>Logout</Navbar.Text>
-
-                {/* Dropdown customization */}
-                <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                  <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.2">
-                    Another action
-                  </NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.3">
-                    Something
-                  </NavDropdown.Item>
-                  <NavDropdown.Divider />
-                  <NavDropdown.Item href="#action/3.4">
-                    Separated link
-                  </NavDropdown.Item>
-                </NavDropdown>
+                <Nav.Link href="/home">
+                  <text className={styles.navLinks}>Home</text>
+                </Nav.Link>
+                <Nav.Link href="/profile">
+                  <text className={styles.navLinks}>Profile</text>
+                </Nav.Link>
+                <Nav.Link href="/edit-profile">
+                  <text className={styles.navLinks}>Edit Profile </text>
+                </Nav.Link>
+                <Nav.Link onClick={handleLogout}>
+                  <text className={styles.navLinks}>Logout </text>
+                </Nav.Link>
               </Nav>
             </Navbar.Collapse>
           </Container>
