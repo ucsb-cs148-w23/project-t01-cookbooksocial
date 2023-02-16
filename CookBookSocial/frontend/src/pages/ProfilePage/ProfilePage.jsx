@@ -30,7 +30,7 @@ function ProfilePage() {
   function renderProfileRecipePostComponents() {
     const arrComponents = [];
     for (let i = 0; i < profileRecipePostsList.length; i++) {
-      if (profileRecipePostsList[i].email === currentUser.email) {
+      if (profileRecipePostsList[i].uid === currentUser.uid) {
         arrComponents.unshift(
           <RecipePost
             key={i}
@@ -38,6 +38,7 @@ function ProfilePage() {
             title={profileRecipePostsList[i].title}
             image={profileRecipePostsList[i].image}
             description={profileRecipePostsList[i].description}
+            uid={profileRecipePostsList[i].uid}
             ingredients={profileRecipePostsList[i].ingredients}
             instructions={profileRecipePostsList[i].instructions}
           />
