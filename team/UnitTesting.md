@@ -9,7 +9,7 @@ Jest
 ---
 ## Why?
 
-We decided to use Jest because it is a library that works quite well with the react environment. This is due to React comes already with Jest pretty must setup for you to use. Many of the functions work well with the react ecosystem. For example, you can easily check things whithin components. Or you can provide each component some sort of testing ID.
+We decided to use Jest because it is a library that works quite well with the React environment. This is because React already comes with Jest pretty must set-up for you to use. Many of the functions work well with the react ecosystem. For example, you can quickly check things within components. Or you can provide each component with some sort of testing ID.
 
 ---
 ### Example:
