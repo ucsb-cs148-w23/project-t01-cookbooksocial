@@ -11,6 +11,7 @@ import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 import ProfilePic from "./pages/ProfilePicPage/ProfilePic";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import WithPrivateRoute from "./utils/WithPrivateRoute";
+import SavedPage from "./pages/SavedPage/SavedPage";
 
 function App() {
   return (
@@ -50,6 +51,15 @@ function App() {
               </WithPrivateRoute>
             }
           />
+          <Route
+            exact path ="/saved-post"
+            element={
+              <WithPrivateRoute>
+                <SavedPage/>
+              </WithPrivateRoute>
+            }
+          />
+          
 
           {/* This route is a "wilcard", if someone tries to access a non defined route, they will be redirected to home route */}
           <Route path="*" element={<Navigate to="/home" replace />} />

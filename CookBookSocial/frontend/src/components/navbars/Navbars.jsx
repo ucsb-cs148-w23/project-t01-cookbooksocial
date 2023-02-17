@@ -60,6 +60,9 @@ export default function Navbars() {
                 <Nav.Link href="/edit-profile">
                   <text className={styles.navLinks}>Edit Profile </text>
                 </Nav.Link>
+                <Nav.Link href="/saved-post">
+                  <text className={styles.navLinks}>Saved Posts</text>
+                </Nav.Link>
                 <Nav.Link onClick={handleLogout}>
                   <text className={styles.navLinks}>Logout </text>
                 </Nav.Link>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import RecipePost from "../../components/recipe_posts/RecipePost";
 import Navbars from "../../components/navbars/Navbars";
 import PostModal from "../../components/postModal/postModal";
+import HomePageContent from "../../components/HomePageContent/HomePageContent";
 
 import "./HomePage.css";
 /*
@@ -54,7 +55,8 @@ function HomePage() {
         <div className="newPostCont">
           <PostModal></PostModal>
         </div>
-        <ul>{renderRecipePostComponents()}</ul>
+        <HomePageContent></HomePageContent>
+        {/* <ul>{renderRecipePostComponents()}</ul> */}
       </div>
     </div>
   );
