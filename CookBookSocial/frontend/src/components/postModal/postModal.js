@@ -1,6 +1,5 @@
 import "./postModalStyles.css";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { storage, db } from "../../config/firebase";
 
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
