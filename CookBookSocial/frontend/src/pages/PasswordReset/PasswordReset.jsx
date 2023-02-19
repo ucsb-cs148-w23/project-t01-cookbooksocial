@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
-import "./PasswordReset.module.css";
+import styles from "./PasswordReset.module.css";
 
 const auth = getAuth();
 
@@ -32,12 +32,11 @@ function PasswordReset() {
   };
 
   return (
-    <div className="container">
-      <div className="form-box">
+    <div className={styles.container}>
+      <div className={styles["form-box"]}>
         <h1>Password Reset</h1>
         <form onSubmit={handleSubmit}>
           <label>
-            
             <input
               type="email"
               placeholder="Email Address"
@@ -51,14 +50,14 @@ function PasswordReset() {
           <button type="submit">Submit</button>
         </form>
         {showBanner && (
-          <div className="banner">
+          <div className={styles.banner}>
             <p>
               Password reset email sent. Redirecting to login page.
             </p>
           </div>
         )}
         {showError && (
-          <div className="error">
+          <div className={styles.error}>
             <p>Email not found. Please check your email address and try again.</p>
           </div>
         )}
