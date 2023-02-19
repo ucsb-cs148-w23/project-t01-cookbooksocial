@@ -13,50 +13,51 @@ import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import WithPrivateRoute from "./utils/WithPrivateRoute";
 
 function App() {
-  return (
-    <AuthProvider>
-      <div className="App">
-        <ErrorMessage />
-        <Routes>
-          <Route exact path="/login" element={<Login />} />
+    return (
+        <AuthProvider>
+            <div className="App font-sans">
+                <ErrorMessage />
+                <Routes>
+                    <Route exact path="/login" element={<Login />} />
 
-          <Route
-            exact
-            path="/home"
-            element={
-              <WithPrivateRoute>
-                <HomePage />
-              </WithPrivateRoute>
-            }
-          />
+                    <Route
+                        exact
+                        path="/home"
+                        element={
+                            <WithPrivateRoute>
+                                <HomePage />
+                            </WithPrivateRoute>
+                        }
+                    />
 
-          <Route exact path="/register" element={<Signup />} />
+                    <Route exact path="/register" element={<Signup />} />
 
-          <Route
-            exact
-            path="/profile"
-            element={
-              // This adds private routing
-              <WithPrivateRoute>
-                <ProfilePage/>
-              </WithPrivateRoute>
-            }
-          />
-          <Route
-            exact path ="/edit-profile"
-            element={
-              <WithPrivateRoute>
-                <ProfilePic/>
-              </WithPrivateRoute>
-            }
-          />
+                    <Route
+                        exact
+                        path="/profile"
+                        element={
+                            // This adds private routing
+                            <WithPrivateRoute>
+                                <ProfilePage />
+                            </WithPrivateRoute>
+                        }
+                    />
+                    <Route
+                        exact
+                        path="/edit-profile"
+                        element={
+                            <WithPrivateRoute>
+                                <ProfilePic />
+                            </WithPrivateRoute>
+                        }
+                    />
 
-          {/* This route is a "wilcard", if someone tries to access a non defined route, they will be redirected to home route */}
-          <Route path="*" element={<Navigate to="/home" replace />} />
-        </Routes>
-      </div>
-    </AuthProvider>
-  );
+                    {/* This route is a "wilcard", if someone tries to access a non defined route, they will be redirected to home route */}
+                    <Route path="*" element={<Navigate to="/home" replace />} />
+                </Routes>
+            </div>
+        </AuthProvider>
+    );
 }
 
 export default App;

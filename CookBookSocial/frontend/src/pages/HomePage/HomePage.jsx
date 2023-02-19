@@ -14,10 +14,10 @@ What does calling useState do? It declares a “state variable”. Our variable 
 */
 
 function HomePage() {
-  //state to hold an array of json objects of recipe posts (TWO FILLER POSTS FOR NOW AS EXAMPLES)
-  const [recipePostsList, updateRecipePostsList] = useState([]);
+    //state to hold an array of json objects of recipe posts (TWO FILLER POSTS FOR NOW AS EXAMPLES)
+    const [recipePostsList, updateRecipePostsList] = useState([]);
 
-  /*
+    /*
   This will fetch the list of recipe posts stored in the database 
   as an array of json objects. It will then save it in the state variable recipePostsList.
   It will refresh and check for new posts everytime the page refreshes.
@@ -25,43 +25,32 @@ function HomePage() {
   the backend.
   */
 
-  const URL_GET_RECIPE_POSTS_DATA = "/api/recipe/all";
+    const URL_GET_RECIPE_POSTS_DATA = "/api/recipe/all";
 
-  useEffect(() => {
-    fetch(URL_GET_RECIPE_POSTS_DATA)
-      .then((response) => response.json())
-      .then((data) => updateRecipePostsList(data));
-  }, []);
+    useEffect(() => {
+        fetch(URL_GET_RECIPE_POSTS_DATA)
+            .then((response) => response.json())
+            .then((data) => updateRecipePostsList(data));
+    }, []);
 
-  function renderRecipePostComponents() {
-    const arrComponents = [];
-    for (let i = 0; i < recipePostsList.length; i++) {
-      arrComponents.unshift(
-        <RecipePost
-          key={i}
-          email={recipePostsList[i].email}
-          title={recipePostsList[i].title}
-          image={recipePostsList[i].image}
-          description={recipePostsList[i].description}
-          uid={recipePostsList[i].uid}
-          ingredients={recipePostsList[i].ingredients}
-          instructions={recipePostsList[i].instructions}
-        />
-      );
+    function renderRecipePostComponents() {
+        const arrComponents = [];
+        for (let i = 0; i < recipePostsList.length; i++) {
+            arrComponents.unshift(<RecipePost key={i} recipe={recipePostsList[i]} />);
+        }
+        return arrComponents;
     }
-    return arrComponents;
-  }
 
-  //To display the state variable in the html, use the {} curly brackets.  Simple!
-  return (
-    <div>
-      <Navbars />
-      <div className="home-page">
-        <PostModal></PostModal>
-        <ul>{renderRecipePostComponents()}</ul>
-      </div>
-    </div>
-  );
+    //To display the state variable in the html, use the {} curly brackets.  Simple!
+    return (
+        <div>
+            <Navbars />
+            <div className="max-w-2xl mx-auto my-2">
+                <PostModal></PostModal>
+                <ul>{renderRecipePostComponents()}</ul>
+            </div>
+        </div>
+    );
 }
 
 export default HomePage;
