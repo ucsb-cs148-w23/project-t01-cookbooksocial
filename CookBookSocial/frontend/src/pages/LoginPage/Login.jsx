@@ -42,24 +42,26 @@ export default function Login() {
         <form onSubmit={handleFormSubmit}>
           <div>
             <div className={styles.inputFields}>
-              <label htmlFor="email-address">Email address</label>
+              <label htmlFor="email-address"> </label>
               <input
                 id="email-address"
                 name="email"
                 type="email"
                 autoComplete="email"
+                placeholder="Email Address"
                 required
                 className={styles.input}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 
-            <div className={styles["Login-input"]}>
-              <label htmlFor="password">Password</label>
+            <div className={styles.inputFields}>
+              <label htmlFor="password"></label>
               <input
                 id="password"
                 name="password"
                 type="password"
+                placeholder="password"
                 autoComplete="current-password"
                 required
                 className={styles.input}
@@ -68,11 +70,11 @@ export default function Login() {
             </div>
           </div>
 
-          <div className={styles["Login-input"]}>
+          <div className={styles.inputFields}>
             <button
               type="submit"
               disabled={loading}
-              className={styles["Login-button"]}
+              className={styles.button}
             >
               Login
             </button>
