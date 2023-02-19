@@ -33,6 +33,10 @@ export default function Login() {
 
   const GoogleRedirect = () => signInWithRedirect(auth, provider);
 
+  const handleForgotPasswordClick = () => {
+    navigate("/password-reset");
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.rectangle}>
@@ -91,12 +95,20 @@ export default function Login() {
             <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google logo" className={styles.googleIcon} />
           </button>
         </div>
+        <div className="flex items-center justify-between"></div>
+        <div className="text-sm">
+            <Link to="/password-reset" className="text-blue-600">
+              Forgot Password?
+            </Link>
+          </div>
+          
         <div className="flex items-center justify-between">
           <div className="text-sm">
             <Link to="/register" className="text-blue-600">
               Don't have an account? Register
             </Link>
           </div>
+
         </div>
       </div>
     </div>

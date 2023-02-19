@@ -11,6 +11,7 @@ import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 import ProfilePic from "./pages/ProfilePicPage/ProfilePic";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import WithPrivateRoute from "./utils/WithPrivateRoute";
+import PasswordReset from "./pages/PasswordReset/PasswordReset";
 
 function App() {
   return (
@@ -31,7 +32,7 @@ function App() {
           />
 
           <Route exact path="/register" element={<Signup />} />
-
+          <Route exact path="/password-reset" element={<PasswordReset />} />
           <Route
             exact
             path="/profile"
