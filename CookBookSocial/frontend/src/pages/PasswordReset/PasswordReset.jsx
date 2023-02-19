@@ -37,9 +37,10 @@ function PasswordReset() {
         <h1>Password Reset</h1>
         <form onSubmit={handleSubmit}>
           <label>
-            Email:
+            
             <input
               type="email"
+              placeholder="Email Address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               onInput={() => setShowError(false)}
