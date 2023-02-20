@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import cors from "cors";
 import dotenv from "dotenv";
 import recipeRouter from "./routes/recipe.js";
+import userRouter from "./routes/user.js";
 import bodyParser from "body-parser";
 
 const app = express();
@@ -49,6 +50,7 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 app.use("/api/recipe", recipeRouter);
+app.use("/api/user", userRouter);
 
 app.listen(port, () => {
     console.log(`Example Express app listening at http://localhost:${port}`);

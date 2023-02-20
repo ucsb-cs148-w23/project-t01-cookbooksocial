@@ -1,6 +1,7 @@
 // newTea function for post tea route
 import db from "../firebase.js";
 import {
+  query,
   doc,
   getDoc,
   getDocs,
@@ -9,6 +10,7 @@ import {
   deleteDoc,
   collection,
   serverTimestamp,
+  orderBy
 } from "firebase/firestore";
 
 import { getStorage } from "firebase/storage";
@@ -98,10 +100,10 @@ const getRecipe = async (req, res, next) => {
 
 const getAllRecipes = async (req, res, next) => {
   try {
-    const querySnapshot = await getDocs(collection(db, "recipes"));
+    const querySnapshot = await getDocs(query(collection(db, "recipes"),orderBy("createdAt")));
     const recipes = [];
     querySnapshot.forEach((doc) => {
-      recipes.push(doc.data());
+    recipes.push(doc.data());
     });
     res.status(200).send(recipes);
   } catch (e) {

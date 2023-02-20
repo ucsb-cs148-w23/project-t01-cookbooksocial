@@ -12,11 +12,6 @@ export default function Navbars() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!currentUser) {
-      navigate("/login");
-    }
-  }, [currentUser, navigate]);
 
   const username = currentUser.displayName;
 

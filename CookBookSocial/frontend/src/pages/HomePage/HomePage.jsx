@@ -4,6 +4,11 @@ import Navbars from "../../components/navbars/Navbars";
 import PostModal from "../../components/postModal/postModal";
 import HomePageContent from "../../components/HomePageContent/HomePageContent";
 
+import { Button } from "react-bootstrap";
+
+import Turkey from "../../images/turkey.jpg";
+import Potatoes from "../../images/potatoes.jpg";
+import { render } from "react-dom";
 import "./HomePage.css";
 /*
 What does calling useState do? It declares a “state variable”. Our variable is called response but we could call it anything else, like banana. This is a way to “preserve” some values between the function calls. Normally, variables “disappear” when the function exits but state variables are preserved by React.
@@ -39,6 +44,7 @@ function HomePage() {
           title={recipePostsList[i].title}
           image={recipePostsList[i].image}
           description={recipePostsList[i].description}
+          uid={recipePostsList[i].uid}
           ingredients={recipePostsList[i].ingredients}
           instructions={recipePostsList[i].instructions}
         />

@@ -1,6 +1,5 @@
 import "./postModalStyles.css";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { storage, db } from "../../config/firebase";
 
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
@@ -141,7 +140,12 @@ export function Modal({ show, setShow }) {
   const [errorOutput, setErrorOutput] = useState("");
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
+
+  //FIXME not using email, remove?
   const [email, setMail] = useState("");
+
+  const [uid, setUID] = useState("")
+
   const [ingreList, setIngreList] = useState([]);
   const [stepList, setStepList] = useState([]);
   const [image, setImage] = useState([]);
@@ -157,6 +161,7 @@ export function Modal({ show, setShow }) {
     title: "",
     description: "",
     email: currentUser.email,
+    uid: currentUser.uid,
     ingredients: [],
     instructions: [],
   });
@@ -167,10 +172,11 @@ export function Modal({ show, setShow }) {
       title: title,
       description: desc,
       email: currentUser.email,
+      uid: currentUser.uid,
       ingredients: ingreList,
       instructions: stepList,
     });
-  }, [title, desc, email, ingreList, stepList]);
+  }, [title, desc, email, uid, ingreList, stepList]);
 
   function validateTitle() {
     if (fullRecipeInfo.title.trim() == "") {
@@ -194,6 +200,15 @@ export function Modal({ show, setShow }) {
     if (fullRecipeInfo.email.trim() == "") {
       setIsError(true);
       setErrorOutput(errorOutput + "Invalid Email! ");
+      return false;
+    }
+    return true;
+  }
+
+  function validateUID() {
+    if (fullRecipeInfo.uid.trim() == "") {
+      setIsError(true);
+      setErrorOutput(errorOutput + "Invalid User ID! ");
       return false;
     }
     return true;
@@ -239,6 +254,7 @@ export function Modal({ show, setShow }) {
     setImage([]);
     setTitle("");
     setDesc("");
+    setUID("");
     setIngreList([]);
     setStepList([]);
     setStepText("");
@@ -254,6 +270,7 @@ export function Modal({ show, setShow }) {
     if (
       !validateTitle() ||
       !validateDescription() ||
+      !validateUID() ||
       !validateIngredients() ||
       !validateFile()
     ) {
