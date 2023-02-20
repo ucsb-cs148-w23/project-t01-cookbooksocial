@@ -36,6 +36,9 @@ export default function Signup() {
       if (errorMessage === "auth/weak-password") {
         setError("The password is too weak.");
       }
+      else if (errorMessage === "auth/email-already-in-use") {
+        setError("You already are registered with this email. Please sign in.");
+      }
       else {
         console.log("This happened")
         setError(errorMessage); // Replace the alert with this
@@ -47,10 +50,10 @@ export default function Signup() {
   }
 
   return (
-    <div>
-      <div>
+    <div className={styles.container}>
+      <div className={styles.rectangle}>
         <div className={styles.topText}>
-          <h2>Register your account</h2>
+          <h2>Create Account </h2>
         </div>
         <form onSubmit={handleFormSubmit}>
           <div>
