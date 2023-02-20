@@ -5,7 +5,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import styles from "./Login.module.css";
 
 export default function Login() {
-  const { currentUser, login, setError, loginWithGoogle } = useAuth();
+  const { currentUser, login, setError } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,10 +32,6 @@ export default function Login() {
   };
 
   const GoogleRedirect = () => signInWithRedirect(auth, provider);
-
-  const handleForgotPasswordClick = () => {
-    navigate("/password-reset");
-  };
 
   return (
     <div className={styles.container}>

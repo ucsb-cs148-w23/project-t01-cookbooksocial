@@ -7,10 +7,10 @@ const auth = getAuth();
 function PasswordReset() {
   const [email, setEmail] = useState("");
   const [showBanner, setShowBanner] = useState(false);
-  const [countdown, setCountdown] = useState(5);
+  const [ setCountdown] = useState(5);
   const [showError, setShowError] = useState(false);
   const [showButton, setShowButton] = useState(true);
-  const [hasStartedTyping, setHasStartedTyping] = useState(false);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,7 +37,7 @@ function PasswordReset() {
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
-    setHasStartedTyping(true);
+  
     setShowError(false);
     setShowButton(true);
   };
