@@ -46,38 +46,38 @@ const ShowAllRecipeConent = () =>{
 }
 
 
-const ShowLikedRecipeConent = () =>{
-  const [likedRecipePostsList, updateLikedRecipePostsList] = useState([]);
+const ShowFriendsRecipeConent = () =>{
+  const [friendsRecipePostsList, updateFriendsRecipePostsList] = useState([]);
 
   /*
-  This will fetch the list of liked recipe posts stored in the database 
+  This will fetch the list of friends recipe posts stored in the database 
   as an array of json objects. It will then save it in the state variable AllrecipePostsList.
   It will refresh and check for new posts everytime the page refreshes.
   "URL_GET_RECIPE_POSTS_DATA" will be replaced by the actual api endpoint for GET once it is created by
   the backend.
   */
   
-  //change api to liked (fix here)
+  //change api to friends (fix here)
   const URL_GET_LIKED_RECIPE_POSTS_DATA = "/api/recipe/all";
   
     useEffect(() => {
       fetch(URL_GET_LIKED_RECIPE_POSTS_DATA)
         .then((response) => response.json())
-        .then((data) => updateLikedRecipePostsList(data));
+        .then((data) => updateFriendsRecipePostsList(data));
     }, []);
 
 
   const arrComponents = [];
-  for (let i = 0; i < likedRecipePostsList.length; i++) {
+  for (let i = 0; i < friendsRecipePostsList.length; i++) {
     arrComponents.unshift(
       <RecipePost
         key={i}
-        email={likedRecipePostsList[i].email}
-        title={likedRecipePostsList[i].title}
-        image={likedRecipePostsList[i].image}
-        description={likedRecipePostsList[i].description}
-        ingredients={likedRecipePostsList[i].ingredients}
-        instructions={likedRecipePostsList[i].instructions}
+        email={friendsRecipePostsList[i].email}
+        title={friendsRecipePostsList[i].title}
+        image={friendsRecipePostsList[i].image}
+        description={friendsRecipePostsList[i].description}
+        ingredients={friendsRecipePostsList[i].ingredients}
+        instructions={friendsRecipePostsList[i].instructions}
       />
     );
   }
@@ -100,7 +100,7 @@ export default function HomePageContent () {
     <Tabs customStyle={customStyle}>
       <TabList>
         <Tab>ALL</Tab>
-        <Tab>LIKED</Tab>
+        <Tab>FRIENDS</Tab>
       </TabList>
       <PanelList>
         <Panel>
@@ -108,8 +108,8 @@ export default function HomePageContent () {
           <ShowAllRecipeConent/>
         </Panel>
         <Panel>
-          show liked post
-          <ShowLikedRecipeConent/>
+          show friends post
+          <ShowFriendsRecipeConent/>
         </Panel>
       </PanelList>
     </Tabs>
