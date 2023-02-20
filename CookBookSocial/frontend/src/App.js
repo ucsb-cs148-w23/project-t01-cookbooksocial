@@ -6,6 +6,7 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import HomePage from "./pages/HomePage/HomePage";
 import Signup from "./pages/SignupPage/Signup";
 import Login from "./pages/LoginPage/Login";
+import EditPost from "./pages/EditPostPage/EditPost";
 import { AuthProvider } from "./contexts/AuthContext";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 import ProfilePic from "./pages/ProfilePicPage/ProfilePic";
@@ -48,6 +49,13 @@ function App() {
               <WithPrivateRoute>
                 <ProfilePic/>
               </WithPrivateRoute>
+            }
+          />
+
+          <Route
+            exact path="/edit-recipe/:id"
+            element = {
+              <EditPost/>
             }
           />
 

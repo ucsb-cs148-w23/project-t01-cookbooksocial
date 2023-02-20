@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-
+import { useAuth } from "../../contexts/AuthContext";
 import './RecipePost.css'
-
+import PutModal from "../putModal/putModal.js";
+import { useNavigate } from "react-router-dom";
+import Button from 'react-bootstrap/Button'
 import { renderIngredients } from './functions/RecipePostFunctions';
 
 /*
@@ -12,7 +14,7 @@ What does calling useState do? It declares a “state variable”. Our variable 
 function RecipePost(props) {
 
     const [showFullRecipe, toggleShowFullRecipe] = useState(false)
-
+    const { currentUser } = useAuth();
     function toggleShowFull() {
         toggleShowFullRecipe(!showFullRecipe)
     }
@@ -33,11 +35,23 @@ function RecipePost(props) {
         return arrComponents
     }
 
+    let navigate = useNavigate();
+    const editRedirect = (id) => {
+        let path = `/edit-recipe/${id}`
+        navigate(path)
+    }
     //To display the state variable in the html, use the {} curly brackets.  Simple!
     return (
     <div className="post" onClick={toggleShowFull}> 
+
         <header className='header'>
+
+            <div className='postTop'>
             <h2>{props.email}</h2>
+                {currentUser.uid === props.uid && (
+                        <Button variant='warning' className='recipePostEditBtn' onClick={ () => {editRedirect(props.id)}}>Edit</Button>
+                )}
+            </div>
             <h2>{props.title}</h2>
         </header>
         <div>

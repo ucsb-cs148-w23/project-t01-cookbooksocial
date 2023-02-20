@@ -33,6 +33,7 @@ function HomePage() {
       .then((data) => updateRecipePostsList(data));
   }, []);
 
+
   function renderRecipePostComponents() {
     const arrComponents = [];
     for (let i = 0; i < recipePostsList.length; i++) {
