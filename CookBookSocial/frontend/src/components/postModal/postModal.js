@@ -1,13 +1,11 @@
 import "./postModalStyles.css";
 import React, { useState, useEffect } from "react";
-import { storage, db } from "../../config/firebase";
-
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import fireBaseUpload from "../Api";
 
 
 import { useAuth } from "../../contexts/AuthContext";
 
-import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+
 //add Recipe modal button by adding <PostButton/>
 
 //recipe ingredients
@@ -154,8 +152,7 @@ export function Modal({ show, setShow }) {
 
   const { currentUser } = useAuth();
 
-  const [imgUrl, setImgUrl] = useState(null);
-  const [progresspercent, setProgresspercent] = useState(0);
+
 
   const [fullRecipeInfo, updateFullRecipeInfo] = useState({
     title: "",
@@ -232,17 +229,6 @@ export function Modal({ show, setShow }) {
     return true;
   }
 
-  async function getiD(stringURL) {
-    const postInfo = fullRecipeInfo;
-    postInfo["createdAt"] = serverTimestamp();
-    postInfo["image"] = stringURL;
-
-    const res = await addDoc(collection(db, "recipes"), postInfo);
-
-    // console.log("INSIDE OF GET ID FUNTION");
-
-    return res;
-  }
 
   function handleImage(pic) {
     setImage(pic);
@@ -283,36 +269,7 @@ export function Modal({ show, setShow }) {
     // Here we are uploading the image first, that way we can make sure the uploaded image is correct
     console.log("RECIPE INFO: ", fullRecipeInfo);
 
-    const storageRef = ref(storage, `images/${image.name}`);
-
-    const uploadTask = uploadBytesResumable(storageRef, image);
-
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress = Math.round(
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-        );
-        setProgresspercent(progress);
-      },
-      (error) => {
-        console.log("ERROR IN UPLOAD TASK");
-        alert(error);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setImgUrl(downloadURL);
-          let response = getiD(downloadURL);
-
-          // console.log("This is the response: ", response);
-          response.then(() => {
-            console.log("Upload Completed:\n");
-          });
-        });
-      }
-    );
-
-    uploadTask.then(() => {
+    fireBaseUpload(image,fullRecipeInfo).then(() => {
       setImage([]);
       setTitle("");
       setDesc("");
