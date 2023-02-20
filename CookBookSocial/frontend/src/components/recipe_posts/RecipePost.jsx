@@ -30,16 +30,36 @@ function RecipePost({ recipe }) {
         return arrComponents;
     }
 
+    function timeStamptoDate(createdAt) {
+        const date = new Date(createdAt.seconds * 1000 + createdAt.nanoseconds / 1000000);
+        const options = { year: "numeric", month: "long", day: "numeric" };
+        return date.toLocaleDateString("en-US", options);
+    }
+
+    function displayName(recipe) {
+        if (recipe.user && recipe.user.name) {
+            return recipe.user.name;
+        } else if (recipe.user && recipe.user.email) {
+            return recipe.user.email;
+        } else if (recipe.uid) {
+            return `UID ${recipe.uid}`;
+        } else {
+            return "No author found! FIX THIS";
+        }
+    }
+
     //To display the state variable in the html, use the {} curly brackets.  Simple!
     return (
         <div
-            className="bg-white overflow-hidden pb-10 mb-10 border-b border-neutral-300"
+            className="bg-white overflow-hidden pb-10 mb-10 border-b border-neutral-300 text-left"
             onClick={toggleShowFull}
         >
             <header className="header">
                 <h2 className="font-extrabold text-left text-3xl">{recipe.title}</h2>
             </header>
-            <p className="text-left">{recipe.description}</p>
+            <p>By {displayName(recipe)}</p>
+            <p>{timeStamptoDate(recipe.createdAt)}</p>
+            <p>{recipe.description}</p>
             <div className="relative pb-2/3">
                 <img
                     className="h-full w-full object-cover aspect-[3/2]"
