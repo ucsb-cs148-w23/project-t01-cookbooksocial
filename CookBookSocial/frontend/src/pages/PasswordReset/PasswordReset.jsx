@@ -69,9 +69,13 @@ function PasswordReset() {
             <p>{showError}</p>
           </div>
         )}
+        <div className={styles["back-to-login"]}>
+          <a href="/login">Back to Login</a>
+        </div>
       </div>
     </div>
   );
+  
 }
 
 export default PasswordReset;
