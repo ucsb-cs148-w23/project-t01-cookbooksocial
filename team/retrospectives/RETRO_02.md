@@ -1,29 +1,37 @@
-# Retrospective your-nr-goes-here, date-goes-here 
+# Retro 2
+Date of Retrospective: 02/17/23
 
-* Led by: Gita
-* Present: Nick, Terry, Jacob, Gita, Daoyi, Will, Bryan
+* Led by: Gita Supramaniam
+* Present: Nicolas, Terry, Jacob, Daoyi, Will, Bryan
 * Absent: N/A
 
 ## Action item
 
-* a goal: refactor code to have functions in other files (vs all in one file)
-* 
-* think about features for final product 
-*(friends + messaging (API Bryan will look into)
-- likes/saving (tabs/groups by category), similar to homepage
-- rateyourmusic.com: make lists and share
-- load certain amount of posts at a time (like infinite scrolling)
-- commenting good for social aspect
-- reset password/profile improvements
+Start/Goal:
+- Refactor code to have functions in other files (vs all in one file)
+- Think about features for final product
+  - friends + messaging
+  - likes/saving (tabs/groups by category), similar to homepage
+  - make lists and share (similar to Pinterest or rateyourmusic.com)
+  - load certain amount of posts at a time (like infinite scrolling)
+  - commenting on posts for social aspect
+  - reset password/profile improvements
+- Open issues for bugs + fix
 
-- open to pair programming
-- feeling lost or come up with more ideas
+Stop/Change:
+- getting stuck on one particular issue, we can try to communicate when stuck or try pair programming (also good for coming up with more ideas!)
 
-- opening issues for bugs
+Continue:
+- Good communication (Slack and otherwise), posting consistent updates and feedback
+- Adding issues to the kanban board as we come up with them
+- Making consistent progress on issues (got a lot done for MVP)
 
-* a change: identify one thing that the team will change about how it works together
-* a measurement: identify at least one way to measure whether the change helped the team acheive the goal, or move closer to it.
+Measurement of Change:
+- Consistently having all team members making progress on issues in kanban board
+- Communication in Slack about difficulties with issues as they arise
 
-## Optional
+## Retro Assessment
 
-* Record anything else you think the team might want to remember from this retro
+* Retro Process Used: Start/Stop/Continue via a Google Jamboard because it is simple to understand and encourages participation with guided topics.
+* Brief Assessment of Retro: I think it went well because there was a lot of discussion across different topics (team goals, team collaboration) and everyone got to contribute. There were also action items that arose from discussion.
+* Advice For Next Retro: Balance suggesting directions for discussion with allowing pauses for participants to do the same.
