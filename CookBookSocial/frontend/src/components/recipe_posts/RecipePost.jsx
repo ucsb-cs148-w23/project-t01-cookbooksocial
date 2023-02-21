@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 import { renderIngredients } from "./functions/RecipePostFunctions";
 
@@ -47,6 +48,10 @@ function RecipePost({ recipe }) {
         }
     }
 
+    function displayRecipeTitle(recipe) {
+        return recipe.title
+    }
+
     //To display the state variable in the html, use the {} curly brackets.  Simple!
     return (
         <div
@@ -54,9 +59,9 @@ function RecipePost({ recipe }) {
             onClick={toggleShowFull}
         >
             <header className="header">
-                <h2 className="font-extrabold text-left text-3xl">{recipe.title}</h2>
+                {/* <h2 className="font-extrabold text-left text-3xl">{displayRecipeTitle(recipe)}</h2> */}
             </header>
-            <p>By {displayName(recipe)}</p>
+            <p><Link to={`/profile/${recipe.uid}`}>By: {displayName(recipe)}</Link></p>
             <p>{timeStamptoDate(recipe.createdAt)}</p>
             <p>{recipe.description}</p>
             <div className="pb-2/3">
