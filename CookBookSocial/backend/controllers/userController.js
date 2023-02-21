@@ -1,4 +1,4 @@
-import db from "../firebase.js";
+import { db } from "../firebase.js";
 import { setDoc, doc, collection, serverTimestamp } from "firebase/firestore";
 
 const addUser = async (req, res, next) => {

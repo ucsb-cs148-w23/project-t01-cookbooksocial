@@ -14,6 +14,7 @@ import WithPrivateRoute from "./utils/WithPrivateRoute";
 import PasswordReset from "./pages/PasswordReset/PasswordReset";
 
 function App() {
+
   return (
     <AuthProvider>
       <div className="App">
