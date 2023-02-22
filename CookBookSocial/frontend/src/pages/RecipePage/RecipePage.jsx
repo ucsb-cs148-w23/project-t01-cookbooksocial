@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { collection, doc, getDoc, getFirestore } from 'firebase/firestore';
 import styles from './RecipePage.module.css';
+import Navbars from "../../components/navbars/Navbars";
 
 function RecipePage() {
   const { id } = useParams();
@@ -10,7 +11,6 @@ function RecipePage() {
   useEffect(() => {
     const db = getFirestore();
     const recipeRef = doc(collection(db, 'recipes'), id);
-
     getDoc(recipeRef)
       .then(doc => {
         if (doc.exists()) {
@@ -30,7 +30,7 @@ function RecipePage() {
     
     const banner = document.createElement('div');
     banner.innerText = 'Link copied to clipboard!';
-    banner.className = styles.fancyBanner;
+    banner.className = styles.copyBanner;
     document.body.appendChild(banner);
     setTimeout(() => {
       banner.style.opacity = '0';
@@ -47,6 +47,8 @@ function RecipePage() {
   }
 
   return (
+    <div>
+    <Navbars />
     <div className={styles.recipePage}>
       <h1 className={styles.recipeTitle}>{recipe.title}</h1>
       <div className={styles.recipeImageWrapper}>
@@ -84,6 +86,7 @@ function RecipePage() {
           </ol>
         </div>
       </div>
+    </div>
     </div>
   );
 }
