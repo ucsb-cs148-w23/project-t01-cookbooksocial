@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {Tabs, TabList, Tab, DragTabList, DragTab, PanelList, Panel, ExtraButton} from 'react-tabtab';
-import * as customStyle from 'react-tabtab/lib/themes/bulma';
+import customStyle from "./HomeTab.js";
 import RecipePost from "../../components/recipe_posts/RecipePost";
 
 const ShowAllRecipeConent = () =>{
@@ -57,7 +57,7 @@ const ShowFriendsRecipeConent = () =>{
   the backend.
   */
   
-  //change api to friends (fix here)
+  //change api to friends recipe(fix here)
   const URL_GET_LIKED_RECIPE_POSTS_DATA = "/api/recipe/all";
   
     useEffect(() => {

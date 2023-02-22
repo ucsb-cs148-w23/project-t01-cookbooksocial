@@ -1,5 +1,3 @@
-
-
 import React, { useEffect, useState,Component } from "react";
 import {Tabs, TabList, Tab, DragTabList, DragTab, PanelList, Panel, ExtraButton} from 'react-tabtab';
 import customStyle from './SavedPageTabs';
@@ -10,83 +8,81 @@ import DraggableList from "react-draggable-list";
 
 //Assuming maxed file we can save is 10. Assuming each user have 10 saved file in the database. 
 
+const GetSavedRecipesByIndex = (index =0) =>{
+  const [savedRecipePostsList, updateSavedRecipePostsList] = useState([]);
+  
+  /*
+  This will fetch the list of Saved recipe posts stored in the database. each saved file is related by "key" 
+  as an array of json objects. It will then save it in the state variable AllrecipePostsList.
+  It will refresh and check for new posts everytime the page refreshes.
+  "URL_GET_RECIPE_POSTS_DATA" will be replaced by the actual api endpoint for GET once it is created by
+  the backend.
+  */
 
+
+  
+  //change api to get data of saved file with "file index"(fix here)
+  //change api like "/api/recipe/saved(index)"
+  const URL_GET_SAVED_RECIPE_POSTS_DATA = "/api/recipe/all";
+  
+    useEffect(() => {
+      fetch(URL_GET_SAVED_RECIPE_POSTS_DATA)
+        .then((response) => response.json())
+        .then((data) => updateSavedRecipePostsList(data));
+    }, []);
+
+
+  const arrComponents = [];
+  for (let i = 0; i < savedRecipePostsList.length; i++) {
+    arrComponents.unshift(
+      <RecipePost
+        key={i}
+        email={savedRecipePostsList[i].email}
+        title={savedRecipePostsList[i].title}
+        image={savedRecipePostsList[i].image}
+        description={savedRecipePostsList[i].description}
+        ingredients={savedRecipePostsList[i].ingredients}
+        instructions={savedRecipePostsList[i].instructions}
+      />
+    );
+  }
+
+  return(
+    arrComponents
+  )
+  
+}
+
+//generate initial data
 
 
 function SavedPageContent () {
-  
-
-  const GetSavedRecipesByIndex = (index =0) =>{
-    const [savedRecipePostsList, updateSavedRecipePostsList] = useState([]);
-    /*
-    This will fetch the list of Saved recipe posts stored in the database. each saved file is related by "key" 
-    as an array of json objects. It will then save it in the state variable AllrecipePostsList.
-    It will refresh and check for new posts everytime the page refreshes.
-    "URL_GET_RECIPE_POSTS_DATA" will be replaced by the actual api endpoint for GET once it is created by
-    the backend.
-    */
-    //change api to get data of saved file with "file index"(fix here)
-    //like "/api/recipe/saved(index)"
-    const URL_GET_SAVED_RECIPE_POSTS_DATA = "/api/recipe/all";
-    
-      useEffect(() => {
-        fetch(URL_GET_SAVED_RECIPE_POSTS_DATA)
-          .then((response) => response.json())
-          .then((data) => updateSavedRecipePostsList(data));
-      }, []);
-  
-  
-    const arrComponents = [];
-    for (let i = 0; i < savedRecipePostsList.length; i++) {
-      arrComponents.unshift(
-        {key :i, email:savedRecipePostsList[i].email, title:savedRecipePostsList[i].title, image: savedRecipePostsList[i].image, description:savedRecipePostsList[i].description,ingredient:savedRecipePostsList[i].ingredients,instruction: savedRecipePostsList[i].instructions}
-        // <RecipePost
-        //   key={i}
-        //   email={savedRecipePostsList[i].email}
-        //   title={savedRecipePostsList[i].title}
-        //   image={savedRecipePostsList[i].image}
-        //   description={savedRecipePostsList[i].description}
-        //   ingredients={savedRecipePostsList[i].ingredients}
-        //   instructions={savedRecipePostsList[i].instructions}
-        // />
-      );
-    }
-  
-    return(
-      arrComponents
-    )
-    
-  }
+  const [savedRecipePostsList, updateSavedRecipePostsList] = useState([]);
 
 
 
-  const [savedRecipeFileList,updateSavedRecipeFileList] = useState([]);
+
+
   
   const MakeData = () => {
     //const [savedArrComponents,updateSavedArrComponents] = useState([]);
     //savedArrComponents[number] = GetSavedRecipesByIndex(number);
-    
-    const number = 3;
+    const number = 10;
     const fileTitlePrefix ='initial';
     const initialData = [];
-    //console.log(GetSavedRecipesByIndex(1))
-    for (let i=0; i< number; i++)
-    {
-      savedRecipeFileList.push(GetSavedRecipesByIndex(i));
-    }
     //get all data
     for (let i = 0; i < number; i++) {
       initialData.push({
         fileTitle: `${fileTitlePrefix} ${i}`,
         content:
-           "dss"
-          //savedRecipeFileList[i]
+          <GetSavedRecipesByIndex index = {i}/>
       });    
 
     }
    
     //delete data which fileTitle is null
     const data = initialData.filter((data) => (data.fileTitle !== ''))
+    console.log(data);
     return data;
   }
 
@@ -116,7 +112,7 @@ function SavedPageContent () {
   const handleTabSequenceChange = ({oldIndex, newIndex})=> {
     const updateTabs = simpleSwitch(tabs, oldIndex, newIndex);
     setTabs(updateTabs);
-    setActiveIndex(newIndex);
+    setActiveIndex(newIndex)
     //swich a file in databse(fix here)
     
   }
@@ -181,7 +177,9 @@ function SavedPageContent () {
     tabTemplate.push(<DragTab key={i} closable={closable}>{tab.fileTitle}</DragTab>);
     panelTemplate.push(
       <Panel key={i}>
-           tex
+            {
+              tab.content
+            }
       </Panel>
       );
   })

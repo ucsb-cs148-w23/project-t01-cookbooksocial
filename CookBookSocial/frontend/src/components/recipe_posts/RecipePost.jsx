@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 import './RecipePost.css'
 
@@ -36,6 +37,7 @@ function RecipePost(props) {
     //To display the state variable in the html, use the {} curly brackets.  Simple!
     return (
     <div className="post" onClick={toggleShowFull}> 
+        <DropdownMenu></DropdownMenu>
         <header className='header'>
             <h2>{props.email}</h2>
             <h2>{props.title}</h2>
@@ -63,5 +65,21 @@ function RecipePost(props) {
     </div>
     );
 }
+
+
+const DropdownMenu = () => {
+    return(
+    <Dropdown>
+    <Dropdown.Toggle variant="success" id="dropdown-basic">
+        saved
+    </Dropdown.Toggle>
+    <Dropdown.Menu>
+        <Dropdown.Item  onClick={()=>{console.log("1")}}>file1</Dropdown.Item>
+        <Dropdown.Item  onClick={()=>{console.log("2")}}>file2</Dropdown.Item>
+        <Dropdown.Item  onClick={()=>{console.log("3")}}>file3</Dropdown.Item>
+    </Dropdown.Menu>
+    </Dropdown>
+    )
+  };
 
 export default RecipePost;
