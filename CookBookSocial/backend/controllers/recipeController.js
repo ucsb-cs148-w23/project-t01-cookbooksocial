@@ -106,7 +106,7 @@ const getAllRecipes = async (req, res, next) => {
         const recipes = [];
         for (const doc of querySnapshot.docs) {
             let recipe = doc.data();
-            recipe["id"]=doc.id;
+            recipe["id"]=doc.id; //Preserve the firebase document ID to be able to match recipes
             if (Object.hasOwn(doc.data(), "uid")) {
                 const user = await getUser(doc.data().uid);
                 recipe["user"] = user;
