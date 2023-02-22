@@ -136,7 +136,7 @@
   .shareButton:hover {
     background-color: #ff7300;
   }
-  .fancyBanner {
+  .copyBanner {
     position: fixed;
     top: 0;
     left: 50%;
