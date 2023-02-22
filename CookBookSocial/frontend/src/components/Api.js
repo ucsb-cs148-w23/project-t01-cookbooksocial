@@ -11,7 +11,7 @@ Larger images would make more duplicate posts, which I am assume is because the 
 
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage, db } from "../config/firebase";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { doc, addDoc, updateDoc, collection, serverTimestamp } from "firebase/firestore";
 
 
 async function postToFirebase(stringURL, fullRecipeInfo) {
@@ -21,12 +21,23 @@ async function postToFirebase(stringURL, fullRecipeInfo) {
 
     const res = await addDoc(collection(db, "recipes"), postInfo);
 
-    // console.log("INSIDE OF GET ID FUNTION");
 
     return res;
 }
 
-export default function firebaseUpload(image, fullRecipeInfo){
+
+async function putToFirebase(id, stringURL, fullRecipeInfo) {
+    let postInfo = fullRecipeInfo;
+    postInfo["createdAt"] = serverTimestamp();
+    postInfo["image"] = stringURL;
+    const docRef = doc(db, "recipes", id);
+    const res = await updateDoc(docRef, postInfo);
+
+
+    return res;
+}
+
+export function firebaseUpload(image, fullRecipeInfo){
     const storageRef = ref(storage, `images/${image.name}`);
 
     const uploadTask = uploadBytesResumable(storageRef, image);
@@ -57,4 +68,41 @@ export default function firebaseUpload(image, fullRecipeInfo){
     );
 
     return uploadTask;
+}
+
+export function firebaseUpdateWithImage(id, image, fullRecipeInfo){
+    const storageRef = ref(storage, `images/${image.name}`);
+
+    const uploadTask = uploadBytesResumable(storageRef, image);
+
+    uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+            const progress = Math.round(
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            );
+            console.log(progress);
+        },
+        (error) => {
+            console.log("ERROR IN UPLOAD TASK");
+            alert(error);
+        },
+        () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+
+                let response = putToFirebase(id, downloadURL, fullRecipeInfo);
+
+                // console.log("This is the response: ", response);
+                response.then(() => {
+                    console.log("Upload Completed:\n");
+                });
+            });
+        }
+    );
+
+    return uploadTask;
+}
+
+export function firebaseUpdateWithOutImage(id, imageURL, fullRecipeInfo) {
+    putToFirebase(id, imageURL, fullRecipeInfo);
 }

@@ -1,6 +1,6 @@
 import "./postModalStyles.css";
 import React, { useState, useEffect } from "react";
-import fireBaseUpload from "../Api";
+import {firebaseUpload} from "../Api";
 
 
 import { useAuth } from "../../contexts/AuthContext";
@@ -269,7 +269,7 @@ export function Modal({ show, setShow }) {
     // Here we are uploading the image first, that way we can make sure the uploaded image is correct
     console.log("RECIPE INFO: ", fullRecipeInfo);
 
-    fireBaseUpload(image,fullRecipeInfo).then(() => {
+    firebaseUpload(image,fullRecipeInfo).then(() => {
       setImage([]);
       setTitle("");
       setDesc("");

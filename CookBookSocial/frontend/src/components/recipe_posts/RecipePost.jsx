@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 import { renderIngredients } from "./functions/RecipePostFunctions";
+import {Button} from "react-bootstrap";
 
 /*
 What does calling useState do? It declares a “state variable”. Our variable is called response but we could call it anything else, like banana. This is a way to “preserve” some values between the function calls. Normally, variables “disappear” when the function exits but state variables are preserved by React.
@@ -50,11 +51,12 @@ function RecipePost({ recipe }) {
 
     let navigate = useNavigate();
     const editRedirect = (id) => {
-        let path = `/edit-recipe/${id}`
-        navigate(path)
+        let path = `/edit-recipe/${id}`;
+        navigate(path);
     }
+
+
     //To display the state variable in the html, use the {} curly brackets.  Simple!
-    // <Button variant='warning' className='recipePostEditBtn' onClick={ () => {editRedirect(props.id)}}>Edit</Button>
     return (
         <div
             className="bg-white overflow-hidden pb-10 mb-10 border-b border-neutral-300 text-left"
@@ -62,6 +64,7 @@ function RecipePost({ recipe }) {
         >
             <header className="header">
                 <h2 className="font-extrabold text-left text-3xl">{recipe.title}</h2>
+                <Button variant='warning' className='recipePostEditBtn' onClick={() => { editRedirect(recipe.id) }}>Edit</Button>
             </header>
             <p>By {displayName(recipe)}</p>
             <p>{timeStamptoDate(recipe.createdAt)}</p>
