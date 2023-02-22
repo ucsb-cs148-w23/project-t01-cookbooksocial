@@ -2,18 +2,18 @@ import React, { useEffect, useState } from "react";
 import RecipePost from "../../components/recipe_posts/RecipePost";
 import Navbars from "../../components/navbars/Navbars";
 import PostModal from "../../components/postModal/postModal";
-import "./ProfilePage.css";
+import "./PeoplePage.css";
 import { useAuth } from "../../contexts/AuthContext";
-// import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 
 // import renderRecipePostComponents from "./pages/HomePage/HomePage";
 //FIXME: ProfilePage is very similar to HomePage code so probably a way to re-use
 
-function ProfilePage() {
+function PeoplePage() {
     const [profileRecipePostsList, updateProfileRecipePostsList] = useState([]);
-    const { currentUser } = useAuth();
-    // const { userId } = useParams();
+    // const { currentUser } = useAuth();
+    const { userId } = useParams();
 
 
     //useAuth has information from Firebase about user, we will get email from here
@@ -26,7 +26,7 @@ function ProfilePage() {
   */
     const URL_GET_PROFILE_RECIPE_POSTS_DATA = "/api/recipe/all";
 
-    console.log("Current User: ", currentUser);
+    // console.log("Current User: ",currentUser);
     useEffect(() => {
         fetch(URL_GET_PROFILE_RECIPE_POSTS_DATA)
             .then((response) => response.json())
@@ -36,9 +36,7 @@ function ProfilePage() {
     function renderProfileRecipePostComponents() {
         const arrComponents = [];
         for (let i = 0; i < profileRecipePostsList.length; i++) {
-            if (profileRecipePostsList[i].uid === currentUser.uid) {
-
-                console.log("This is the recipe in Profile Page", profileRecipePostsList[i])
+            if (profileRecipePostsList[i].uid === userId) {
                 arrComponents.unshift(
                     <RecipePost
                         key={i}
@@ -60,11 +58,10 @@ function ProfilePage() {
         <div>
             <Navbars />
             <div className="profile-page">
-                <PostModal></PostModal>
                 <ul>{renderProfileRecipePostComponents()}</ul>
             </div>
         </div>
     );
 }
 
-export default ProfilePage;
+export default PeoplePage;
