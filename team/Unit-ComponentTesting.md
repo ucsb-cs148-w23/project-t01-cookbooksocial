@@ -1,4 +1,4 @@
-# Unit Testing
+# Unit Testing & Component Testing
 
 ---
 
@@ -27,3 +27,15 @@ Located at:
 `frontend/src/components/recipe_posts/functions/RecipePostFunctions.jsx`
 
 <img width="736" alt="image" src="https://user-images.githubusercontent.com/33767941/219590298-42ada9c8-d684-499e-85b5-efefd28f04c3.png">
+
+
+
+<img width="695" alt="image" src="https://user-images.githubusercontent.com/33767941/221036414-ddc358ca-993d-4764-bd96-d4ec040dce38.png">
+
+
+<img width="1375" alt="image" src="https://user-images.githubusercontent.com/33767941/221036669-a050cc89-e2c6-49e6-baee-2d439b9432fe.png">
+
+
+Function that is being tested:
+
+<img width="1250" alt="image" src="https://user-images.githubusercontent.com/33767941/221036949-c577327d-6e8a-43a0-8760-ec41718655f0.png">
