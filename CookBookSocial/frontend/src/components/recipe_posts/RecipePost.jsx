@@ -72,11 +72,12 @@ function RecipePost({ recipe }) {
             <p>{timeStamptoDate(recipe.createdAt)}</p>
             <p>{recipe.description}</p>
             <div className="pb-2/3">
-                <img
-                    className="h-full w-full object-cover aspect-[3/2]"
-                    src={recipe.image}
-                    alt="NOT FOUND"
-                />
+            <Link to={`/recipe/${recipe.id}`}>
+                    <img
+                        src={recipe.image}
+                        alt="Error loading image"
+                    />
+                </Link>
             </div>
 
             {showFullRecipe && (

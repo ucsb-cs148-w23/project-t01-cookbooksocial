@@ -14,6 +14,7 @@ import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import WithPrivateRoute from "./utils/WithPrivateRoute";
 import PasswordReset from "./pages/PasswordReset/PasswordReset";
 import PeoplePage from "./pages/PeoplePage/PeoplePage";
+import RecipePage from "./pages/RecipePage/RecipePage";
 
 function App() {
 
@@ -71,6 +72,8 @@ function App() {
               <EditPost/>
             }
           />
+          {/* Add the dynamic recipe page route */}
+          <Route path="/recipe/:id" element={<RecipePage />} />
 
           {/* This route is a "wilcard", if someone tries to access a non defined route, they will be redirected to home route */}
           <Route path="*" element={<Navigate to="/home" replace />} />
