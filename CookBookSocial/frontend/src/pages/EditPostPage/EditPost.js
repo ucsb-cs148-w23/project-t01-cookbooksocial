@@ -3,6 +3,7 @@ import "../../components/postModal/postModalStyles.css";
 import {firebaseUpdateWithImage, firebaseUpdateWithOutImage} from "../../components/Api";
 import {useNavigate, useParams} from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import Navbars from "../../components/navbars/Navbars";
 
 const IngreLists = (props) => {
 
@@ -37,7 +38,7 @@ const IngreLists = (props) => {
                                 <td className="modalSub">{ingre}</td>
                                 <td>
                                     <button
-                                        className="delIngButton"
+                                        className="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-small rounded-full text-large px-3 py-1 text-center mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 mx-2"
                                         onClick={() => onClickDelete(index)}
                                     >
                                         -
@@ -101,12 +102,12 @@ const StepLists = (props) => {
                     <div className="stepListIndex">step {index + 1}:</div>
                     <textarea
                         className="form-control"
-                        placeholder="add step"
                         value={step}
+                        readOnly
                         onChange={(event) => onChangeOldStep(index, event.target.value)}
                     ></textarea>
                     <button
-                        className="stepListbutton"
+                        className="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-small rounded-full text-large px-3 py-1 text-center mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 mx-2"
                         onClick={() => onClickDelete(index)}
                     >
                         -
@@ -142,7 +143,11 @@ export default function EditPost() {
     const [stepList, setStepList] = useState([]);
     const [stepText, setStepText] = useState("");
     const [image, setImage] = useState([]);
+    const [isImageChanged, setIsImageChanged] = useState(false);
     const [prevImg, setPrevImg] = useState("");
+
+    const [isError, setIsError] = useState(false);
+    const [errorOutput, setErrorOutput] = useState("");
 
     const { currentUser } = useAuth();
 
@@ -195,14 +200,73 @@ export default function EditPost() {
         });
     }, [title, desc, email, uid, ingreList, stepList]);
 
-    console.log(updatedRecipeInfo);
+    console.log(recipeData);
 
     function handleImage(pic) {
+        setIsImageChanged(true);
         setImage(pic);
         setPrevImg(URL.createObjectURL(pic));
     }
 
+    function validateTitle() {
+        if (updatedRecipeInfo.title.trim() == "") {
+            setIsError(true);
+            setErrorOutput(errorOutput + "Invalid Title! ");
+            return false;
+        }
+        return true;
+    }
+
+    function validateDescription() {
+        if (updatedRecipeInfo.description.trim() == "") {
+            setIsError(true);
+            setErrorOutput(errorOutput + "Invalid Description! ");
+            return false;
+        }
+        return true;
+    }
+
+
+    function validateIngredients() {
+        if (updatedRecipeInfo.ingredients.length == 0) {
+            setIsError(true);
+            setErrorOutput(errorOutput + "Invalid Ingredients! ");
+            return false;
+        }
+        return true;
+    }
+
+
+    let navigate = useNavigate();
+
     function postRecipe(){
+
+        if (
+            !validateTitle() ||
+            !validateDescription() ||
+            !validateIngredients()
+        ) {
+            return false;
+        }
+        setIsError(false);
+
+
+        if (stepText != "") {
+            stepList.push(stepText);
+        }
+        console.log("RECIPE INFO: ", updatedRecipeInfo);
+
+        if(isImageChanged){
+            firebaseUpdateWithImage(id, image, updatedRecipeInfo, recipeData['image']).then(() =>{
+                let path = "/profile";
+                navigate(path);
+            });
+        } else {
+            firebaseUpdateWithOutImage(id, recipeData['image'], updatedRecipeInfo);
+            let path = "/profile";
+            navigate(path);
+        }
+
 
     }
 
@@ -213,6 +277,9 @@ export default function EditPost() {
     
 
         return ( 
+            <body>
+            <Navbars/>
+                {isError && <div id="postModal-error-log">{errorOutput}</div>}
             <div className="container container-column">
                 <div className="putLeft">
                 </div>
@@ -277,16 +344,10 @@ export default function EditPost() {
                     </div>
                     </div>
             </div>
+            </body>
             
 
         );
-
-
-
-
-
-
-
 
 
    

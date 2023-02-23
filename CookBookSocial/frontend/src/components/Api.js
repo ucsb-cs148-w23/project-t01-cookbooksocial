@@ -9,7 +9,7 @@ Larger images would make more duplicate posts, which I am assume is because the 
 
 */
 
-import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { ref, getDownloadURL, uploadBytesResumable, deleteObject, getStorage } from "firebase/storage";
 import { storage, db } from "../config/firebase";
 import { doc, addDoc, updateDoc, collection, serverTimestamp } from "firebase/firestore";
 
@@ -70,8 +70,20 @@ export function firebaseUpload(image, fullRecipeInfo){
     return uploadTask;
 }
 
-export function firebaseUpdateWithImage(id, image, fullRecipeInfo){
+export function firebaseUpdateWithImage(id, image, fullRecipeInfo, oldImgURL){
     const storageRef = ref(storage, `images/${image.name}`);
+    console.log(oldImgURL);
+    const storageDeleteFrom = getStorage();
+    const oldImageRef = ref(storageDeleteFrom, oldImgURL);
+    // Delete the file
+    deleteObject(oldImageRef).then(() => {
+        // File deleted successfully
+        console.log("deleted old image successfully");
+    }).catch((error) => {
+        console.log("failed to delete old image: ", error);
+    });
+
+
 
     const uploadTask = uploadBytesResumable(storageRef, image);
 
