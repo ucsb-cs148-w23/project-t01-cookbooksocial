@@ -13,6 +13,7 @@ import ProfilePic from "./pages/ProfilePicPage/ProfilePic";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import WithPrivateRoute from "./utils/WithPrivateRoute";
 import PasswordReset from "./pages/PasswordReset/PasswordReset";
+import PeoplePage from "./pages/PeoplePage/PeoplePage";
 
 function App() {
 
@@ -42,6 +43,16 @@ function App() {
               // This adds private routing
               <WithPrivateRoute>
                 <ProfilePage/>
+              </WithPrivateRoute>
+            }
+          />
+          <Route
+            exact
+            path="/profile/:userId"
+            element={
+              // This adds private routing
+              <WithPrivateRoute>
+                <PeoplePage/>
               </WithPrivateRoute>
             }
           />
