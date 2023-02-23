@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 
 import { renderIngredients } from "./functions/RecipePostFunctions";
 
@@ -37,10 +36,10 @@ function RecipePost({ recipe }) {
     }
 
     function displayName(recipe) {
-        if (recipe.user && recipe.user.name) {
-            return recipe.user.name;
-        } else if (recipe.user && recipe.user.email) {
-            return recipe.user.email;
+        if (recipe.user) {
+            return recipe.user;
+        } else if (recipe.email) {
+            return recipe.email;
         } else if (recipe.uid) {
             return `UID ${recipe.uid}`;
         } else {
@@ -59,9 +58,11 @@ function RecipePost({ recipe }) {
             onClick={toggleShowFull}
         >
             <header className="header">
-                {/* <h2 className="font-extrabold text-left text-3xl">{displayRecipeTitle(recipe)}</h2> */}
+                <h2 className="font-extrabold text-left text-3xl">{displayRecipeTitle(recipe)}</h2>
             </header>
-            <p><Link to={`/profile/${recipe.uid}`}>By: {displayName(recipe)}</Link></p>
+
+            {/* We concatenate the user ID to the profile route, so it redirects us to the user page on click */}
+            <a href={"profile/" + recipe.uid}>By: {displayName(recipe)}</a>
             <p>{timeStamptoDate(recipe.createdAt)}</p>
             <p>{recipe.description}</p>
             <div className="pb-2/3">

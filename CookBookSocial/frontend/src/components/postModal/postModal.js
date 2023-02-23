@@ -239,7 +239,7 @@ export function Modal({ show, setShow }) {
 
     const res = await addDoc(collection(db, "recipes"), postInfo);
 
-    // console.log("INSIDE OF GET ID FUNTION");
+    // console.log("This is the timestamp Object:\n", postInfo["createdAt"]);
 
     return res;
   }
