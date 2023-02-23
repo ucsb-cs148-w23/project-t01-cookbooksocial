@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Container from "react-bootstrap/Container";
 import RecipePost from "../../components/recipe_posts/RecipePost";
 import Navbars from "../../components/navbars/Navbars";
 import PostModal from "../../components/postModal/postModal";
@@ -13,6 +14,7 @@ import { useAuth } from "../../contexts/AuthContext";
 function ProfilePage() {
     const [profileRecipePostsList, updateProfileRecipePostsList] = useState([]);
     const { currentUser } = useAuth();
+    const username = currentUser.displayName;
     // const { userId } = useParams();
 
 
@@ -55,10 +57,18 @@ function ProfilePage() {
             return arrComponents;
         }
     }
-
+    //have user info at top
     return (
         <div>
             <Navbars />
+            <Container>
+            <img src={currentUser?.photoURL}
+            className={"bioProfilePic"}
+            alt="No-Pic"/>
+            <div className={"bioProfileName"}>
+            {username ? username : "No username"}
+            </div>
+            </Container>
             <div className="profile-page">
                 <PostModal></PostModal>
                 <ul>{renderProfileRecipePostComponents()}</ul>

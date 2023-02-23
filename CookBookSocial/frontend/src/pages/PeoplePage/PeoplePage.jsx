@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Container from "react-bootstrap/Container";
 import RecipePost from "../../components/recipe_posts/RecipePost";
 import Navbars from "../../components/navbars/Navbars";
 import PostModal from "../../components/postModal/postModal";
@@ -13,7 +14,9 @@ import { useParams } from "react-router-dom";
 function PeoplePage() {
     const [profileRecipePostsList, updateProfileRecipePostsList] = useState([]);
     // const { currentUser } = useAuth();
-    const { userId } = useParams();
+    //uses param from route :userId
+    const { userId} = useParams();
+    const username= userId.displayName;
 
 
     //useAuth has information from Firebase about user, we will get email from here
@@ -57,6 +60,14 @@ function PeoplePage() {
     return (
         <div>
             <Navbars />
+            <Container>
+            <img src={userId?.photoURL}
+            className={"bioProfilePic"}
+            alt="No-Pic"/>
+            <div className={"bioProfileName"}>
+            {username ? username : "No username"}
+            </div>
+            </Container>
             <div className="profile-page">
                 <ul>{renderProfileRecipePostComponents()}</ul>
             </div>
