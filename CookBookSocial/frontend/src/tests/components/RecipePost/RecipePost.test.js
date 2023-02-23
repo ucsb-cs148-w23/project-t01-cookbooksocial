@@ -1,8 +1,12 @@
 import RecipePost from "../../../components/recipe_posts/RecipePost";
 
 import { render, screen } from "@testing-library/react";
-
 import postFixture from "../../fixtures/postFixture";
+import { cleanup } from "@testing-library/react";
+
+afterEach(() => {
+  cleanup();
+});
 
 describe("Recipe Post Tests", () => {
   test("Testing that recipe post component renders", async () => {

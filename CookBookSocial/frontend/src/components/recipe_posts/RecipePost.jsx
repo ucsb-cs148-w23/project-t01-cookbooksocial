@@ -13,13 +13,6 @@ function RecipePost({ recipe }) {
         toggleShowFullRecipe(!showFullRecipe);
     }
 
-    // function renderIngredients() {
-    //     const arrComponents = []
-    //     for (let i = 0; i < recipe.ingredients.length; i++) {
-    //         arrComponents.push(<li>{recipe.ingredients[i]}</li>)
-    //     }
-    //     return arrComponents
-    // }
 
     function renderInstructions() {
         const arrComponents = [];
