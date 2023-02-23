@@ -111,8 +111,7 @@ const getAllRecipes = async (req, res, next) => {
                 const user = await getUser(doc.data().uid);
                 recipe["user"] = user;
             }
-            let recipeWithId = {...recipe, id: doc.id};
-            recipes.push(recipeWithId);
+            recipes.push(recipe);
         }
         res.status(200).send(recipes);
     } catch (e) {
