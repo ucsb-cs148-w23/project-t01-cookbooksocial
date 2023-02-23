@@ -20,7 +20,7 @@ function RecipePage() {
         if (doc.exists()) {
           const data = doc.data();
           setRecipe(data);
-          setEditPostPath(`/edit-recipe/${data.id}`)
+          setEditPostPath(`/edit-recipe/${id}`)
         } else {
           console.log('Recipe not found!');
         }
