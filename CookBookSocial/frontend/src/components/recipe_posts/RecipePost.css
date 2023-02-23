@@ -42,3 +42,11 @@
 .instructions {
     padding-bottom: 50px;
 }
+
+.postTop h2{
+    display: inline;
+}
+
+.recipePostEditBtn{
+    margin: 8px;
+}
