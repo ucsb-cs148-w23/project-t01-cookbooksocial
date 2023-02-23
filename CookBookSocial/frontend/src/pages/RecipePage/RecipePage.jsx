@@ -3,10 +3,14 @@ import { useParams } from 'react-router-dom';
 import { collection, doc, getDoc, getFirestore } from 'firebase/firestore';
 import styles from './RecipePage.module.css';
 import Navbars from "../../components/navbars/Navbars";
+import { useAuth } from '../../contexts/AuthContext';
 
 function RecipePage() {
   const { id } = useParams();
   const [recipe, setRecipe] = useState(null);
+  const [editPostPath, setEditPostPath] = useState(``);
+
+  const { currentUser } = useAuth();
 
   useEffect(() => {
     const db = getFirestore();
@@ -16,6 +20,7 @@ function RecipePage() {
         if (doc.exists()) {
           const data = doc.data();
           setRecipe(data);
+          setEditPostPath(`/edit-recipe/${data.id}`)
         } else {
           console.log('Recipe not found!');
         }
@@ -87,6 +92,11 @@ function RecipePage() {
         </div>
       </div>
     </div>
+      {currentUser.uid === recipe.uid && (
+        <a type="button" class="text-white bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-lg px-5 py-2.5 text-center mr-2 mb-2 mt-4"
+          href={editPostPath}
+        >Edit</a>
+      )}
     </div>
   );
 }
