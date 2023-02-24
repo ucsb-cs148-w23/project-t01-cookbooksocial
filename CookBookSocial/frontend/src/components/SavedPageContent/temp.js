@@ -9,7 +9,7 @@ import DraggableList from "react-draggable-list";
 //Assuming maxed file we can save is 10. Assuming each user have 10 saved file in the database. 
 
 const GetSavedRecipesByIndex = (index =0) =>{
-  const [savedRecipePostsList, updateSavedRecipePostsList] = useState([]);
+  const [recipePostsList, updateRecipePostsList] = useState([]);
   
   /*
   This will fetch the list of Saved recipe posts stored in the database. each saved file is related by "key" 
@@ -28,23 +28,13 @@ const GetSavedRecipesByIndex = (index =0) =>{
     useEffect(() => {
       fetch(URL_GET_SAVED_RECIPE_POSTS_DATA)
         .then((response) => response.json())
-        .then((data) => updateSavedRecipePostsList(data));
+        .then((data) => updateRecipePostsList(data));
     }, []);
 
 
   const arrComponents = [];
-  for (let i = 0; i < savedRecipePostsList.length; i++) {
-    arrComponents.unshift(
-      <RecipePost
-        key={i}
-        email={savedRecipePostsList[i].email}
-        title={savedRecipePostsList[i].title}
-        image={savedRecipePostsList[i].image}
-        description={savedRecipePostsList[i].description}
-        ingredients={savedRecipePostsList[i].ingredients}
-        instructions={savedRecipePostsList[i].instructions}
-      />
-    );
+  for (let i = 0; i <  recipePostsList.length; i++) {
+    arrComponents.unshift(<RecipePost key={i} recipe={recipePostsList[i]} />);
   }
 
   return(
