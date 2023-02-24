@@ -1,19 +1,22 @@
 import React, {useState} from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import './deleteModal.css';
 
 
 function DeleteModal({recipeId, show, setShow}){
 
     const [isLoading, setIsLoading] = useState(false);
+    const [hasErrorDelete, setHasErrorDelete] = useState(false);
 
     const URL_DELETE_RECIPE = `/api/recipe/${recipeId}`
 
     function modalClosing(){
         setShow(false);
+        setHasErrorDelete(false);
     }
 
     let navigate = useNavigate();
+    const location = useLocation();
 
     async function deletePost(){
         setIsLoading(true);
@@ -25,16 +28,26 @@ function DeleteModal({recipeId, show, setShow}){
         }).then(function(data){
             setIsLoading(false);
             console.log(data);
-            console.log("Redirecting....");
-            let path = "/profile";
-            navigate(path);
+            if(data.status === 200){
+                setShow(false);
+                if(location.pathname === '/profile'){
+                    window.location.reload();
+                } else {
+                    console.log("Redirecting....");
+                    let path = "/profile";
+                    navigate(path);
+                }
+            } else {
+                console.log("Backend failed to delete post.");
+                setHasErrorDelete(true);
+
+            }
+        
         
 
         });
         console.log(response);
-        setShow(false);
     }
-
 
     if (show){
         return (
@@ -42,7 +55,7 @@ function DeleteModal({recipeId, show, setShow}){
             <div className="delete-modal content">
 
 
-            {isLoading && (
+            {isLoading && !hasErrorDelete && (
                           <div className="delete-modal loading">
                         <div className="spinner-border text-danger" role="status">
                             <span className="sr-only">Deleting...</span>
@@ -55,7 +68,7 @@ function DeleteModal({recipeId, show, setShow}){
                 </div>
 
             )}
-            {!isLoading && (
+            {!isLoading && !hasErrorDelete && (
                 <div>
                             <div className="text-xl py-5 delete-modal confirmation-text">
                                 Are you sure you want to delete this recipe?
@@ -77,6 +90,25 @@ function DeleteModal({recipeId, show, setShow}){
                                 className="btn btn-danger m-2"
                             >
                                 Delete
+                            </span>
+                </div>
+
+            )}
+            {hasErrorDelete && !isLoading && (
+                        <div className="delete-modal">
+                        <div className="text-xl py-5 delete-modal confirmation-text">
+                                Error - Failed to Delete Recipe
+                            </div>
+                            <div>
+
+                            </div>
+
+                            <span
+                                onClick={() => modalClosing()}
+                                type="button"
+                                className="btn btn-info m-2"
+                            >
+                                Return
                             </span>
                 </div>
 

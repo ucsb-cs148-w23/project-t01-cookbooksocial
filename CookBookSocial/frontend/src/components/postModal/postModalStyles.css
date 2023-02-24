@@ -36,13 +36,7 @@
     color:#ff6767;
 }
 
-.modalTitle{ 
-	color: #E83015; 
-	font-size: 20px; 
-	margin-bottom: 12px; 
-	padding-bottom: 4px; 
-	border-bottom: #E83015 2px solid;	
-}
+
 .modalSub{ 
 	color: #E83015; 
 	font-size: 15px; 
@@ -124,7 +118,13 @@
 
 
 
-
+.modalTitle{ 
+	color: #E83015; 
+	font-size: 20px; 
+	margin-bottom: 12px; 
+	padding-bottom: 4px; 
+	border-bottom: #E83015 2px solid;	
+}
 
 
 
@@ -241,6 +241,7 @@ a{
 
 .ingInput{
     margin-top: 4%;
+    color: #db5642;
 }
 
 .titleContainers {

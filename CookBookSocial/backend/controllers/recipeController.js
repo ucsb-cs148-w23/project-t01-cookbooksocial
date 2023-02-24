@@ -101,7 +101,7 @@ const deleteRecipe = async (req, res, next) => {
         deleteObject(oldImageRef).then(async () => {
             await deleteDoc(docRef);
             res.status(200).send(`Document deleted with ID: ${docRef.id} and image deleted with URL ${imageURL}`);
-        }).catch((error) => {
+        }).catch((e) => {
             res.status(400).send(`Failed to delete the image.  Error: ${e.message}`);
             return;
         });
