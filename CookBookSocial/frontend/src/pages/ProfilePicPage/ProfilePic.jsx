@@ -6,6 +6,9 @@ import { generateAvatar } from "../../utils/GenerateAvatar";
 
 import styles from "./ProfilePic.module.css";
 
+import { storage, db } from "../../config/firebase";
+import { doc, setDoc } from "firebase/firestore"; 
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -19,6 +22,8 @@ export default function ProfilePic() {
   const [loading, setLoading] = useState(false);
 
   const { currentUser, updateUserProfile, setError } = useAuth();
+
+  //FIXME store userImage in user's doc test
 
   useEffect(() => {
     const fetchData = () => {
@@ -50,6 +55,10 @@ export default function ProfilePic() {
         photoURL: avatars[selectedAvatar],
       };
       await updateUserProfile(user, profile);
+      //FIXME resuing code from userFunctions.js
+      //FIXME not sure if order is ok
+      const userRef = doc(db, "users", currentUser.uid);
+      setDoc(userRef, { profile: profile }, { merge: true });
       navigate("/home");
     } catch (e) {
       setError("Failed to update profile");
