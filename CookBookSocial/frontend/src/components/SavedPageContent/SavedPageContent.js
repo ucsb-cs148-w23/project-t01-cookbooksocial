@@ -1,7 +1,7 @@
 import React, { useEffect, useState,Component } from "react";
 import {Tabs, TabList, Tab, DragTabList, DragTab, PanelList, Panel, ExtraButton} from 'react-tabtab';
 import customStyle from './SavedPageTabs';
-import RecipePost from "../../components/recipe_posts/RecipePost";
+import RecipePost from "../recipe_posts/RecipePost";
 import {simpleSwitch} from 'react-tabtab/lib/helpers/move';
 import DraggableList from "react-draggable-list";
 
@@ -34,25 +34,13 @@ const GetSavedRecipesByIndex = (index =0) =>{
 
   const arrComponents = [];
   for (let i = 0; i <  recipePostsList.length; i++) {
-    arrComponents.unshift(recipePostsList[i]);
+    arrComponents.unshift(<RecipePost key={i} recipe={recipePostsList[i]} />);
   }
 
   return(
     arrComponents
   )
-  
-}
 
-const DataConvertStyle =(data)=>
-{
-  const arrComponents = [];
-  for (let i = 0; i <  data.length; i++) {
-    arrComponents.unshift(<RecipePost key={i} recipe={data[i]} />);
-  }
-
-  return(
-    arrComponents
-  )
 }
 
 //generate initial data
@@ -61,21 +49,23 @@ const DataConvertStyle =(data)=>
 function SavedPageContent () {
   const [savedRecipePostsList, updateSavedRecipePostsList] = useState([]);
 
+
+
+
+
   
   const MakeData = () => {
     //const [savedArrComponents,updateSavedArrComponents] = useState([]);
     //savedArrComponents[number] = GetSavedRecipesByIndex(number);
-    const number = 2;
+    const number = 10;
     const fileTitlePrefix ='initial';
     const initialData = [];
-    const fileData = GetSavedRecipesByIndex(0);
-    console.log(fileData);
     //get all data
     for (let i = 0; i < number; i++) {
       initialData.push({
         fileTitle: `${fileTitlePrefix} ${i}`,
         content:
-        fileData
+          <GetSavedRecipesByIndex index = {i}/>
       });    
 
     }
@@ -138,7 +128,8 @@ function SavedPageContent () {
     return (
       {fileTitle: tempFileName,
         content: 
-         GetSavedRecipesByIndex()
+          <GetSavedRecipesByIndex index = {tabs.length}/>
+        
       }
     )  
   }
@@ -177,7 +168,7 @@ function SavedPageContent () {
     panelTemplate.push(
       <Panel key={i}>
             {
-              <DataConvertStyle data= {tab.content} />
+              tab.content
             }
       </Panel>
       );
@@ -220,6 +211,7 @@ function SavedPageContent () {
   )
   
 }
+
 
 
 export default SavedPageContent;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState,Component } from "react";
 import {Tabs, TabList, Tab, DragTabList, DragTab, PanelList, Panel, ExtraButton} from 'react-tabtab';
 import customStyle from './SavedPageTabs';
-import RecipePost from "../../components/recipe_posts/RecipePost";
+import RecipePost from "../recipe_posts/RecipePost";
 import {simpleSwitch} from 'react-tabtab/lib/helpers/move';
 import DraggableList from "react-draggable-list";
 
@@ -40,7 +40,7 @@ const GetSavedRecipesByIndex = (index =0) =>{
   return(
     arrComponents
   )
-  
+
 }
 
 //generate initial data
@@ -159,7 +159,7 @@ function SavedPageContent () {
     setshowArrow(showModal);
   }
 
-  console.log("time")
+  console.log("render count")
   const tabTemplate = [];
   const panelTemplate = [];
   tabs.forEach((tab, i) => {
@@ -211,24 +211,6 @@ function SavedPageContent () {
   )
   
 }
-
-
-// export default function App() {
-//   const [items, setItems] = useState(["Item 1", "Item 2", "Item 3"]);
-//   return (
-//     <>
-    // <List
-    //   values={items}
-    //   onChange={({ oldIndex, newIndex }) =>
-    //     setItems(arrayMove(items, oldIndex, newIndex))
-    //   }
-    //   renderList={({ children, props }) => <ul {...props}>{children}</ul>}
-    //   renderItem={({ value, props }) => <li {...props}>{value}</li>}
-    // />
-//     <button onClick={()=> {console.log(items)}}></button>
-//     </>
-//   );
-// }
 
 
 
