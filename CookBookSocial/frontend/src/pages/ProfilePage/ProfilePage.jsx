@@ -15,10 +15,9 @@ function ProfilePage() {
     const [profileRecipePostsList, updateProfileRecipePostsList] = useState([]);
     const { currentUser } = useAuth();
     const username = currentUser.displayName;
-    // const { userId } = useParams();
 
 
-    //useAuth has information from Firebase about user, we will get email from here
+    //useAuth has information from Firebase about user, we will get userId from here
     /*
   This will fetch the list of PROFILE recipe posts stored in the database 
   as an array of json objects. It will then save it in the state variable profileRecipePostsList.
