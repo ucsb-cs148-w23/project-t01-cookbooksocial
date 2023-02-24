@@ -34,7 +34,7 @@ const GetSavedRecipesByIndex = (index =0) =>{
 
   const arrComponents = [];
   for (let i = 0; i <  recipePostsList.length; i++) {
-    arrComponents.unshift(<RecipePost key={i} recipe={recipePostsList[i]} />);
+    arrComponents.unshift(recipePostsList[i]);
   }
 
   return(
@@ -43,29 +43,39 @@ const GetSavedRecipesByIndex = (index =0) =>{
   
 }
 
+const DataConvertStyle =(data)=>
+{
+  const arrComponents = [];
+  for (let i = 0; i <  data.length; i++) {
+    arrComponents.unshift(<RecipePost key={i} recipe={data[i]} />);
+  }
+
+  return(
+    arrComponents
+  )
+}
+
 //generate initial data
 
 
 function SavedPageContent () {
   const [savedRecipePostsList, updateSavedRecipePostsList] = useState([]);
 
-
-
-
-
   
   const MakeData = () => {
     //const [savedArrComponents,updateSavedArrComponents] = useState([]);
     //savedArrComponents[number] = GetSavedRecipesByIndex(number);
-    const number = 10;
+    const number = 2;
     const fileTitlePrefix ='initial';
     const initialData = [];
+    const fileData = GetSavedRecipesByIndex(0);
+    console.log(fileData);
     //get all data
     for (let i = 0; i < number; i++) {
       initialData.push({
         fileTitle: `${fileTitlePrefix} ${i}`,
         content:
-          <GetSavedRecipesByIndex index = {i}/>
+        fileData
       });    
 
     }
@@ -128,8 +138,7 @@ function SavedPageContent () {
     return (
       {fileTitle: tempFileName,
         content: 
-          <GetSavedRecipesByIndex index = {tabs.length}/>
-        
+         GetSavedRecipesByIndex()
       }
     )  
   }
@@ -168,7 +177,7 @@ function SavedPageContent () {
     panelTemplate.push(
       <Panel key={i}>
             {
-              tab.content
+              <DataConvertStyle data= {tab.content} />
             }
       </Panel>
       );
@@ -211,25 +220,6 @@ function SavedPageContent () {
   )
   
 }
-
-
-// export default function App() {
-//   const [items, setItems] = useState(["Item 1", "Item 2", "Item 3"]);
-//   return (
-//     <>
-    // <List
-    //   values={items}
-    //   onChange={({ oldIndex, newIndex }) =>
-    //     setItems(arrayMove(items, oldIndex, newIndex))
-    //   }
-    //   renderList={({ children, props }) => <ul {...props}>{children}</ul>}
-    //   renderItem={({ value, props }) => <li {...props}>{value}</li>}
-    // />
-//     <button onClick={()=> {console.log(items)}}></button>
-//     </>
-//   );
-// }
-
 
 
 export default SavedPageContent;

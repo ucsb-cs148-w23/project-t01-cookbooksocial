@@ -4,7 +4,6 @@ import customStyle from "./HomeTab.js";
 import RecipePost from "../../components/recipe_posts/RecipePost";
 
 const ShowAllRecipeConent = () =>{
-  const [allRecipePostsList, updateAllRecipePostsList] = useState([]);
 
   /*
   This will fetch the list of all recipe posts stored in the database 
@@ -15,28 +14,19 @@ const ShowAllRecipeConent = () =>{
   */
   
   //api is all
-  const URL_GET_ALL_RECIPE_POSTS_DATA = "/api/recipe/all";
+  const [recipePostsList, updateRecipePostsList] = useState([]);
+  const URL_GET_SAVED_RECIPE_POSTS_DATA = "/api/recipe/all";
   
     useEffect(() => {
-      fetch(URL_GET_ALL_RECIPE_POSTS_DATA)
+      fetch(URL_GET_SAVED_RECIPE_POSTS_DATA)
         .then((response) => response.json())
-        .then((data) => updateAllRecipePostsList(data));
+        .then((data) => updateRecipePostsList(data));
     }, []);
 
 
   const arrComponents = [];
-  for (let i = 0; i < allRecipePostsList.length; i++) {
-    arrComponents.unshift(
-      <RecipePost
-        key={i}
-        email={allRecipePostsList[i].email}
-        title={allRecipePostsList[i].title}
-        image={allRecipePostsList[i].image}
-        description={allRecipePostsList[i].description}
-        ingredients={allRecipePostsList[i].ingredients}
-        instructions={allRecipePostsList[i].instructions}
-      />
-    );
+  for (let i = 0; i <  recipePostsList.length; i++) {
+    arrComponents.unshift(<RecipePost key={i} recipe={recipePostsList[i]} />);
   }
 
   return(
@@ -47,7 +37,6 @@ const ShowAllRecipeConent = () =>{
 
 
 const ShowFriendsRecipeConent = () =>{
-  const [friendsRecipePostsList, updateFriendsRecipePostsList] = useState([]);
 
   /*
   This will fetch the list of friends recipe posts stored in the database 
@@ -58,28 +47,19 @@ const ShowFriendsRecipeConent = () =>{
   */
   
   //change api to friends recipe(fix here)
-  const URL_GET_LIKED_RECIPE_POSTS_DATA = "/api/recipe/all";
+  const [recipePostsList, updateRecipePostsList] = useState([]);
+  const URL_GET_SAVED_RECIPE_POSTS_DATA = "/api/recipe/all";
   
     useEffect(() => {
-      fetch(URL_GET_LIKED_RECIPE_POSTS_DATA)
+      fetch(URL_GET_SAVED_RECIPE_POSTS_DATA)
         .then((response) => response.json())
-        .then((data) => updateFriendsRecipePostsList(data));
+        .then((data) => updateRecipePostsList(data));
     }, []);
 
 
   const arrComponents = [];
-  for (let i = 0; i < friendsRecipePostsList.length; i++) {
-    arrComponents.unshift(
-      <RecipePost
-        key={i}
-        email={friendsRecipePostsList[i].email}
-        title={friendsRecipePostsList[i].title}
-        image={friendsRecipePostsList[i].image}
-        description={friendsRecipePostsList[i].description}
-        ingredients={friendsRecipePostsList[i].ingredients}
-        instructions={friendsRecipePostsList[i].instructions}
-      />
-    );
+  for (let i = 0; i <  recipePostsList.length; i++) {
+    arrComponents.unshift(<RecipePost key={i} recipe={recipePostsList[i]} />);
   }
 
   return(
@@ -87,9 +67,6 @@ const ShowFriendsRecipeConent = () =>{
   )
   
 }
-
-
-
 
 
 
