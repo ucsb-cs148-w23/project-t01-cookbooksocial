@@ -56,7 +56,6 @@ function RecipePost({ recipe }) {
         return recipe.title;
     }
 
-    //To display the state variable in the html, use the {} curly brackets.  Simple!
     return (
         <div
             className="bg-white overflow-hidden pb-10 mb-10 border-b border-neutral-300 text-left"
@@ -71,13 +70,16 @@ function RecipePost({ recipe }) {
                     Edit
                 </a>
             )}
-            <header className="header">
-                <h2 className="font-extrabold text-left text-3xl">{displayRecipeTitle(recipe)}</h2>
+            <header className="header mb-2">
+                <h2 className="font-extrabold text-left text-4xl">{displayRecipeTitle(recipe)}</h2>
             </header>
-            <p>
-                <Link to={`/profile/${recipe.uid}`}>By: {displayName(recipe)}</Link>
+            <p className="text-gray-700 mb-0">
+                By{" "}
+                <Link className="no-underline" to={`/profile/${recipe.uid}`}>
+                    {displayName(recipe)}
+                </Link>
             </p>
-            <p>{timeStamptoDate(recipe.createdAt)}</p>
+            <p className="text-gray-500">{timeStamptoDate(recipe.createdAt)}</p>
             <p>{recipe.description}</p>
             <div className="pb-2/3">
                 <Link to={`/recipe/${recipe.id}`}>
