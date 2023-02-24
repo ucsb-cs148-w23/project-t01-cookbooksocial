@@ -4,6 +4,7 @@ import {firebaseUpdateWithImage, firebaseUpdateWithOutImage} from "../../compone
 import {useNavigate, useParams} from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import Navbars from "../../components/navbars/Navbars";
+import DeleteButton from "../../components/deleteModal/deleteModal";
 
 const IngreLists = (props) => {
 
@@ -284,7 +285,11 @@ export default function EditPost() {
                 <div className="putLeft">
                 </div>
                 <div className="flex_first-box">
-                    <div className="flex_first-item"> </div>
+                    <div className="flex_first-item mt-5">
+                    <DeleteButton
+                    recipeId={id}
+                    ></DeleteButton>    
+                    </div>
                     <div className="flex_first-item">
                         <div>
                             <p className="modalTitle">Image</p>

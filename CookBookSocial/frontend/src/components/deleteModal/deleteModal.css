@@ -26,3 +26,19 @@
     background-color: white;
 
 }
+
+.delete-modal.loading{
+        z-index: 2;
+        width: 50vw;
+        margin-top: 10vh;
+        padding: 40px 10px 40px 10px;
+        border-radius: 4px;
+        height: fit-content;
+        border-radius: 20px;
+        height: 50vh;
+        background-color: white;
+}
+
+.delete-modal.confirmation-text{
+    color: black;
+}

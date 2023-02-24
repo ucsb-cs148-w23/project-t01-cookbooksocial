@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { renderIngredients } from "./functions/RecipePostFunctions";
 import {Button} from "react-bootstrap";
 import { useAuth } from "../../contexts/AuthContext";
+import DeleteButton from "../deleteModal/deleteModal";
 
 /*
 What does calling useState do? It declares a “state variable”. Our variable is called response but we could call it anything else, like banana. This is a way to “preserve” some values between the function calls. Normally, variables “disappear” when the function exits but state variables are preserved by React.
@@ -61,6 +62,7 @@ function RecipePost({ recipe }) {
 
     //To display the state variable in the html, use the {} curly brackets.  Simple!
     return (
+        <div>
         <div
             className="bg-white overflow-hidden pb-10 mb-10 border-b border-neutral-300 text-left"
             onClick={toggleShowFull}
@@ -90,13 +92,23 @@ function RecipePost({ recipe }) {
                         <h2 className="instructions-header">Instructions</h2>
                         <ol className="post-list">{renderInstructions()}</ol>
                     </div>
-                    {currentUser.uid === recipe.uid && (
-                        <a type="button" class="text-white bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-lg px-5 py-2.5 text-center mr-2 mb-2 mt-4" 
-                        href={editPostPath}
-                        >Edit</a>
-                    )}
+                    
                 </footer>
             )}
+        </div>
+        {
+        showFullRecipe && currentUser.uid === recipe.uid && (
+            <div>
+                <a type="button" className="text-white bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-lg px-5 py-2.5 text-center mr-5 mb-5"
+                    href={editPostPath}
+                >Edit</a>
+                <DeleteButton
+                    recipeId={recipe.id}
+                ></DeleteButton>
+                <hr></hr>
+            </div>
+        )
+    }
         </div>
     );
 }

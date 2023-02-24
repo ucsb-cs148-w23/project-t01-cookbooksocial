@@ -15,7 +15,7 @@ import {
     orderBy,
 } from "firebase/firestore";
 
-import { getStorage } from "firebase/storage";
+import { getStorage, deleteObject, ref } from "firebase/storage";
 
 const addRecipe = async (req, res, next) => {
     /*
@@ -73,14 +73,44 @@ const updateRecipe = async (req, res, next) => {
 };
 
 const deleteRecipe = async (req, res, next) => {
+    // First need to get the recipe so we can get the image URL
+    // We need the image URL so we can delete the image from storage
+    const id = req.params.id;
+    const docRef = doc(db, "recipes", id);
+    const docSnap = await getDoc(docRef);
+    let imageURL = "";
     try {
-        const id = req.params.id;
-        const docRef = doc(db, "recipes", id);
-        await deleteDoc(docRef);
-        res.status(200).send(`Document deleted with ID: ${docRef.id}`);
+        if (docSnap.exists()) {
+            imageURL = docSnap.data()['image'];
+            if(imageURL === ""){
+                throw new Error('ImageURL was Invalid');
+            }
+        } else {
+            throw new Error('Recipe not found');
+        }
     } catch (e) {
         res.status(400).send(`Error: ${e.message}`);
+        return;
     }
+
+
+    // Delete image from storage then delete whole recipe
+    try{
+        const storageDeleteFrom = getStorage();
+        const oldImageRef = ref(storageDeleteFrom, imageURL);
+        deleteObject(oldImageRef).then(async () => {
+            await deleteDoc(docRef);
+            res.status(200).send(`Document deleted with ID: ${docRef.id} and image deleted with URL ${imageURL}`);
+        }).catch((error) => {
+            res.status(400).send(`Failed to delete the image.  Error: ${e.message}`);
+            return;
+        });
+    } catch(e){
+        res.status(400).send(`Error: ${e.message}`);
+        return;
+    }
+
+
 };
 
 const getRecipe = async (req, res, next) => {
