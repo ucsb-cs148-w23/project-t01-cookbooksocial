@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { renderIngredients } from "./functions/RecipePostFunctions";
-import {Button} from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { useAuth } from "../../contexts/AuthContext";
 
 /*
@@ -52,11 +52,8 @@ function RecipePost({ recipe }) {
         }
     }
 
-
-
-
     function displayRecipeTitle(recipe) {
-        return recipe.title
+        return recipe.title;
     }
 
     //To display the state variable in the html, use the {} curly brackets.  Simple!
@@ -66,17 +63,16 @@ function RecipePost({ recipe }) {
             onClick={toggleShowFull}
         >
             <header className="header">
-                {/* <h2 className="font-extrabold text-left text-3xl">{displayRecipeTitle(recipe)}</h2> */}
+                <h2 className="font-extrabold text-left text-3xl">{displayRecipeTitle(recipe)}</h2>
             </header>
-            <p><Link to={`/profile/${recipe.uid}`}>By: {displayName(recipe)}</Link></p>
+            <p>
+                <Link to={`/profile/${recipe.uid}`}>By: {displayName(recipe)}</Link>
+            </p>
             <p>{timeStamptoDate(recipe.createdAt)}</p>
             <p>{recipe.description}</p>
             <div className="pb-2/3">
-            <Link to={`/recipe/${recipe.id}`}>
-                    <img
-                        src={recipe.image}
-                        alt="Error loading image"
-                    />
+                <Link to={`/recipe/${recipe.id}`}>
+                    <img src={recipe.image} alt="Error loading image" />
                 </Link>
             </div>
 
@@ -91,9 +87,13 @@ function RecipePost({ recipe }) {
                         <ol className="post-list">{renderInstructions()}</ol>
                     </div>
                     {currentUser.uid === recipe.uid && (
-                        <a type="button" class="text-white bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-lg px-5 py-2.5 text-center mr-2 mb-2 mt-4" 
-                        href={editPostPath}
-                        >Edit</a>
+                        <a
+                            type="button"
+                            class="text-white bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-lg px-5 py-2.5 text-center mr-2 mb-2 mt-4"
+                            href={editPostPath}
+                        >
+                            Edit
+                        </a>
                     )}
                 </footer>
             )}
