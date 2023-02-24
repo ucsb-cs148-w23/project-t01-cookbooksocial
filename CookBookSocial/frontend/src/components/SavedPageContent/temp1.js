@@ -9,54 +9,60 @@ import styled from "styled-components";
 
 //Assuming maxed file we can save is 10. Assuming each user have 10 saved file in the database. 
 
+const GetSavedRecipesByIndex = (index =0) =>{
+  const [savedRecipePostsList, updateSavedRecipePostsList] = useState([]);
+  
+  /*
+  This will fetch the list of Saved recipe posts stored in the database. each saved file is related by "key" 
+  as an array of json objects. It will then save it in the state variable AllrecipePostsList.
+  It will refresh and check for new posts everytime the page refreshes.
+  "URL_GET_RECIPE_POSTS_DATA" will be replaced by the actual api endpoint for GET once it is created by
+  the backend.
+  */
 
+
+  
+  //change api to get data of saved file with "file index"(fix here)
+  //change api like "/api/recipe/saved(index)"
+  const URL_GET_SAVED_RECIPE_POSTS_DATA = "/api/recipe/all";
+  
+    useEffect(() => {
+      fetch(URL_GET_SAVED_RECIPE_POSTS_DATA)
+        .then((response) => response.json())
+        .then((data) => updateSavedRecipePostsList(data));
+    }, []);
+
+
+  const arrComponents = [];
+  for (let i = 0; i < savedRecipePostsList.length; i++) {
+    arrComponents.unshift(
+      {key :i, email:savedRecipePostsList[i].email, title:savedRecipePostsList[i].title, image: savedRecipePostsList[i].image, description:savedRecipePostsList[i].description,ingredient:savedRecipePostsList[i].ingredients,instruction: savedRecipePostsList[i].instructions}
+    );
+  }
+
+  return(
+    arrComponents
+  )
+  
+}
 
 
 //generate initial data
 
 
 function SavedPageContent () {
-  const GetSavedRecipesByIndex = (index =0) =>{
-    const [savedRecipePostsList, updateSavedRecipePostsList] = useState([]);
-    
-    /*
-    This will fetch the list of Saved recipe posts stored in the database. each saved file is related by "key" 
-    as an array of json objects. It will then save it in the state variable AllrecipePostsList.
-    It will refresh and check for new posts everytime the page refreshes.
-    "URL_GET_RECIPE_POSTS_DATA" will be replaced by the actual api endpoint for GET once it is created by
-    the backend.
-    */
+  const [savedRecipePostsList, updateSavedRecipePostsList] = useState(GetSavedRecipesByIndex());
   
-  
-    
-    //change api to get data of saved file with "file index"(fix here)
-    //change api like "/api/recipe/saved(index)"
-    const URL_GET_SAVED_RECIPE_POSTS_DATA = "/api/recipe/all";
-    
-      useEffect(() => {
-        fetch(URL_GET_SAVED_RECIPE_POSTS_DATA)
-          .then((response) => response.json())
-          .then((data) => updateSavedRecipePostsList(data));
-      }, []);
-  
-  
-    const arrComponents = [];
-    for (let i = 0; i < savedRecipePostsList.length; i++) {
-      arrComponents.unshift(
-        {key :i, email:savedRecipePostsList[i].email, title:savedRecipePostsList[i].title, image: savedRecipePostsList[i].image, description:savedRecipePostsList[i].description,ingredient:savedRecipePostsList[i].ingredients,instruction: savedRecipePostsList[i].instructions}
-      );
-    }
-    console.log(arrComponents)
-    return(
-      arrComponents
-    )
-    
-  }
 
+
+
+
+
+  
   const MakeData = () => {
     //const [savedArrComponents,updateSavedArrComponents] = useState([]);
     //savedArrComponents[number] = GetSavedRecipesByIndex(number);
-    const number = 1;
+    const number = 10;
     const fileTitlePrefix ='initial';
     const initialData = [];
     //get all data
@@ -76,23 +82,14 @@ function SavedPageContent () {
   }
 
 
-  const GetTest = () =>{
-    const temp = [];
-    for(let i  =0; i< 3;i++){
-      temp.push({key :i, email:"testmail"+i, title:"testTitle"+i, image: null, description:"desc"+i,ingredient:null,instruction: null});
-    }
-    
 
-    return(temp);
-    
-  }
+
 
   const [showExtra, setshowExtra] = useState(false);
   const [showArrow, setshowArrow] = useState(true);
   const [showModal, setshowModal] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [tabs, setTabs] = useState(MakeData());
-  const [savedRecipePostsList, updateSavedRecipePostsList] = useState(GetTest());
   const [newFileName, setNewFileName] = useState();
 
 
@@ -168,7 +165,7 @@ function SavedPageContent () {
   }
 
   console.log("time")
-  console.log(savedRecipePostsList[0].length)
+  console.log(savedRecipePostsList)
   const tabTemplate = [];
   const panelTemplate = [];
   //convert data to html style
@@ -190,14 +187,13 @@ function SavedPageContent () {
         )
       }
   }
-  console.log(styledSavedFile)
   tabs.forEach((tab, i) => {
     const closable = tabs.length > 1;
     tabTemplate.push(<DragTab key={i} closable={closable}>{tab.fileTitle}</DragTab>);
     panelTemplate.push(
       <Panel key={i}>
             {
-              styledSavedFile[0]
+              styledSavedFile[i]
             }
       </Panel>
       );
