@@ -8,8 +8,6 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useParams } from "react-router-dom";
 import {db } from "../../config/firebase";
 import { doc, getDoc } from "firebase/firestore"; 
-// import { getUser } from "../../../../backend/controllerFunctions/userFunctions.js"
-
 // import renderRecipePostComponents from "./pages/HomePage/HomePage";
 //FIXME: ProfilePage is very similar to HomePage code so probably a way to re-use
 
@@ -20,53 +18,6 @@ function PeoplePage() {
     //uses param from route :userId
     const { userId} = useParams();
 
-    //look up the firestore user doc for the user whose PeoplePage we are viewing
-    // const bioProfilePicHTML = document.querySelector("#bioProfilePic")
-    // function renderProfileInfo(doc){
-    //     if(!doc){
-    //         console.log("returned early");
-    //         return;
-    //     }
-    //     let li=document.createElement('li');
-    //     let displayName=document.createElement('span');
-    //     let photoURL=document.createElement('span');
-
-    //     li.setAttribute('data-id', doc.id);
-    //     displayName.textContent=doc.data().profile.displayName;
-    //     photoURL.textContent=doc.data().profile.photoURL;
-
-    //     li.appendChild(photoURL);
-    //     li.appendChild(displayName);
-    //     if(!li){
-    //         console.log("li is null");
-    //     }
-    //     console.log("li",li);
-    //     bioProfilePicHTML.appendChild(li);
-
-    // }
-    // getDoc(doc(db, "users", userId)).then((snapshot) =>{
-    //     //pass snapshot to a render func
-    //     if(!snapshot ){
-    //         console.log("null before call");
-    //         console.log("doc data", snapshot.data());
-    //     }
-    //     renderProfileInfo(snapshot);
-
-    // })
-
-    // let userProfile;
-    // const userData=getUser(userId)
-    // userData.then(function(result){
-    //     userProfile=result;
-    //     console.log("user prof before", userProfile.email)
-    // })
-    // console.log("user prof", userProfile)
-    const username=3
-    // //FIXME
-    // console.log("user data after:",userData)
-    // console.log("Username", username);
-
-    //useAuth has information from Firebase about user, we will get email from here
     /*
   This will fetch the list of PROFILE recipe posts stored in the database 
   as an array of json objects. It will then save it in the state variable profileRecipePostsList.
@@ -123,25 +74,16 @@ function PeoplePage() {
             return arrComponents;
         }
     }
-
+    console.log(profileInfo)
     return (
         <div>
             <Navbars />
             <Container>
-            {/* <img src={movies}
-            className={"bioProfilePic"}
-            alt="No-Pic"/>
-            
-            <ul id= "bioProfilePic"></ul> */}
-            <img src={profileInfo.data?.profile.photoURL} 
-            className={"bioProfilePic"}
-            alt="No-Pic"/>
+            <img src= {profileInfo.data?.profile ? profileInfo.data?.profile.photoURL : "No-Pic"} className={"bioProfilePic"} />
+
             <ul>
-            <li className="bioProfileName" key={profileInfo.id}>{profileInfo.data?.profile.displayName? profileInfo.data?.profile.displayName: "No username"}</li>
+            <li className="bioProfileName" key={profileInfo.id}>{profileInfo.data?.profile ? profileInfo.data?.profile.displayName: "No username"}</li>
             </ul>
-            {/* <div className={"bioProfile"}>
-            {username ? username : "No username"}
-            </div> */}
             </Container>
             <div className="profile-page">
                 <ul>{renderProfileRecipePostComponents()}</ul>
