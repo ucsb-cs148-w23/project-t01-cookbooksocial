@@ -81,7 +81,11 @@ function RecipePost({ recipe }) {
             <p>{recipe.description}</p>
             <div className="pb-2/3">
                 <Link to={`/recipe/${recipe.id}`}>
-                    <img src={recipe.image} alt="Error loading image" />
+                    <img
+                        className="h-full w-full object-cover aspect-[3/2]"
+                        src={recipe.image}
+                        alt="Recipe"
+                    />
                 </Link>
             </div>
         </div>
