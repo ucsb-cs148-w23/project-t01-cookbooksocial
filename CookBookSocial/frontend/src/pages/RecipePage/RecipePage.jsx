@@ -4,7 +4,7 @@ import { collection, doc, getDoc, getFirestore } from 'firebase/firestore';
 import styles from './RecipePage.module.css';
 import Navbars from "../../components/navbars/Navbars";
 import { useAuth } from '../../contexts/AuthContext';
-import DeleteModal from '../../components/deleteModal/deleteModal';
+import DeleteButton from '../../components/deleteModal/deleteModal';
 
 function RecipePage() {
   const { id } = useParams();
@@ -61,7 +61,7 @@ function RecipePage() {
   // } else {
     return(
       <div>
-
+    
         <Navbars />
         <div className={styles.recipePage}>
           <h1 className={styles.recipeTitle}>{recipe.title}</h1>
@@ -106,9 +106,9 @@ function RecipePage() {
             <a type="button" class="text-white bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-lg px-5 py-2.5 text-center mr-2 mb-2 mt-4"
               href={editPostPath}
             >Edit</a>
-            <span type="button" class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-lg px-5 py-2.5 text-center mr-2 mb-2"
-              onClick={() => setShowDeleteModal(true)}
-            >Delete</span>
+            <DeleteButton
+            recipeId={id}
+            ></DeleteButton>
           </div>
         )}
       </div>

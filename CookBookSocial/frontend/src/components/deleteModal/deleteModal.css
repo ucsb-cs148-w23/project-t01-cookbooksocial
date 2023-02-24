@@ -1,3 +1,5 @@
+@charset "utf-8";
+
 .delete-modal.overlay {
     position: fixed;
     top: 0;
@@ -14,15 +16,13 @@
 
 .delete-modal.content {
     z-index: 2;
-    width: 90vw;
+    width: auto;
     margin-top: 10vh;
     padding: 40px 10px 40px 10px;
-    background: rgb(251, 233, 207);
-    overflow-y: scroll;
-    align-items: center;
     border-radius: 4px;
     height: fit-content;
     border-radius: 20px;
-    height: 85vh;
+    height: 50vh;
+    background-color: white;
 
 }
