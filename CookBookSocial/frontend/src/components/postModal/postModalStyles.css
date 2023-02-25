@@ -193,7 +193,6 @@
 .postConfirm a {
 	background-color:#db5642;
     border-radius: 50px;
-    position: relative;
     display: flex;
     justify-content: space-around;
     align-items: center;
