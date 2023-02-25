@@ -229,17 +229,6 @@ export function Modal({ show, setShow }) {
     return true;
   }
 
-  async function getiD(stringURL) {
-    const postInfo = fullRecipeInfo;
-    postInfo["createdAt"] = serverTimestamp();
-    postInfo["image"] = stringURL;
-
-    const res = await addDoc(collection(db, "recipes"), postInfo);
-
-    // console.log("This is the timestamp Object:\n", postInfo["createdAt"]);
-
-    return res;
-  }
 
   function handleImage(pic) {
     setImage(pic);

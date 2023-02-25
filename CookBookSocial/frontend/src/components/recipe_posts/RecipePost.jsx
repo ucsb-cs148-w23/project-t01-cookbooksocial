@@ -36,14 +36,18 @@ function RecipePost({ recipe }) {
     }
 
     function displayName(recipe) {
-        if (recipe.user) {
-            return recipe.user;
-        } else if (recipe.email) {
+        console.log(recipe, recipe['user']);
+
+        // There is no 'user' in the recipe.  
+        if ('profile' in recipe.user) {
+            if('displayName' in recipe.user.profile){
+                return recipe.user.profile.displayName;
+            }
+        } 
+       if ('email' in recipe) {
             return recipe.email;
-        } else if (recipe.uid) {
-            return `UID ${recipe.uid}`;
         } else {
-            return "No author found! FIX THIS";
+            return "No author found!";
         }
     }
 
