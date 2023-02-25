@@ -54,6 +54,7 @@ export default function ProfilePic() {
         photoURL: avatars[selectedAvatar],
       };
       await updateUserProfile(user, profile);
+      //update user's firestore doc with new profile photo and display name
       const userRef = doc(db, "users", currentUser.uid);
       setDoc(userRef, { profile: profile }, { merge: true });
       navigate("/home");
