@@ -6,6 +6,9 @@ import { generateAvatar } from "../../utils/GenerateAvatar";
 
 import styles from "./ProfilePic.module.css";
 
+import {db } from "../../config/firebase";
+import { doc, setDoc } from "firebase/firestore"; 
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -19,6 +22,7 @@ export default function ProfilePic() {
   const [loading, setLoading] = useState(false);
 
   const { currentUser, updateUserProfile, setError } = useAuth();
+
 
   useEffect(() => {
     const fetchData = () => {
@@ -50,6 +54,9 @@ export default function ProfilePic() {
         photoURL: avatars[selectedAvatar],
       };
       await updateUserProfile(user, profile);
+      //update user's firestore doc with new profile photo and display name
+      const userRef = doc(db, "users", currentUser.uid);
+      setDoc(userRef, { profile: profile }, { merge: true });
       navigate("/home");
     } catch (e) {
       setError("Failed to update profile");
