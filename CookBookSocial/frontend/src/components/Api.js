@@ -12,7 +12,7 @@ Larger images would make more duplicate posts, which I am assume is because the 
 import { ref, getDownloadURL, uploadBytesResumable, deleteObject, getStorage } from "firebase/storage";
 import { storage, db } from "../config/firebase";
 import { doc, addDoc, updateDoc, collection, serverTimestamp } from "firebase/firestore";
-
+import {v4 as uuidv4} from 'uuid';
 
 async function postToFirebase(stringURL, fullRecipeInfo) {
     let postInfo = fullRecipeInfo;
@@ -38,7 +38,7 @@ async function putToFirebase(id, stringURL, fullRecipeInfo) {
 }
 
 export function firebaseUpload(image, fullRecipeInfo){
-    const storageRef = ref(storage, `images/${image.name}`);
+    const storageRef = ref(storage, `images/${uuidv4()}`);
 
     const uploadTask = uploadBytesResumable(storageRef, image);
 
@@ -71,7 +71,7 @@ export function firebaseUpload(image, fullRecipeInfo){
 }
 
 export function firebaseUpdateWithImage(id, image, fullRecipeInfo, oldImgURL){
-    const storageRef = ref(storage, `images/${image.name}`);
+    const storageRef = ref(storage, `images/${uuidv4()}`);
     console.log(oldImgURL);
     const storageDeleteFrom = getStorage();
     const oldImageRef = ref(storageDeleteFrom, oldImgURL);
