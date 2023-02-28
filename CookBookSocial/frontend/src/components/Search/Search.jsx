@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import algoliasearch from 'algoliasearch';
 import { InstantSearch, SearchBox, Hits, Highlight } from 'react-instantsearch-dom';
-import './Search.css'; 
+import './Search.css';
 
 const searchClient = algoliasearch(
   'DEKII3BH6O',
@@ -10,6 +10,7 @@ const searchClient = algoliasearch(
 
 const InstantSearchComponent = () => {
   const [showHits, setShowHits] = useState(false);
+  const [query, setQuery] = useState('');
   const hitsRef = useRef(null);
 
   useEffect(() => {
@@ -26,6 +27,11 @@ const InstantSearchComponent = () => {
     };
   }, [hitsRef]);
 
+  const handleSearch = (event) => {
+    setQuery(event.currentTarget.value);
+    setShowHits(event.currentTarget.value.length > 0);
+  };
+
   return (
     <InstantSearch indexName="Recipe Titles" searchClient={searchClient} hitsPerPage={3}>
       <div style={{ maxWidth: '300px', margin: '0 auto' }}>
@@ -33,10 +39,11 @@ const InstantSearchComponent = () => {
           translations={{
             placeholder: 'Search for recipes...',
           }}
-          onFocus={() => setShowHits(true)}
+          onChange={handleSearch}
+          onFocus={() => setShowHits(query.length > 0)}
           style={{ maxWidth: '200px', margin: '0 auto' }}
         />
-        {showHits && (
+        {showHits && query.length > 0 && (
           <div ref={hitsRef}>
             <Hits
               hitComponent={Hit}
