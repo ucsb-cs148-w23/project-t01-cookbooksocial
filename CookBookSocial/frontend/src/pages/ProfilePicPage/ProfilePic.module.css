@@ -28,3 +28,18 @@
 .nameField {
   margin-bottom: 5%;
 }
+
+.backButton {
+  position: fixed;
+  left: 5%;
+  top: 5%;
+  background-color: #DB5642;
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+  width: 100px;
+  height: 30px;
+  border-radius: 15px;
+  align-items: center;
+
+}
