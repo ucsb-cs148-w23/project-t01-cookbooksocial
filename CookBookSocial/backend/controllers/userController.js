@@ -57,6 +57,7 @@ const sendFriendRequest = async (req, res, next) => {
 
         const idSentFrom = req.params['idSent'];
         const idSentTo = req.params['idReceived'];
+
         
         if(!idSentFrom || !idSentTo){
             throw new Error("Got invalid parameters.");
@@ -66,6 +67,8 @@ const sendFriendRequest = async (req, res, next) => {
         if(idSentFrom === idSentTo){
             throw new Error("Cannot friend yourself!");
         }
+
+    
 
         const docRefSent = doc(db, "users", idSentFrom);
         const docRefReceived = doc(db, "users", idSentTo);
@@ -83,14 +86,14 @@ const sendFriendRequest = async (req, res, next) => {
 
 
         if("friends" in updateDataSend){
-            if (updateDataSend['friends'].includes(idSentTo)) {
+            if (idSentTo in updateDataSend['friends']) {
                 throw new Error("Already friended");
 
             } 
         }
 
         if ("friends" in updateDataRec) {
-            if (updateDataRec['friends'].includes(idSentFrom)) {
+            if (idSentFrom in updateDataRec['friends']) {
                 throw new Error("Already friended (This shouldn't happen)");
 
             }
@@ -110,40 +113,52 @@ const sendFriendRequest = async (req, res, next) => {
         }
 
         const infoForSender = {
-            uid: idSentTo,
-            profile: recProfile
+            profile: recProfile,
+            uid: idSentTo
+   
         }
 
         const infoForRec = {
-            uid: idSentFrom,
-            profile: sendProfile
+            profile: sendProfile,
+            uid: idSentFrom
+            
         }
 
+        if ("receivedFriendRequests" in updateDataSend) {
+            if (idSentTo in updateDataSend['receivedFriendRequests']) {
+                throw new Error(" WARNING: You already received a friend request from them.");
+            } 
+        } 
 
 
         if("sentFriendRequests" in updateDataSend){
-            if(updateDataSend['sentFriendRequests']['uid'] === idSentTo){
+            if(idSentTo in updateDataSend['sentFriendRequests']){
                 throw new Error("Already sent friend request to them.");
 
             } else {
-                updateDataSend['sentFriendRequests'].push(infoForSender);
+                updateDataSend['sentFriendRequests'][`${idSentTo}`] = infoForSender;
             }
         } else {
-            updateDataSend['sentFriendRequests'] = [ infoForSender ];
+            updateDataSend['sentFriendRequests'] = {};
+            updateDataSend['sentFriendRequests'][`${idSentTo}`] = infoForSender;
+
         }
 
+
         if("receivedFriendRequests" in updateDataRec){
-            if(updateDataRec['receivedFriendRequests']['uid'] === idSentFrom){
+            if (idSentFrom in updateDataRec['receivedFriendRequests']){
                 throw new Error(" WARNING: They have already received your friend request.  THIS SHOULD NOT HAPPEN");
             } else {
-                updateDataRec['receivedFriendRequests'].push(infoForRec);
+                updateDataRec['receivedFriendRequests'][`${idSentFrom}`] =  infoForRec;
             }
         } else {
-            updateDataRec['receivedFriendRequests'] = [ infoForRec ];
+            updateDataRec['receivedFriendRequests'] = {};
+            updateDataRec['receivedFriendRequests'][`${idSentFrom}`] = infoForRec;
         }
 
         await updateDoc(docRefSent, updateDataSend);
         await updateDoc(docRefReceived, updateDataRec);
+
 
         res.status(200).send(`Success.  Friend Request Sent.`);
 
@@ -152,6 +167,7 @@ const sendFriendRequest = async (req, res, next) => {
 
     } catch(e){
         res.status(400).send(`Error: ${e}`);
+        console.log(e);
         return;
     }
 }
@@ -212,35 +228,37 @@ const acceptFriendRequest = async (req, res, next) => {
         }
 
         if ("friends" in updateDataSend) {
-            if (updateDataSend['friends']['uid'] === idReceiver) {
+            if (idReceiver in updateDataSend['friends']) {
                 throw new Error("Already friended");
             } else {
-                updateDataSend['friends'].push(infoForSender);
+                updateDataSend['friends'][idReceiver] = infoForSender;
             }
         } else {
-            updateDataSend['friends'] = [infoForSender ];
+            updateDataSend['friends'] = {};
+            updateDataSend['friends'][idReceiver] = infoForSender;
         }
 
         if ("friends" in updateDataRec) {
-            if (updateDataRec['friends']['uid'] === idSender) {
+            if (idSender in updateDataRec['friends']) {
                 throw new Error("Already friended (This shouldn't happen)");
 
             }else {
-                updateDataRec['friends'].push(infoForRec);
+                updateDataRec['friends'][idSender] = infoForRec;
             }
         } else {
-            updateDataRec['friends'] = [infoForRec];
+            updateDataRec['friends'] = {};
+            updateDataRec['friends'][idSender] = infoForRec;
         }
 
         if ("sentFriendRequests" in updateDataSend) {
-                // Filter will remove all occurences of idReceiver in case there was some previous error.
-            updateDataSend['sentFriendRequests'] = updateDataSend['sentFriendRequests'].filter(e => e['uid'] !== idReceiver);
+            delete updateDataSend['sentFriendRequests'][idReceiver];
+
 
         } 
 
         if ("receivedFriendRequests" in updateDataRec) {
 
-            updateDataRec['receivedFriendRequests'] = updateDataRec['receivedFriendRequests'].filter(e => e['uid'] !== idSender);
+            delete updateDataRec['receivedFriendRequests'][idSender];
 
         } 
 
@@ -254,8 +272,62 @@ const acceptFriendRequest = async (req, res, next) => {
 
     } catch(e){
         res.status(400).send(`Error: ${e}`);
+        console.log(e);
         return;
     }
 }
 
-export { addUser, deleteUser, sendFriendRequest, acceptFriendRequest, getFriendRequests };
+
+const rejectFriendRequest = async (req, res, next) => {
+    /*
+        idReceiver is the current user that is accepting a friend request.  The idSender is the one who sent the friend request.  They will both be added to eachother's friends list, and removed from 'sendFriendRequests' and 'receivedFriendRequest' lists
+    */
+
+    try {
+        const idReceiver = req.params['idReceived'];
+        const idSender = req.params['idSent'];
+
+        if (!idReceiver || !idSender) {
+            throw new Error("Got invalid parameters.");
+        }
+
+        const docRefSender = doc(db, "users", idSender);
+        const docRefReceiver = doc(db, "users", idReceiver);
+
+        const docSnapSender = await getDoc(docRefSender);
+        const docSnapReceiver = await getDoc(docRefReceiver);
+
+        if (!docSnapSender.exists() || !docSnapReceiver.exists()) {
+            throw new Error("One of these users does not exist!");
+        }
+
+        const updateDataSend = docSnapSender.data();
+        const updateDataRec = docSnapReceiver.data();
+
+
+        if ("sentFriendRequests" in updateDataSend) {
+            delete updateDataSend['sentFriendRequests'][idReceiver];
+
+        }
+
+        if ("receivedFriendRequests" in updateDataRec) {
+
+            delete updateDataRec['receivedFriendRequests'][idSender];
+
+        }
+
+
+
+        await updateDoc(docRefSender, updateDataSend);
+        await updateDoc(docRefReceiver, updateDataRec);
+
+        res.status(200).send(`Success.  Rejected Friend Request.`);
+
+
+    } catch (e) {
+        res.status(400).send(`Error: ${e}`);
+        return;
+    }
+}
+
+export { addUser, deleteUser, sendFriendRequest, acceptFriendRequest, getFriendRequests, rejectFriendRequest };

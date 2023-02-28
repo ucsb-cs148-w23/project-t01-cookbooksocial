@@ -5,6 +5,7 @@ import Navbars from "../../components/navbars/Navbars";
 import PostModal from "../../components/postModal/postModal";
 import "./ProfilePage.css";
 import { useAuth } from "../../contexts/AuthContext";
+import FriendRequestsDisplay from "../../components/friendRequestsDisplay/FriendRequestsDisplay";
 // import { useParams } from "react-router-dom";
 
 
@@ -13,7 +14,6 @@ import { useAuth } from "../../contexts/AuthContext";
 
 function ProfilePage() {
     const [profileRecipePostsList, updateProfileRecipePostsList] = useState([]);
-    const [receivedFriendRequests, setReceivedFriendRequests] = useState([]);
     const { currentUser } = useAuth();
     const username = currentUser.displayName;
 
@@ -27,7 +27,6 @@ function ProfilePage() {
   the backend.
   */
     const URL_GET_PROFILE_RECIPE_POSTS_DATA = "/api/recipe/all";
-    const URL_GET_USERS_FRIEND_REQUESTS = `/api/user/friend-requests/${currentUser.uid}`;
 
     console.log("Current User: ", currentUser);
     useEffect(() => {
@@ -35,9 +34,6 @@ function ProfilePage() {
             .then((response) => response.json())
             .then((data) => updateProfileRecipePostsList(data));
 
-        fetch(URL_GET_USERS_FRIEND_REQUESTS)
-            .then((response) => response.json())
-            .then((data) => setReceivedFriendRequests(data));
     }, []);
 
     function renderProfileRecipePostComponents() {
@@ -63,37 +59,7 @@ function ProfilePage() {
         }
     }
 
-    function reloadFriendReqs(){
-        fetch(URL_GET_USERS_FRIEND_REQUESTS)
-            .then((response) => response.json())
-            .then((data) => setReceivedFriendRequests(data));
-    }
 
-    function acceptFriend(senderId){
-        const URL_ACCEPT_FRIEND_REQUEST = `/api/user/friend-accept/${currentUser.uid}/${senderId}`;
-        const response = fetch(URL_ACCEPT_FRIEND_REQUEST, {
-            method: 'PUT',
-            headers: {
-                'Content-type': 'application/json'
-            }
-        }).then(function (data) {
-            console.log(data);
-            reloadFriendReqs();
-        });
-
-        console.log(response);
-
-    }
-
-    let receivedFriendReqDisplay;
-    receivedFriendReqDisplay = receivedFriendRequests.map((friendReq) => (
-        <div className="friendRequest" key={friendReq.uid}>{friendReq.profile.displayName || friendReq.email}
-            <span className="rec-friend-req-btn bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-                onClick={() => acceptFriend(friendReq.uid)}
-            >
-                Accept</span>
-        </div>
-    ));
     //have user info at top
     return (
         <div>
@@ -105,11 +71,9 @@ function ProfilePage() {
             <div className={"bioProfileName"}>
             {username ? username : "No username"}
             </div>
-            <div className="rec-friend-req-container">
-                    {receivedFriendRequests.length !== 0 && (
-                        receivedFriendReqDisplay
-                    )}
-            </div>
+            <FriendRequestsDisplay
+            currentUserId={currentUser.uid}
+            />
             </Container>
             <div className="profile-page">
                 <PostModal></PostModal>
