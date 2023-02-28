@@ -128,7 +128,7 @@ function SavedPageContent () {
     return (
       {fileTitle: tempFileName,
         content: 
-          <GetSavedRecipesByIndex index = {tabs.length}/>
+          null
         
       }
     )  

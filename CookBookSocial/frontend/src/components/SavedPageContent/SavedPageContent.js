@@ -1,14 +1,7 @@
-import React, { useEffect, useState,Component } from "react";
-import {Tabs, TabList, Tab, DragTabList, DragTab, PanelList, Panel, ExtraButton} from 'react-tabtab';
-import customStyle from './SavedPageTabs';
-import RecipePost from "../recipe_posts/RecipePost";
-import {simpleSwitch} from 'react-tabtab/lib/helpers/move';
-import DraggableList from "react-draggable-list";
+import React, { useEffect, useState } from "react";
+import RecipePost from "../../components/recipe_posts/RecipePost";
 
-
-//Assuming maxed file we can save is 10. Assuming each user have 10 saved file in the database. 
-
-const GetSavedRecipesByIndex = (index =0) =>{
+const GetSavedRecipeData = () =>{
   const [recipePostsList, updateRecipePostsList] = useState([]);
   
   /*
@@ -34,7 +27,7 @@ const GetSavedRecipesByIndex = (index =0) =>{
 
   const arrComponents = [];
   for (let i = 0; i <  recipePostsList.length; i++) {
-    arrComponents.unshift(<RecipePost key={i} recipe={recipePostsList[i]} />);
+    arrComponents.unshift(recipePostsList[i]);
   }
 
   return(
@@ -43,175 +36,46 @@ const GetSavedRecipesByIndex = (index =0) =>{
 
 }
 
-//generate initial data
-
-
-function SavedPageContent () {
-  const [savedRecipePostsList, updateSavedRecipePostsList] = useState([]);
-
-
-
-
-
-  
-  const MakeData = () => {
-    //const [savedArrComponents,updateSavedArrComponents] = useState([]);
-    //savedArrComponents[number] = GetSavedRecipesByIndex(number);
-    const number = 10;
-    const fileTitlePrefix ='initial';
-    const initialData = [];
-    //get all data
-    for (let i = 0; i < number; i++) {
-      initialData.push({
-        fileTitle: `${fileTitlePrefix} ${i}`,
-        content:
-          <GetSavedRecipesByIndex index = {i}/>
-      });    
-
-    }
-   
-    //delete data which fileTitle is null
-    const data = initialData.filter((data) => (data.fileTitle !== ''))
-    console.log(data);
-    return data;
+const DataConvertStyle =(data)=>
+{
+  const arrComponents = [];
+  for (let i = 0; i <  data.length; i++) {
+    arrComponents.push(<RecipePost key={i} recipe={data[i]} />);
   }
 
-
-
-
-
-  const [showExtra, setshowExtra] = useState(false);
-  const [showArrow, setshowArrow] = useState(true);
-  const [showModal, setshowModal] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [tabs, setTabs] = useState(MakeData());
-  const [newFileName, setNewFileName] = useState();
-
-
-
-
-  //tap tab
-  const handleTabChange = (index) => {
-    setActiveIndex(index);
-  }
-
-
-
-
-  //handle switch tabs
-  const handleTabSequenceChange = ({oldIndex, newIndex})=> {
-    const updateTabs = simpleSwitch(tabs, oldIndex, newIndex);
-    setTabs(updateTabs);
-    setActiveIndex(newIndex)
-    //swich a file in databse(fix here)
-    
-  }
-
-
-
-  //add new file 
-  const handleExtraButton = () => {
-    if ( newFileName != ""){
-      const newTabs = [...tabs, addNewTab()];
-      setTabs(newTabs);
-      setActiveIndex(newTabs.length - 1)
-    }
-    else
-    {
-      console.log("new file name is null")
-    }
-  }
-
-  const addNewTab =()=> {
-    const tempFileName = newFileName;
-    setNewFileName('');
-    return (
-      {fileTitle: tempFileName,
-        content: 
-          <GetSavedRecipesByIndex index = {tabs.length}/>
-        
-      }
-    )  
-  }
-
-  //control tab and tab's contents
-  const handleEdit = ({type, index}) => {
-    if (type === 'delete') {
-      setTabs([...tabs.slice(0, index), ...tabs.slice(index + 1)]);
-    }
-    if (index - 1 >= 0) {
-      setActiveIndex(index - 1);
-    } else {
-      setActiveIndex(0);
-    }
-    return {tabs, activeIndex};
-  }
-
-    
-
-  const handleToggleExtra = e => {
-    setshowExtra(showExtra);
-  }
-  const handleToggleArrow = e => {
-    setshowArrow(showArrow);
-  }
-  const handleToggleModal = e => {
-    setshowArrow(showModal);
-  }
-
-  console.log("time")
-  const tabTemplate = [];
-  const panelTemplate = [];
-  tabs.forEach((tab, i) => {
-    const closable = tabs.length > 1;
-    tabTemplate.push(<DragTab key={i} closable={closable}>{tab.fileTitle}</DragTab>);
-    panelTemplate.push(
-      <Panel key={i}>
-            {
-              tab.content
-            }
-      </Panel>
-      );
-  })
-
-  return (
-    <>
-    <div>
-      <input
-        className="inputNewFileName"
-        value={newFileName}
-        onChange={(event) => setNewFileName(event.target.value)}
-        placeholder="Add New File"
-      />
-      <button onClick={handleExtraButton}>
-        +
-      </button>
-    </div>
-    <Tabs onTabEdit={handleEdit}
-            onTabChange={handleTabChange}
-            activeIndex={activeIndex}
-            customStyle={customStyle}
-            onTabSequenceChange={handleTabSequenceChange}
-            showArrowButton={showArrow}
-            showModalButton={showModal}
-            ExtraButton={showExtra &&
-              <ExtraButton onClick={this.handleExtraButton}>
-                
-              </ExtraButton>
-            }
-    >
-      <DragTabList>
-        {tabTemplate}
-      </DragTabList>
-      <PanelList>
-        {panelTemplate}
-      </PanelList>
-    </Tabs>
-    </>
+  return(
+    arrComponents
   )
-  
 }
 
 
+export default function SavedPageContent () {
+  const [data, setData] = useState(GetSavedRecipeData())
+  // const [recipePostsList, updateRecipePostsList] = useState([]);
+  // useEffect(() => {
+  //   // declare the async data fetching function
+  //   const fetchData = async () => {
+  //     // get the data from the api
+      
+  //     const data = await ShowSavedRecipeConent();
+  
+  //     // set state with the result
+  //     setData(data);
+  //   }
+  
+  //   // call the function
+  //   fetchData()
+  //     // make sure to catch any error
+  //     .catch(console.error);;
+  // }, [])
+  console.log(data);
+ 
 
-export default SavedPageContent;
+  return (
+    <>
+    
+
+    </>
+  )
+
+}
