@@ -54,6 +54,7 @@ const sendFriendRequest = async (req, res, next) => {
 */
 
     try{
+
         const idSentFrom = req.params['idSent'];
         const idSentTo = req.params['idReceived'];
         
@@ -73,11 +74,13 @@ const sendFriendRequest = async (req, res, next) => {
         const docSnapRec = await getDoc(docRefReceived);
 
         if(!docSnapSend.exists() || !docSnapRec.exists() ){
+            console.log("test3");
             throw new Error("One of these users does not exist!");
         }
 
         const updateDataSend = docSnapSend.data();
         const updateDataRec = docSnapRec.data();
+
 
         if("friends" in updateDataSend){
             if (updateDataSend['friends'].includes(idSentTo)) {
@@ -93,27 +96,50 @@ const sendFriendRequest = async (req, res, next) => {
             }
         }
 
+        let recProfile = {};
+        if('profile' in updateDataRec){
+            recProfile = updateDataRec['profile'];
+        } else {
+            recProfile = updateDataRec['email'];
+        }
+        let sendProfile = {};
+        if ('profile' in updateDataSend) {
+            sendProfile = updateDataSend['profile'];
+        } else {
+            sendProfile = updateDataSend['email'];
+        }
+
+        const infoForSender = {
+            uid: idSentTo,
+            profile: recProfile
+        }
+
+        const infoForRec = {
+            uid: idSentFrom,
+            profile: sendProfile
+        }
+
 
 
         if("sentFriendRequests" in updateDataSend){
-            if(updateDataSend['sentFriendRequests'].includes(idSentTo)){
+            if(updateDataSend['sentFriendRequests']['uid'] === idSentTo){
                 throw new Error("Already sent friend request to them.");
 
             } else {
-                updateDataSend['sentFriendRequests'].push(idSentTo);
+                updateDataSend['sentFriendRequests'].push(infoForSender);
             }
         } else {
-            updateDataSend['sentFriendRequests'] = [ idSentTo ];
+            updateDataSend['sentFriendRequests'] = [ infoForSender ];
         }
 
         if("receivedFriendRequests" in updateDataRec){
-            if(updateDataRec['receivedFriendRequests'].includes(idSentFrom)){
+            if(updateDataRec['receivedFriendRequests']['uid'] === idSentFrom){
                 throw new Error(" WARNING: They have already received your friend request.  THIS SHOULD NOT HAPPEN");
             } else {
-                updateDataRec['receivedFriendRequests'].push(idSentFrom);
+                updateDataRec['receivedFriendRequests'].push(infoForRec);
             }
         } else {
-            updateDataRec['receivedFriendRequests'] = [ idSentFrom ];
+            updateDataRec['receivedFriendRequests'] = [ infoForRec ];
         }
 
         await updateDoc(docRefSent, updateDataSend);
@@ -161,36 +187,60 @@ const acceptFriendRequest = async (req, res, next) => {
         const updateDataSend = docSnapSender.data();
         const updateDataRec = docSnapReceiver.data();
 
+
+        let recProfile = {};
+        if ('profile' in updateDataRec) {
+            recProfile = updateDataRec['profile'];
+        } else {
+            recProfile = updateDataRec['email'];
+        }
+        let sendProfile = {};
+        if ('profile' in updateDataSend) {
+            sendProfile = updateDataSend['profile'];
+        } else {
+            sendProfile = updateDataSend['email'];
+        }
+
+        const infoForSender = {
+            uid: idReceiver,
+            profile: recProfile
+        }
+
+        const infoForRec = {
+            uid: idSender,
+            profile: sendProfile
+        }
+
         if ("friends" in updateDataSend) {
-            if (updateDataSend['friends'].includes(idReceiver)) {
+            if (updateDataSend['friends']['uid'] === idReceiver) {
                 throw new Error("Already friended");
             } else {
-                updateDataSend['friends'].push(idReceiver);
+                updateDataSend['friends'].push(infoForSender);
             }
         } else {
-            updateDataSend['friends'] = [ idReceiver ];
+            updateDataSend['friends'] = [infoForSender ];
         }
 
         if ("friends" in updateDataRec) {
-            if (updateDataRec['friends'].includes(idSender)) {
+            if (updateDataRec['friends']['uid'] === idSender) {
                 throw new Error("Already friended (This shouldn't happen)");
 
             }else {
-                updateDataRec['friends'].push(idSender);
+                updateDataRec['friends'].push(infoForRec);
             }
         } else {
-            updateDataRec['friends'] = [idSender];
+            updateDataRec['friends'] = [infoForRec];
         }
 
         if ("sentFriendRequests" in updateDataSend) {
                 // Filter will remove all occurences of idReceiver in case there was some previous error.
-            updateDataSend['sentFriendRequests'] = updateDataSend['sentFriendRequests'].filter(e => e !== idReceiver);
+            updateDataSend['sentFriendRequests'] = updateDataSend['sentFriendRequests'].filter(e => e['uid'] !== idReceiver);
 
         } 
 
         if ("receivedFriendRequests" in updateDataRec) {
 
-            updateDataRec['receivedFriendRequests'] = updateDataRec['receivedFriendRequests'].filter(e => e !== idSender);
+            updateDataRec['receivedFriendRequests'] = updateDataRec['receivedFriendRequests'].filter(e => e['uid'] !== idSender);
 
         } 
 
