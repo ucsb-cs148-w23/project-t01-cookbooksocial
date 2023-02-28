@@ -174,6 +174,9 @@ export default function EditPost() {
             .then((response) => response.json())
             .then((data) => {
                 setRecipeData(data);
+                if (currentUser && currentUser.uid !== data.uid) {
+                    navigate("/home");
+                  }
                 // setUpdatedRecipeInfo({
                 //     ...updatedRecipeInfo,
                 //     title: data['title'],
