@@ -8,6 +8,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useParams } from "react-router-dom";
 import {db } from "../../config/firebase";
 import { doc, getDoc } from "firebase/firestore"; 
+import AddFriendButton from "../../components/addFriendButton/AddFriendButton";
 // import renderRecipePostComponents from "./pages/HomePage/HomePage";
 //FIXME: ProfilePage is very similar to HomePage code so probably a way to re-use
 
@@ -79,26 +80,9 @@ function PeoplePage() {
     }
 
 
-    /*
-        currentUser.uid is the user id of the current viewer/user.  userId is the id of the user profile that they are viewing.  Need both id's when making a friend request.  currentUser will have the other user id in their 'sentFriendRequests' list in firebase.  The profile being viewed will have the current user ID in their 'receivedFriendRequests' list in firebase.
-    */
-    const URL_SEND_FRIEND_REQUEST = `/api/user/friend-request/${currentUser.uid}/${userId}`;
- 
-    function addFriend(){
-        const response = fetch(URL_SEND_FRIEND_REQUEST, {
-            method: 'PUT',
-            headers: {
-                'Content-type': 'application/json'
-            }
-        }).then(function(data){
-            console.log(data);
-        });
 
-        console.log(response);
 
-    }
-
-    console.log(profileInfo)
+    // console.log(profileInfo)
     return (
         <div>
             <Navbars />
@@ -108,11 +92,11 @@ function PeoplePage() {
             <ul>
             <li className="bioProfileName" key={profileInfo.id}>{profileInfo.data?.profile ? profileInfo.data?.profile.displayName: "No username"}</li>
             <li className="friend-button">
-                <span 
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-                onClick={() => addFriend()}>
-                    Add Friend
-                </span>
+               <AddFriendButton
+                currentUserId={currentUser.uid}
+                profileUid = {userId}
+                profileInfo = {profileInfo}
+               />
             </li>
             </ul>
             </Container>

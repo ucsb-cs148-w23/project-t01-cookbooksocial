@@ -77,7 +77,6 @@ const sendFriendRequest = async (req, res, next) => {
         const docSnapRec = await getDoc(docRefReceived);
 
         if(!docSnapSend.exists() || !docSnapRec.exists() ){
-            console.log("test3");
             throw new Error("One of these users does not exist!");
         }
 
@@ -158,6 +157,8 @@ const sendFriendRequest = async (req, res, next) => {
 
         await updateDoc(docRefSent, updateDataSend);
         await updateDoc(docRefReceived, updateDataRec);
+        // console.log(updateDataRec);
+        // console.log(updateDataSend);
 
 
         res.status(200).send(`Success.  Friend Request Sent.`);
@@ -307,14 +308,21 @@ const rejectFriendRequest = async (req, res, next) => {
 
         if ("sentFriendRequests" in updateDataSend) {
             delete updateDataSend['sentFriendRequests'][idReceiver];
+            // if (Object.keys(updateDataSend['sentFriendRequests']).length === 0) {
+            //     delete updateDataSend['sentFriendRequests'];
+            // }
+
 
         }
 
         if ("receivedFriendRequests" in updateDataRec) {
 
             delete updateDataRec['receivedFriendRequests'][idSender];
+            // if (Object.keys(updateDataRec['receivedFriendRequests']).length === 0) {
+            //     delete updateDataRec['receivedFriendRequests'];
+            // }
 
-        }
+        } 
 
 
 
@@ -326,6 +334,7 @@ const rejectFriendRequest = async (req, res, next) => {
 
     } catch (e) {
         res.status(400).send(`Error: ${e}`);
+        console.log(e);
         return;
     }
 }
