@@ -28,7 +28,7 @@ export default function Navbars() {
   return (
     // Navbar object wrapper as a whole
 
-    <Navbar className={styles.navColor} expand="lg">
+    <Navbar className={styles.navColor} sticky="top" expand="lg">
       <Container>
         <Navbar.Brand href="/home">
           <text className={styles.titlePage}> ServesUp</text>
