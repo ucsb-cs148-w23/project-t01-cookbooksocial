@@ -17,6 +17,8 @@ function PeoplePage() {
     //uses param from route :userId
     const { userId} = useParams();
 
+    const {currentUser} = useAuth();
+
     //useAuth has information from Firebase about user, we will get email from here
     /*
   This will fetch the list of PROFILE recipe posts stored in the database 
@@ -75,6 +77,27 @@ function PeoplePage() {
             return arrComponents;
         }
     }
+
+
+    /*
+        currentUser.uid is the user id of the current viewer/user.  userId is the id of the user profile that they are viewing.  Need both id's when making a friend request.  currentUser will have the other user id in their 'sentFriendRequests' list in firebase.  The profile being viewed will have the current user ID in their 'receivedFriendRequests' list in firebase.
+    */
+    const URL_SEND_FRIEND_REQUEST = `/api/user/friend-request/${currentUser.uid}/${userId}`;
+ 
+    function addFriend(){
+        const response = fetch(URL_SEND_FRIEND_REQUEST, {
+            method: 'PUT',
+            headers: {
+                'Content-type': 'application/json'
+            }
+        }).then(function(data){
+            console.log(data);
+        });
+
+        console.log(response);
+
+    }
+
     console.log(profileInfo)
     return (
         <div>
@@ -84,6 +107,13 @@ function PeoplePage() {
             
             <ul>
             <li className="bioProfileName" key={profileInfo.id}>{profileInfo.data?.profile ? profileInfo.data?.profile.displayName: "No username"}</li>
+            <li className="friend-button">
+                <span 
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                onClick={() => addFriend()}>
+                    Add Friend
+                </span>
+            </li>
             </ul>
             </Container>
             <div className="profile-page">

@@ -24,3 +24,17 @@
 .profilePosts{
     position:relative
 }
+
+.rec-friend-req-container{
+    margin-bottom: 20px;
+
+}
+
+.rec-friend-req-btn{
+    cursor: pointer;
+}
+
+.rec-friend-req-btn:hover {
+    cursor: pointer;
+    color: blue !important;
+}
