@@ -18,6 +18,7 @@ async function postToFirebase(stringURL, fullRecipeInfo) {
     let postInfo = fullRecipeInfo;
     postInfo["createdAt"] = serverTimestamp();
     postInfo["image"] = stringURL;
+    postInfo["likesByUid"] = [];
 
     const res = await addDoc(collection(db, "recipes"), postInfo);
 

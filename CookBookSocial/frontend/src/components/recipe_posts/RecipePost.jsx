@@ -6,6 +6,9 @@ import { Button } from "react-bootstrap";
 import { useAuth } from "../../contexts/AuthContext";
 import DeleteButton from "../deleteModal/deleteModal";
 
+import { BsHeart, BsHeartFill } from 'react-icons/bs';
+import axios from 'axios';
+
 /*
 What does calling useState do? It declares a “state variable”. Our variable is called response but we could call it anything else, like banana. This is a way to “preserve” some values between the function calls. Normally, variables “disappear” when the function exits but state variables are preserved by React.
 */
@@ -14,7 +17,47 @@ function RecipePost({ recipe }) {
     const [showFullRecipe, toggleShowFullRecipe] = useState(false);
     const [editPostPath, setEditPostPath] = useState(`/edit-recipe/${recipe.id}`);
 
+    const [isLiked, setIsLiked] = useState();
+    const [numLikes, updateNumLikes] = useState();
+    const [updatedAt, setUpdatedAt] = useState(null);
+
+    const UPDATE_URL = `/api/recipe/${recipe.id}`;
     const { currentUser } = useAuth();
+
+    useEffect(() => {
+        for (let i = 0; i < recipe.likesByUid.length; i++) {
+            if (currentUser.uid === recipe.likesByUid[i]) {
+                setIsLiked(true);
+                return;
+            }
+        }
+        setIsLiked(false);
+    }, [])
+
+    useEffect(() => {
+        updateNumLikes(recipe.likesByUid.length);
+    }, [updatedAt])
+
+    async function toggleLiked() {
+        let newLikesByUid = [...(recipe.likesByUid)];
+        if (isLiked) {
+            //remove current user.id from recipe list of users who liked the post
+            for (let i = 0; i < recipe.likesByUid.length; i++) {
+                if (currentUser.uid === recipe.likesByUid[i]) {
+                    //UPDATE the array of uid's of the recipe post
+                    newLikesByUid.splice(i, 1);
+                }
+            }
+        } else {
+            //add current user.id to recipe list of users who liked the post
+            //UPDATE the array of uid's of the recipe post
+            newLikesByUid.push(currentUser.uid);
+        }
+        const newBody = {...recipe, likesByUid: newLikesByUid};
+        const response = await axios.put(UPDATE_URL, newBody);
+        setUpdatedAt(response.data.updatedAt);
+        setIsLiked(!isLiked);
+    }
 
     function toggleShowFull() {
         toggleShowFullRecipe(!showFullRecipe);
@@ -89,6 +132,10 @@ function RecipePost({ recipe }) {
                             alt="Recipe"
                         />
                     </Link>
+                </div>
+                <div className="likes-element">
+                    {isLiked ? <div><BsHeartFill onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div>
+                        : <div><BsHeart onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div>}
                 </div>
 
                 {showFullRecipe && (
