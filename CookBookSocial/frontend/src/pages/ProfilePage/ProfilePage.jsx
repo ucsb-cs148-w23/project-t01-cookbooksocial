@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Container from "react-bootstrap/Container";
 import RecipePost from "../../components/recipe_posts/RecipePost";
 import Navbars from "../../components/navbars/Navbars";
 import PostModal from "../../components/postModal/postModal";
@@ -13,10 +14,10 @@ import { useAuth } from "../../contexts/AuthContext";
 function ProfilePage() {
     const [profileRecipePostsList, updateProfileRecipePostsList] = useState([]);
     const { currentUser } = useAuth();
-    // const { userId } = useParams();
+    const username = currentUser.displayName;
 
 
-    //useAuth has information from Firebase about user, we will get email from here
+    //useAuth has information from Firebase about user, we will get userId from here
     /*
   This will fetch the list of PROFILE recipe posts stored in the database 
   as an array of json objects. It will then save it in the state variable profileRecipePostsList.
@@ -55,10 +56,18 @@ function ProfilePage() {
             return arrComponents;
         }
     }
-
+    //have user info at top
     return (
         <div>
             <Navbars />
+            <Container>
+            <img src={currentUser?.photoURL}
+            className={"bioProfilePic"}
+            alt="No-Pic"/>
+            <div className={"bioProfileName"}>
+            {username ? username : "No username"}
+            </div>
+            </Container>
             <div className="profile-page">
                 <PostModal></PostModal>
                 <ul>{renderProfileRecipePostComponents()}</ul>

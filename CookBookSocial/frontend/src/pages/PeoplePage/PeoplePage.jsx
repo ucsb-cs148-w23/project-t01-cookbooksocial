@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from "react";
+import Container from "react-bootstrap/Container";
 import RecipePost from "../../components/recipe_posts/RecipePost";
 import Navbars from "../../components/navbars/Navbars";
 import PostModal from "../../components/postModal/postModal";
 import "./PeoplePage.css";
 import { useAuth } from "../../contexts/AuthContext";
 import { useParams } from "react-router-dom";
-
-
+import {db } from "../../config/firebase";
+import { doc, getDoc } from "firebase/firestore"; 
 // import renderRecipePostComponents from "./pages/HomePage/HomePage";
 //FIXME: ProfilePage is very similar to HomePage code so probably a way to re-use
 
 function PeoplePage() {
     const [profileRecipePostsList, updateProfileRecipePostsList] = useState([]);
-    // const { currentUser } = useAuth();
-    const { userId } = useParams();
-
+    const [profileInfo, updateProfileInfo] = useState([]);
+    //uses param from route :userId
+    const { userId} = useParams();
 
     //useAuth has information from Firebase about user, we will get email from here
     /*
@@ -32,6 +33,27 @@ function PeoplePage() {
             .then((response) => response.json())
             .then((data) => updateProfileRecipePostsList(data));
     }, []);
+
+    //get profile info
+    useEffect(() => {
+        getProfileInfo()
+    }, [])
+    useEffect(() => {
+    }, [profileInfo])
+
+    //get user's data from firestore doc identified with their userID
+    function getProfileInfo(){
+        const userInfoRef =doc(db, "users", userId);
+        getDoc(userInfoRef).then(snapshot => {
+            const profileInfData= ({
+               data: snapshot.data(),
+               id: snapshot.id, 
+            })
+            console.log("data to update with", profileInfData.data.email);
+            updateProfileInfo(profileInfData)
+        })
+        .catch(error => console.log(error.message))
+    }
 
     function renderProfileRecipePostComponents() {
         const arrComponents = [];
@@ -53,14 +75,22 @@ function PeoplePage() {
             return arrComponents;
         }
     }
-
+    console.log(profileInfo)
     return (
         <div>
             <Navbars />
+            <Container>
+            <img src= {profileInfo.data?.profile ? profileInfo.data?.profile.photoURL: null}            className={"bioProfilePic"} alt="No-Pic" />
+            
+            <ul>
+            <li className="bioProfileName" key={profileInfo.id}>{profileInfo.data?.profile ? profileInfo.data?.profile.displayName: "No username"}</li>
+            </ul>
+            </Container>
             <div className="profile-page">
                 <ul>{renderProfileRecipePostComponents()}</ul>
             </div>
         </div>
+        
     );
 }
 

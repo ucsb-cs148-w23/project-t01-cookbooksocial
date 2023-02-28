@@ -6,6 +6,9 @@ import { generateAvatar } from "../../utils/GenerateAvatar";
 
 import styles from "./ProfilePic.module.css";
 
+import { db } from "../../config/firebase";
+import { doc, setDoc } from "firebase/firestore";
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -29,6 +32,10 @@ export default function ProfilePic() {
     fetchData();
   }, []);
 
+  const backClick = () => {
+    navigate(-1);
+  };
+
   const picClicked = (index) => {
     setSelectedAvatar(index);
     console.log("Clicked: ", index);
@@ -50,6 +57,9 @@ export default function ProfilePic() {
         photoURL: avatars[selectedAvatar],
       };
       await updateUserProfile(user, profile);
+      //update user's firestore doc with new profile photo and display name
+      const userRef = doc(db, "users", currentUser.uid);
+      setDoc(userRef, { profile: profile }, { merge: true });
       navigate("/home");
     } catch (e) {
       setError("Failed to update profile");
@@ -59,57 +69,66 @@ export default function ProfilePic() {
   };
 
   return (
-    <div className="d-flex justify-content-center">
-      <div className="">
-        <div className="text-center">
-          <h2 className="mt-4 text-3xl text-center tracking-tight font-light dark:text-white">
-            Pick an avatar
-          </h2>
-        </div>
+    <>
+      <button className={styles.backButton} onClick={backClick}>
+        Back
+      </button>
+      <div className="d-flex justify-content-center">
+        <div className="">
+          <div className="text-center">
+            <h2 className="mt-4 text-3xl text-center tracking-tight font-light dark:text-white">
+              Pick an avatar
+            </h2>
+          </div>
 
-        <form className="" onSubmit={handleFormSubmit}>
-          <div className={styles.imagesContainer}>
-            {avatars.map((avatar, index) => (
-              <div key={index}>
-                <div className={styles.picSize}>
-                  <img
-                    alt="gallery"
-                    className={classNames(
-                      index === selectedAvatar ? styles.picChosen : styles.picNotChosen
-                    )}
-                    src={avatar}
-                    onClick={() => picClicked(index)}
-                  />
+          <form className="" onSubmit={handleFormSubmit}>
+            <div className={styles.imagesContainer}>
+              {avatars.map((avatar, index) => (
+                <div key={index}>
+                  <div className={styles.picSize}>
+                    <img
+                      alt="gallery"
+                      className={classNames(
+                        index === selectedAvatar
+                          ? styles.picChosen
+                          : styles.picNotChosen
+                      )}
+                      src={avatar}
+                      onClick={() => picClicked(index)}
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
 
-          <div className={styles.nameField}>
-            <input
-              id="username"
-              name="username"
-              type="text"
-              autoComplete="username"
-              required
-              className="px-3 py-2 border border-gray-300"
-              placeholder="Enter a Display Name"
-              defaultValue={currentUser.displayName && currentUser.displayName}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </div>
+            <div className={styles.nameField}>
+              <input
+                id="username"
+                name="username"
+                type="text"
+                autoComplete="username"
+                required
+                className="px-3 py-2 border border-gray-300"
+                placeholder="Enter a Display Name"
+                defaultValue={
+                  currentUser.displayName && currentUser.displayName
+                }
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </div>
 
-          <div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="py-2 px-4 border border-transparent"
-            >
-              Update Profile
-            </button>
-          </div>
-        </form>
+            <div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="py-2 px-4 border border-transparent"
+              >
+                Update Profile
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
