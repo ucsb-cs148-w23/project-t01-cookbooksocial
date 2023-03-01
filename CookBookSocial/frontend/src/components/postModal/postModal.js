@@ -131,12 +131,9 @@ const StepLists = (props) => {
 export function Modal({ show, setShow }) {
     const [isError, setIsError] = useState(false);
     const [errorOutput, setErrorOutput] = useState("");
+
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
-
-    //FIXME not using email, remove?
-    const [email, setMail] = useState("");
-
     const [uid, setUID] = useState("");
 
     const [ingreList, setIngreList] = useState([]);
@@ -150,7 +147,6 @@ export function Modal({ show, setShow }) {
     const [fullRecipeInfo, updateFullRecipeInfo] = useState({
         title: "",
         description: "",
-        email: currentUser.email,
         uid: currentUser.uid,
         ingredients: [],
         instructions: [],
@@ -161,12 +157,11 @@ export function Modal({ show, setShow }) {
             ...fullRecipeInfo,
             title: title,
             description: desc,
-            email: currentUser.email,
             uid: currentUser.uid,
             ingredients: ingreList,
             instructions: stepList,
         });
-    }, [title, desc, email, uid, ingreList, stepList]);
+    }, [title, desc, uid, ingreList, stepList]);
 
     function validateTitle() {
         if (fullRecipeInfo.title.trim() == "") {
@@ -181,15 +176,6 @@ export function Modal({ show, setShow }) {
         if (fullRecipeInfo.description.trim() == "") {
             setIsError(true);
             setErrorOutput(errorOutput + "Invalid Description! ");
-            return false;
-        }
-        return true;
-    }
-
-    function validateEmail() {
-        if (fullRecipeInfo.email.trim() == "") {
-            setIsError(true);
-            setErrorOutput(errorOutput + "Invalid Email! ");
             return false;
         }
         return true;
