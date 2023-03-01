@@ -134,11 +134,10 @@ export function Modal({ show, setShow }) {
 
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
-    const [uid, setUID] = useState("");
 
     const [ingreList, setIngreList] = useState([]);
     const [stepList, setStepList] = useState([]);
-    const [image, setImage] = useState([]);
+    const [image, setImage] = useState("");
     const [prevImg, setPrevImg] = useState("");
     const [stepText, setStepText] = useState("");
 
@@ -161,52 +160,33 @@ export function Modal({ show, setShow }) {
             ingredients: ingreList,
             instructions: stepList,
         });
-    }, [title, desc, uid, ingreList, stepList]);
+    }, [title, desc, currentUser.uid, ingreList, stepList]);
 
-    function validateTitle() {
-        if (fullRecipeInfo.title.trim() == "") {
-            setIsError(true);
-            setErrorOutput(errorOutput + "Invalid Title! ");
-            return false;
-        }
-        return true;
+    function validate(input) {
+        const errorMessages = [];
+        Object.keys(input).forEach((key) => {
+            const value = input[key];
+            const rules = validationRules[key];
+            if (!rules) {
+                return;
+            }
+            if (rules.required && !value) {
+                errorMessages.push(`Invalid ${key}!`);
+            }
+            if (rules.isArray && (!value || !value.length)) {
+                errorMessages.push(`Invalid ${key}!`);
+            }
+        });
+        return errorMessages.join(" ");
     }
 
-    function validateDescription() {
-        if (fullRecipeInfo.description.trim() == "") {
-            setIsError(true);
-            setErrorOutput(errorOutput + "Invalid Description! ");
-            return false;
-        }
-        return true;
-    }
-
-    function validateUID() {
-        if (fullRecipeInfo.uid.trim() == "") {
-            setIsError(true);
-            setErrorOutput(errorOutput + "Invalid User ID! ");
-            return false;
-        }
-        return true;
-    }
-
-    function validateIngredients() {
-        if (fullRecipeInfo.ingredients.length == 0) {
-            setIsError(true);
-            setErrorOutput(errorOutput + "Invalid Ingredients! ");
-            return false;
-        }
-        return true;
-    }
-
-    function validateFile() {
-        if (image.length == "0") {
-            setIsError(true);
-            setErrorOutput(errorOutput + "Invalid Image! ");
-            return false;
-        }
-        return true;
-    }
+    const validationRules = {
+        title: { required: true },
+        description: { required: true },
+        uid: { required: true },
+        ingredients: { isArray: true },
+        image: { required: true },
+    };
 
     function handleImage(pic) {
         setImage(pic);
@@ -218,26 +198,29 @@ export function Modal({ show, setShow }) {
         setImage([]);
         setTitle("");
         setDesc("");
-        setUID("");
         setIngreList([]);
         setStepList([]);
         setStepText("");
         setPrevImg("");
     }
 
-    function postRrecipe() {
-        // add step Text to step List if it is not empty
-        if (stepText != "") {
+    function postRecipe() {
+        // add step text to step List if it is not empty
+        if (stepText !== "") {
             stepList.push(stepText);
         }
 
-        if (
-            !validateTitle() ||
-            !validateDescription() ||
-            !validateUID() ||
-            !validateIngredients() ||
-            !validateFile()
-        ) {
+        const validationError = validate({
+            title: fullRecipeInfo.title,
+            description: fullRecipeInfo.description,
+            uid: fullRecipeInfo.uid,
+            ingredients: fullRecipeInfo.ingredients,
+            image: image,
+        });
+
+        if (validationError) {
+            setIsError(true);
+            setErrorOutput(validationError);
             return false;
         }
         setIsError(false);
@@ -258,7 +241,6 @@ export function Modal({ show, setShow }) {
 
             console.log("Closing modal");
             setShow(false);
-            // window.location.reload(false);
         });
     }
 
@@ -298,7 +280,7 @@ export function Modal({ show, setShow }) {
                             </div>
                             <div className="flex_first-item">
                                 <div className="postConfirm">
-                                    <a href="#" onClick={() => postRrecipe()}>
+                                    <a href="#" onClick={() => postRecipe()}>
                                         Post Now
                                     </a>
                                 </div>
