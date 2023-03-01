@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useEffect } from 'react';
 
 import { renderIngredients } from "./functions/RecipePostFunctions";
 import { Button } from "react-bootstrap";
@@ -10,7 +11,24 @@ import DeleteButton from "../deleteModal/deleteModal";
 What does calling useState do? It declares a “state variable”. Our variable is called response but we could call it anything else, like banana. This is a way to “preserve” some values between the function calls. Normally, variables “disappear” when the function exits but state variables are preserved by React.
 */
 
+
 function RecipePost({ recipe }) {
+
+        //Save scroll progress so if you click recipe then go back you are in same spot on page
+        useEffect(() => {
+          const handleBeforeUnload = () => {
+            sessionStorage.setItem('scrollPosition', window.scrollY);
+          };
+          window.addEventListener('beforeunload', handleBeforeUnload);
+          const scrollPosition = sessionStorage.getItem('scrollPosition');
+          if (scrollPosition !== null) {
+            window.scrollTo(0, parseInt(scrollPosition));
+          }
+          return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+          };
+        }, []);
+
     const [showFullRecipe, toggleShowFullRecipe] = useState(false);
     const [editPostPath, setEditPostPath] = useState(`/edit-recipe/${recipe.id}`);
 
