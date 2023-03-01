@@ -154,6 +154,7 @@ export function Modal({ show, setShow }) {
         uid: currentUser.uid,
         ingredients: [],
         instructions: [],
+        likesByUid: [],
     });
 
     useEffect(() => {
