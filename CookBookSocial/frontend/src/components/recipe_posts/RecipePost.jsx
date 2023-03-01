@@ -14,21 +14,23 @@ What does calling useState do? It declares a “state variable”. Our variable 
 
 function RecipePost({ recipe }) {
 
-        //Save scroll progress so if you click recipe then go back you are in same spot on page
-        useEffect(() => {
-          const handleBeforeUnload = () => {
+    //Save scroll progress so if you click recipe then go back you are in same spot on page
+    useEffect(() => {
+        const handleBeforeUnload = () => {
             sessionStorage.setItem('scrollPosition', window.scrollY);
-          };
-          window.addEventListener('beforeunload', handleBeforeUnload);
-          const scrollPosition = sessionStorage.getItem('scrollPosition');
-          if (scrollPosition !== null) {
+        };
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        const scrollPosition = sessionStorage.getItem('scrollPosition');
+        if (scrollPosition !== null) {
             window.scrollTo(0, parseInt(scrollPosition));
-          }
-          return () => {
+        }
+        return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
-          };
-        }, []);
-
+        };
+    }, []);
+    const handleLinkClick = () => {
+        window.dispatchEvent(new Event('beforeunload'));
+    };
     const [showFullRecipe, toggleShowFullRecipe] = useState(false);
     const [editPostPath, setEditPostPath] = useState(`/edit-recipe/${recipe.id}`);
 
@@ -101,7 +103,7 @@ function RecipePost({ recipe }) {
 
                 <p>{recipe.description}</p>
                 <div className="pb-2/3">
-                    <Link to={`/recipe/${recipe.id}`}>
+                    <Link to={`/recipe/${recipe.id}`} onClick={handleLinkClick}>
                         <img
                             className="h-full w-full object-cover aspect-[3/2]"
                             src={recipe.image}
