@@ -21,13 +21,11 @@ function RecipePost({ recipe }) {
 
     const [isLiked, setIsLiked] = useState(false);
     const [numLikes, updateNumLikes] = useState(0);
-    const [updatedAt, setUpdatedAt] = useState(null);
 
     const { currentUser } = useAuth();
 
     const UPDATE_URL = `/api/recipe/${recipe.id}`;
 
-    
     useEffect(() => {
         for (let i = 0; i < recipe.likesByUid.length; i++) {
             if (currentUser.uid === recipe.likesByUid[i]) {
@@ -40,14 +38,10 @@ function RecipePost({ recipe }) {
     
     useEffect(() => {
         updateNumLikes(recipe.likesByUid.length);
-        
     }, [isLiked])
-    
 
     async function toggleLiked() {
-        
         let newLikesByUid = [...(recipe.likesByUid)];
-    
         if (isLiked) {
             //remove current user.id from recipe list of users who liked the post
             for (let i = 0; i < newLikesByUid.length; i++) {
@@ -63,10 +57,9 @@ function RecipePost({ recipe }) {
                 newLikesByUid.push(currentUser.uid);
             }
         }
-        const newBody = {...recipe, likesByUid: newLikesByUid};
+        const recipeCopy = Object.assign({}, recipe);
+        const newBody = {recipeCopy, likesByUid: newLikesByUid};
         const response = await axios.put(UPDATE_URL, newBody);
-        setUpdatedAt(response.data.updatedAt);
-        
         setIsLiked(!isLiked);
     }
 
