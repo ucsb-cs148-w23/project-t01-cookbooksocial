@@ -95,7 +95,7 @@ function PeoplePage() {
                <AddFriendButton
                 currentUserId={currentUser.uid}
                 profileUid = {userId}
-                profileInfo = {profileInfo}
+                profileInfo = {profileInfo.data}
                />
             </li>
             </ul>
