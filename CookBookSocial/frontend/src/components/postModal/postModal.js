@@ -261,19 +261,27 @@ export function Modal({ show, setShow }) {
         // Here we are uploading the image first, that way we can make sure the uploaded image is correct
         console.log("RECIPE INFO: ", fullRecipeInfo);
 
-        firebaseUpload(image, fullRecipeInfo).then(() => {
-            setImage([]);
-            setTitle("");
-            setDesc("");
-            setIngreList([]);
-            setStepList([]);
-            setStepText("");
-            setPrevImg("");
 
-            console.log("Closing modal");
-            setShow(false);
-            // window.location.reload(false);
-        });
+        firebaseUpload(image, fullRecipeInfo)
+            .then(() => {
+                setImage([]);
+                setTitle("");
+                setDesc("");
+                setIngreList([]);
+                setStepList([]);
+                setStepText("");
+                setPrevImg("");
+                console.log("Closing modal");
+                setShow(false);
+                window.location.reload(false);
+            })
+            .catch((error) => {
+                console.error(error);
+                alert("Error uploading image");
+            });
+
+
+
     }
 
     if (show) {
