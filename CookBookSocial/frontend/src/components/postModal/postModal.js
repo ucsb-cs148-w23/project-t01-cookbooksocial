@@ -1,7 +1,7 @@
 import "./postModalStyles.css";
 import React, { useState, useEffect } from "react";
 import { firebaseUpload } from "../Api";
-
+import { FaSpinner } from "react-icons/fa";
 import { useAuth } from "../../contexts/AuthContext";
 
 //add Recipe modal button by adding <PostButton/>
@@ -144,6 +144,7 @@ export function Modal({ show, setShow }) {
     const [image, setImage] = useState([]);
     const [prevImg, setPrevImg] = useState("");
     const [stepText, setStepText] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { currentUser } = useAuth();
 
@@ -239,7 +240,7 @@ export function Modal({ show, setShow }) {
         setPrevImg("");
     }
 
-    function postRrecipe() {
+    function postRecipe() {
         // add step Text to step List if it is not empty
         if (stepText != "") {
             stepList.push(stepText);
@@ -255,7 +256,7 @@ export function Modal({ show, setShow }) {
             return false;
         }
         setIsError(false);
-
+        setIsSubmitting(true);
         // console.log("IMAGE NAME: ", image.name);
 
         // Here we are uploading the image first, that way we can make sure the uploaded image is correct
@@ -289,7 +290,7 @@ export function Modal({ show, setShow }) {
             <div id="overlay">
                 <div id="content">
                     {isError && <div id="postModal-error-log">{errorOutput}</div>}
-
+    
                     <div className="container container-column">
                         <div className="putLeft">
                             <button className="postModal-close" onClick={() => modalClosing()}>
@@ -310,7 +311,7 @@ export function Modal({ show, setShow }) {
                                             onChange={(event) => handleImage(event.target.files[0])}
                                         />
                                     </form>
-
+    
                                     {prevImg && (
                                         <div className="prevPicContainer">
                                             <img className="prevImage" src={prevImg} />
@@ -320,9 +321,13 @@ export function Modal({ show, setShow }) {
                             </div>
                             <div className="flex_first-item">
                                 <div className="postConfirm">
-                                    <a href="#" onClick={() => postRrecipe()}>
-                                        Post Now
-                                    </a>
+                                    {isSubmitting ? (
+                                        <FaSpinner className="loading-spinner" />
+                                    ) : (
+                                        <a href="#" onClick={() => postRecipe()}>
+                                            Post Now
+                                        </a>
+                                    )}
                                 </div>
                                 <div className="titleContainers">
                                     <p className="modalTitle">Title</p>
@@ -333,7 +338,7 @@ export function Modal({ show, setShow }) {
                                         placeholder="Recipe Name"
                                     />
                                 </div>
-
+    
                                 <p className="modalTitle">Description</p>
                                 <textarea
                                     className="modalRecipeDesc text-black"
@@ -353,7 +358,8 @@ export function Modal({ show, setShow }) {
                                     stepList={stepList}
                                     setStepList={setStepList}
                                     stepText={stepText}
-                                    setStepText={setStepText}
+                                    setStepText={setStepText
+    }
                                 />
                             </div>
                         </div>

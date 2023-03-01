@@ -26,7 +26,7 @@
     flex-direction: column;
   }
   .loading-spinner {
-    font-size: 6rem; /* set the font size to 3rem */
+    font-size: 6rem;
     margin-top: 1rem;
     animation: spin 1s linear infinite;
   }
