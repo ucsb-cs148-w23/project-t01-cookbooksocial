@@ -11,9 +11,9 @@ export default function AddFriendButton({ currentUserId, profileUid, profileInfo
     const NOT_FRIENDED = "not friended";
     const IS_CURRENT_USER = "is current user";
     const [friendedState, setFriendedState] = useState(UNKNOWN);
-    console.log("profile info:", profileInfo);
 
     useEffect(() => {
+        
         if(profileUid === currentUserId){
             setFriendedState(IS_CURRENT_USER);
             return;
@@ -23,10 +23,7 @@ export default function AddFriendButton({ currentUserId, profileUid, profileInfo
             if(currentUserId in profileInfo['friends']){
                 setFriendedState(FRIEND);
                 return;
-            } else {
-                setFriendedState(NOT_FRIENDED);
-                return;
-            }
+            } 
         } 
         if (profileInfo && 'receivedFriendRequests' in profileInfo){
             if (currentUserId in profileInfo['receivedFriendRequests']){
