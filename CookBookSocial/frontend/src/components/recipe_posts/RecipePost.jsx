@@ -57,7 +57,7 @@ function RecipePost({ recipe }) {
                 newLikesByUid.push(currentUser.uid);
             }
         }
-        const newBody = {recipe, likesByUid: newLikesByUid};
+        const newBody = {likesByUid: newLikesByUid};
         const response = await axios.put(UPDATE_URL, newBody);
         setIsLiked(!isLiked);
     }
