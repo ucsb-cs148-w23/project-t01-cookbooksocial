@@ -9,6 +9,7 @@ import DeleteButton from "../deleteModal/deleteModal";
 import { BsHeart, BsHeartFill } from 'react-icons/bs';
 import axios from 'axios';
 
+import './RecipePost.css'
 /*
 What does calling useState do? It declares a “state variable”. Our variable is called response but we could call it anything else, like banana. This is a way to “preserve” some values between the function calls. Normally, variables “disappear” when the function exits but state variables are preserved by React.
 */
@@ -145,8 +146,8 @@ function RecipePost({ recipe }) {
                 </div>
 
                 <div className="likes-element">
-                    {isLiked ? <div><BsHeartFill onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div>
-                        : <div><BsHeart onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div>}
+                    {isLiked ? <div><BsHeartFill className="icon" onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div>
+                        : <div><BsHeart className="icon" onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div>}
                 </div>
 
                 {showFullRecipe && (
