@@ -82,7 +82,7 @@ function RecipePost({ recipe }) {
                     <h2 className="font-extrabold text-left text-4xl">{displayRecipeTitle(recipe)}</h2>
                 </header>
                 <p className="text-gray-700 mb-0">
-                    By:
+                    
                     <a href={"profile/" + recipe.uid}>By: {displayName(recipe)}</a>
                     {/* We concatenate the user ID to the profile route, so it redirects us to the user page on click */}
                 </p>
