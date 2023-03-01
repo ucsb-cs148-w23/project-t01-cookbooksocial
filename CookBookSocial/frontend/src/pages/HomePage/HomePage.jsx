@@ -17,10 +17,10 @@ function HomePage() {
     const handleBeforeUnload = () => {
       sessionStorage.setItem("scrollPosition", window.scrollY);
     };
-    console.log("AHHH");
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     const scrollPosition = sessionStorage.getItem("scrollPosition");
+    console.log("scrollpos:",scrollPosition)
     if (scrollPosition !== null) {
       window.scrollTo(0, parseInt(scrollPosition));
     }
