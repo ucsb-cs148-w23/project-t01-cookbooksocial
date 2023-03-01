@@ -10,3 +10,7 @@
 .rec-friend-req-btn:hover {
     cursor: pointer;
 }
+
+.friendRequest{
+    height: 50px;
+}

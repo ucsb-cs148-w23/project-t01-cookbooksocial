@@ -15,7 +15,16 @@ import FriendRequestsDisplay from "../../components/friendRequestsDisplay/Friend
 function ProfilePage() {
     const [profileRecipePostsList, updateProfileRecipePostsList] = useState([]);
     const { currentUser } = useAuth();
-    const username = currentUser.displayName;
+
+
+
+    let username = "No Username Found";
+
+    if('displayName' in currentUser){
+        username = currentUser.displayName;
+    } else if ('email' in currentUser){
+        username = currentUser.email;
+    } 
 
 
     //useAuth has information from Firebase about user, we will get userId from here
