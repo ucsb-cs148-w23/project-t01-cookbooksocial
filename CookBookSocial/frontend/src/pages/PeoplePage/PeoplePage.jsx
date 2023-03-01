@@ -47,7 +47,12 @@ function PeoplePage() {
     //get user's data from firestore doc identified with their userID
     function getProfileInfo(){
         const userInfoRef =doc(db, "users", userId);
+        
         getDoc(userInfoRef).then(snapshot => {
+            if (!snapshot.exists()) {
+                console.log("invalid user");
+                window.location.href = '/Invalid'; 
+            }
             const profileInfData= ({
                data: snapshot.data(),
                id: snapshot.id, 

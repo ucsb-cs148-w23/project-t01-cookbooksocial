@@ -28,10 +28,12 @@ function RecipePage() {
           setEditPostPath(`/edit-recipe/${id}`)
         } else {
           console.log('Recipe not found!');
+          window.location.href = '/Invalid'; 
         }
       })
       .catch(error => {
         console.log('Error getting recipe:', error);
+        window.location.href = '/Invalid'; 
       });
   }, [id]);
 
