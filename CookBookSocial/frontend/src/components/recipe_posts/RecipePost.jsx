@@ -39,7 +39,8 @@ function RecipePost({ recipe }) {
         console.log(recipe, recipe['user']);
 
         // There is no 'user' in the recipe.  
-        if ('profile' in recipe.user) {
+
+        if ('user' in recipe && 'profile' in recipe.user) {
             if ('displayName' in recipe.user.profile) {
                 return recipe.user.profile.displayName;
             }

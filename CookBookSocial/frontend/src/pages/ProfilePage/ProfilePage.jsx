@@ -5,6 +5,7 @@ import Navbars from "../../components/navbars/Navbars";
 import PostModal from "../../components/postModal/postModal";
 import "./ProfilePage.css";
 import { useAuth } from "../../contexts/AuthContext";
+import FriendRequestsDisplay from "../../components/friendRequestsDisplay/FriendRequestsDisplay";
 // import { useParams } from "react-router-dom";
 
 
@@ -32,6 +33,7 @@ function ProfilePage() {
         fetch(URL_GET_PROFILE_RECIPE_POSTS_DATA)
             .then((response) => response.json())
             .then((data) => updateProfileRecipePostsList(data));
+
     }, []);
 
     function renderProfileRecipePostComponents() {
@@ -56,6 +58,8 @@ function ProfilePage() {
             return arrComponents;
         }
     }
+
+
     //have user info at top
     return (
         <div>
@@ -67,6 +71,9 @@ function ProfilePage() {
             <div className={"bioProfileName"}>
             {username ? username : "No username"}
             </div>
+            <FriendRequestsDisplay
+            currentUserId={currentUser.uid}
+            />
             </Container>
             <div className="profile-page">
                 <PostModal></PostModal>
