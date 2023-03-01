@@ -282,6 +282,8 @@ const acceptFriendRequest = async (req, res, next) => {
 const rejectFriendRequest = async (req, res, next) => {
     /*
         idReceiver is the current user that is accepting a friend request.  The idSender is the one who sent the friend request.  They will both be added to eachother's friends list, and removed from 'sendFriendRequests' and 'receivedFriendRequest' lists
+
+        This is also used for cancelling a friend request
     */
 
     try {

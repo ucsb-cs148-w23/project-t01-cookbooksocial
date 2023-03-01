@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import CancelFriendRequest from "../cancelFriendRequest/cancelFriendRequest";
 import '../friendRequestsDisplay/FriendRequestsDisplay.css'
 
 export default function AddFriendButton({ currentUserId, profileUid, profileInfo }) {
@@ -82,18 +83,13 @@ export default function AddFriendButton({ currentUserId, profileUid, profileInfo
 
     function rejectFriend() {
         setFriendedState(NOT_FRIENDED);
-        const URL_REJECT_FRIEND_REQUEST = `/api/user/friend-reject/${currentUserId}/${profileUid}`;
-        const response = fetch(URL_REJECT_FRIEND_REQUEST, {
-            method: 'PUT',
-            headers: {
-                'Content-type': 'application/json'
-            }
-        }).then(function (data) {
-            console.log(data);
-        });
+        CancelFriendRequest(currentUserId, profileUid);
 
-        console.log(response);
+    }
 
+    function cancelRequest(){
+        setFriendedState(NOT_FRIENDED);
+        CancelFriendRequest(profileUid, currentUserId);
     }
 
     if(friendedState === NOT_FRIENDED){
@@ -125,9 +121,12 @@ export default function AddFriendButton({ currentUserId, profileUid, profileInfo
         )
     } else if (friendedState === REQUEST_SENT){
         return (
-            <span>
-               Friend Request Sent.
-            </span>
+
+                <div className="rec-friend-cancel-btn text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-2 py-2.5 text-center mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+                onClick={() => cancelRequest()}
+                >
+                    Cancel Friend Request
+               </div>
         )
     } else if (friendedState === FRIEND){
         return (

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import CancelFriendRequest from "../cancelFriendRequest/cancelFriendRequest";
 import './FriendRequestsDisplay.css'
 
 export default function FriendRequestsDisplay({currentUserId}){
@@ -35,19 +36,12 @@ export default function FriendRequestsDisplay({currentUserId}){
 
     }
 
-    function rejectFriend(senderId) {
-        const URL_REJECT_FRIEND_REQUEST = `/api/user/friend-reject/${currentUserId}/${senderId}`;
-        const response = fetch(URL_REJECT_FRIEND_REQUEST, {
-            method: 'PUT',
-            headers: {
-                'Content-type': 'application/json'
-            }
-        }).then(function (data) {
+    async function rejectFriend(senderId) {
+
+        await CancelFriendRequest(currentUserId, senderId).then(function (data) {
             console.log(data);
             reloadFriendReqs();
         });
-
-        console.log(response);
 
     }
 

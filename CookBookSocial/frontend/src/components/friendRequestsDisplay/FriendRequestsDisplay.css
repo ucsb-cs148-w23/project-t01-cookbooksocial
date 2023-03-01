@@ -14,3 +14,8 @@
 .friendRequest{
     height: 50px;
 }
+
+.rec-friend-cancel-btn{
+    width: max-content;
+    cursor: pointer;
+}
