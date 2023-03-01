@@ -7,16 +7,37 @@ import SearchBar from "../../components/Search/Search";
 import "./HomePage.css";
 
 function HomePage() {
-  //state to hold an array of json objects of recipe posts (TWO FILLER POSTS FOR NOW AS EXAMPLES)
   const [recipePostsList, updateRecipePostsList] = useState([]);
   const URL_GET_RECIPE_POSTS_DATA = "/api/recipe/all";
   const [searchState, setSearchState] = useState({});
 
   useEffect(() => {
+    const handleBeforeUnload = () => {
+      sessionStorage.setItem("scrollPosition", window.scrollY);
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    const scrollPosition = sessionStorage.getItem("scrollPosition");
+    if (scrollPosition !== null) {
+      window.scrollTo(0, parseInt(scrollPosition));
+    }
+
     fetch(URL_GET_RECIPE_POSTS_DATA)
       .then((response) => response.json())
       .then((data) => updateRecipePostsList(data));
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
   }, []);
+
+  useEffect(() => {
+    const scrollPosition = sessionStorage.getItem("scrollPosition");
+    if (scrollPosition !== null) {
+      window.scrollTo(0, parseInt(scrollPosition));
+    }
+  }, [recipePostsList]);
 
   function renderRecipePostComponents() {
     const arrComponents = [];
@@ -32,11 +53,7 @@ function HomePage() {
       <SearchBar setSearchState={setSearchState} />
       <div className="max-w-2xl mx-auto my-2">
         <PostModal></PostModal>
-        <ul>
-          {recipePostsList.map((recipe) => (
-            <RecipePost key={recipe.id} recipe={recipe} />
-          ))}
-        </ul>
+        <ul>{renderRecipePostComponents()}</ul>
       </div>
     </div>
   );

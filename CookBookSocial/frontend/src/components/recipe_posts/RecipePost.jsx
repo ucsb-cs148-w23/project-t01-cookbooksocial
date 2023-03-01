@@ -14,20 +14,7 @@ What does calling useState do? It declares a “state variable”. Our variable 
 
 function RecipePost({ recipe }) {
 
-    //Save scroll progress so if you click recipe then go back you are in same spot on page
-    useEffect(() => {
-        const handleBeforeUnload = () => {
-            sessionStorage.setItem('scrollPosition', window.scrollY);
-        };
-        window.addEventListener('beforeunload', handleBeforeUnload);
-        const scrollPosition = sessionStorage.getItem('scrollPosition');
-        if (scrollPosition !== null) {
-            window.scrollTo(0, parseInt(scrollPosition));
-        }
-        return () => {
-            window.removeEventListener('beforeunload', handleBeforeUnload);
-        };
-    }, []);
+
     const handleLinkClick = () => {
         window.dispatchEvent(new Event('beforeunload'));
     };
