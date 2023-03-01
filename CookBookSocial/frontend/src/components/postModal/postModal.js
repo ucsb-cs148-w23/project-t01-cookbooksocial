@@ -20,15 +20,15 @@ const IngreLists = (props) => {
     const onClickAdd = () => {
         if (ingreText === "") return;
 
-        props.ingreList.push(ingreText);
+        props.ingredientList.push(ingreText);
         setIngreText("");
     };
 
     // delete ingre form list
     const onClickDelete = (index) => {
-        const deletedIngreList = [...props.ingreList];
+        const deletedIngreList = [...props.ingredientList];
         deletedIngreList.splice(index, 1);
-        props.setIngreList(deletedIngreList);
+        props.setIngredientList(deletedIngreList);
     };
 
     return (
@@ -37,7 +37,7 @@ const IngreLists = (props) => {
             <table>
                 {
                     <tbody id="ingre-body">
-                        {props.ingreList.map((ingre, index) => (
+                        {props.ingredientList.map((ingre, index) => (
                             <tr key={index}>
                                 <td className="modalSub">{ingre}</td>
                                 <td>
@@ -132,18 +132,29 @@ export function Modal({ show, setShow }) {
     const [isError, setIsError] = useState(false);
     const [errorOutput, setErrorOutput] = useState("");
 
-    const [title, setTitle] = useState("");
-    const [desc, setDesc] = useState("");
+    const [formData, setFormData] = useState({
+        title: "",
+        description: "",
+        uid: "",
+        ingredientList: [],
+        stepList: [],
+        stepText: "",
+        image: [],
+        prevImg: "",
+    });
 
-    const [ingreList, setIngreList] = useState([]);
-    const [stepList, setStepList] = useState([]);
-    const [image, setImage] = useState("");
-    const [prevImg, setPrevImg] = useState("");
-    const [stepText, setStepText] = useState("");
+    const { title, description, stepText, stepList, ingredientList, prevImg, image } = formData;
 
     const { currentUser } = useAuth();
 
-    const [fullRecipeInfo, updateFullRecipeInfo] = useState({
+    useEffect(() => {
+        setFormData({
+            ...formData,
+            uid: currentUser.uid,
+        });
+    }, [currentUser.uid]);
+
+    const [recipe, updateRecipe] = useState({
         title: "",
         description: "",
         uid: currentUser.uid,
@@ -152,15 +163,15 @@ export function Modal({ show, setShow }) {
     });
 
     useEffect(() => {
-        updateFullRecipeInfo({
-            ...fullRecipeInfo,
+        updateRecipe({
+            ...recipe,
             title: title,
-            description: desc,
+            description: description,
             uid: currentUser.uid,
-            ingredients: ingreList,
+            ingredients: ingredientList,
             instructions: stepList,
         });
-    }, [title, desc, currentUser.uid, ingreList, stepList]);
+    }, [title, description, currentUser.uid, ingredientList, stepList]);
 
     function validate(input) {
         const errorMessages = [];
@@ -189,19 +200,25 @@ export function Modal({ show, setShow }) {
     };
 
     function handleImage(pic) {
-        setImage(pic);
-        setPrevImg(URL.createObjectURL(pic));
+        setFormData({ ...formData, image: pic });
+        setFormData({ ...formData, prevImg: URL.createObjectURL(pic) });
     }
 
     function modalClosing() {
         setShow(false);
-        setImage([]);
-        setTitle("");
-        setDesc("");
-        setIngreList([]);
-        setStepList([]);
-        setStepText("");
-        setPrevImg("");
+        setShow(false);
+        setIsError(false);
+        setErrorOutput("");
+        setFormData({
+            title: "",
+            description: "",
+            uid: "",
+            ingredientList: [],
+            stepList: [],
+            stepText: "",
+            image: [],
+            prevImg: "",
+        });
     }
 
     function postRecipe() {
@@ -210,11 +227,12 @@ export function Modal({ show, setShow }) {
             stepList.push(stepText);
         }
 
+        // Validate the input
         const validationError = validate({
-            title: fullRecipeInfo.title,
-            description: fullRecipeInfo.description,
-            uid: fullRecipeInfo.uid,
-            ingredients: fullRecipeInfo.ingredients,
+            title: recipe.title,
+            description: recipe.description,
+            uid: recipe.uid,
+            ingredients: recipe.ingredients,
             image: image,
         });
 
@@ -228,19 +246,11 @@ export function Modal({ show, setShow }) {
         // console.log("IMAGE NAME: ", image.name);
 
         // Here we are uploading the image first, that way we can make sure the uploaded image is correct
-        console.log("RECIPE INFO: ", fullRecipeInfo);
+        console.log("RECIPE INFO: ", recipe);
 
-        firebaseUpload(image, fullRecipeInfo).then(() => {
-            setImage([]);
-            setTitle("");
-            setDesc("");
-            setIngreList([]);
-            setStepList([]);
-            setStepText("");
-            setPrevImg("");
-
+        firebaseUpload(image, recipe).then(() => {
+            modalClosing();
             console.log("Closing modal");
-            setShow(false);
         });
     }
 
@@ -289,7 +299,9 @@ export function Modal({ show, setShow }) {
                                     <input
                                         className="text-xl h-8 w-4/5 text-black"
                                         value={title}
-                                        onChange={(event) => setTitle(event.target.value)}
+                                        onChange={(event) =>
+                                            setFormData({ ...formData, title: event.target.value })
+                                        }
                                         placeholder="Recipe Name"
                                     />
                                 </div>
@@ -297,8 +309,13 @@ export function Modal({ show, setShow }) {
                                 <p className="modalTitle">Description</p>
                                 <textarea
                                     className="modalRecipeDesc text-black"
-                                    value={desc}
-                                    onChange={(event) => setDesc(event.target.value)}
+                                    value={description}
+                                    onChange={(event) =>
+                                        setFormData({
+                                            ...formData,
+                                            description: event.target.value,
+                                        })
+                                    }
                                     placeholder="Description"
                                 ></textarea>
                             </div>
@@ -306,14 +323,23 @@ export function Modal({ show, setShow }) {
                         {/* second Part */}
                         <div className="flex_second-box">
                             <div className="flex_second-item">
-                                <IngreLists ingreList={ingreList} setIngreList={setIngreList} />
+                                <IngreLists
+                                    ingredientList={ingredientList}
+                                    setIngredientList={(ingredientList) =>
+                                        setFormData({ ...formData, ingredientList })
+                                    }
+                                />
                             </div>
                             <div className="flex_second-item">
                                 <StepLists
                                     stepList={stepList}
-                                    setStepList={setStepList}
+                                    setStepList={(stepList) =>
+                                        setFormData({ ...formData, stepList })
+                                    }
                                     stepText={stepText}
-                                    setStepText={setStepText}
+                                    setStepText={(stepText) => {
+                                        setFormData({ ...formData, stepText });
+                                    }}
                                 />
                             </div>
                         </div>
