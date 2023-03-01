@@ -57,8 +57,7 @@ function RecipePost({ recipe }) {
                 newLikesByUid.push(currentUser.uid);
             }
         }
-        const recipeCopy = Object.assign({}, recipe);
-        const newBody = {recipeCopy, likesByUid: newLikesByUid};
+        const newBody = {recipe, likesByUid: newLikesByUid};
         const response = await axios.put(UPDATE_URL, newBody);
         setIsLiked(!isLiked);
     }
