@@ -7,3 +7,15 @@
 | Fri  01/21 | Lab     | Terry Pi        | Led team discussion through user stories and personas  |
 | Tue 01/24  | Lecture | Bryan Zamora    | Led sprint planning                                    |
 | Fri 01/27  | Lab     | Bryan Zamora    | Will lead first retro                                  |
+
+## Roles:
+
+Product owner: Jacob
+Scrum Master: Gita
+Testing Coordinator: Will
+Retro 3 Leader: Jacob
+UX Coordinator: Bryan
+Design Document coordinator: Terry
+Deployment Document coordinator: Nick
+User Manual coordinator: Daoyi
+Final Presentation leader: Bryan
