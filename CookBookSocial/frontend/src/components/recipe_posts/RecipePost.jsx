@@ -15,6 +15,7 @@ import { IconContext } from "react-icons/lib";
 What does calling useState do? It declares a “state variable”. Our variable is called response but we could call it anything else, like banana. This is a way to “preserve” some values between the function calls. Normally, variables “disappear” when the function exits but state variables are preserved by React.
 */
 
+
 function RecipePost({ recipe }) {
     const [showFullRecipe, toggleShowFullRecipe] = useState(false);
     const [editPostPath, setEditPostPath] = useState(`/edit-recipe/${recipe.id}`);
@@ -36,9 +37,7 @@ function RecipePost({ recipe }) {
         setIsLiked(false);
     }, [])
     
-    useEffect(() => {
-        updateNumLikes(recipe.likesByUid.length);
-    }, [isLiked])
+    
 
     async function toggleLiked() {
         let newLikesByUid = [...(recipe.likesByUid)];
@@ -61,6 +60,12 @@ function RecipePost({ recipe }) {
         const response = await axios.put(UPDATE_URL, newBody);
         setIsLiked(!isLiked);
     }
+
+    
+    useEffect(() => {
+        updateNumLikes(recipe.likesByUid.length);
+    }, [isLiked])
+    
 
     function toggleShowFull() {
         toggleShowFullRecipe(!showFullRecipe);
