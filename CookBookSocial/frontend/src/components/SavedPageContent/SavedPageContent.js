@@ -1,81 +1,110 @@
 import React, { useEffect, useState } from "react";
-import RecipePost from "../../components/recipe_posts/RecipePost";
+import SavedRecipePost from "./SavedRecipePost/SavedRecipePost";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { deleteDoc } from "firebase/firestore";
 
-const GetSavedRecipeData = () =>{
+// reorder item
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
+export default function SavedPageContent () {
   const [recipePostsList, updateRecipePostsList] = useState([]);
-  
-  /*
-  This will fetch the list of Saved recipe posts stored in the database. each saved file is related by "key" 
-  as an array of json objects. It will then save it in the state variable AllrecipePostsList.
-  It will refresh and check for new posts everytime the page refreshes.
-  "URL_GET_RECIPE_POSTS_DATA" will be replaced by the actual api endpoint for GET once it is created by
-  the backend.
-  */
-
-
-  
-  //change api to get data of saved file with "file index"(fix here)
-  //change api like "/api/recipe/saved(index)"
-  const URL_GET_SAVED_RECIPE_POSTS_DATA = "/api/recipe/all";
-  
-    useEffect(() => {
+  useEffect(() => {
+    //change here to user/saved
+    const URL_GET_SAVED_RECIPE_POSTS_DATA = "/api/user/saved";
+    const access_db = () => {
       fetch(URL_GET_SAVED_RECIPE_POSTS_DATA)
         .then((response) => response.json())
         .then((data) => updateRecipePostsList(data));
+    };
+    access_db();
     }, []);
 
+  const onDragEnd = (result) => {
+    // no drag
+    if (!result.destination) {
+      return;
+    }
+    // reorder item
+    let movedItems = reorder(
+      recipePostsList,
+      result.source.index,
+      result.destination.index 
+    );
+    updateRecipePostsList(movedItems);
+    //update data at database(fix here)
 
-  const arrComponents = [];
-  for (let i = 0; i <  recipePostsList.length; i++) {
-    arrComponents.unshift(recipePostsList[i]);
+  };
+
+  const deleteSavedRecipe = (index) => {
+
+    // reorder item
+    const result = Array.from(recipePostsList);
+    result.splice(index, 1);
+    //updateRecipePostsList(result);
+    console.log("deleted")
+    //update data at database(fix here)
+
+  };
+
+  const bigHeight = {
+    root: {
+    height: "200px"
+      }
   }
-
-  return(
-    arrComponents
-  )
-
-}
-
-const DataConvertStyle =(data)=>
-{
-  const arrComponents = [];
-  for (let i = 0; i <  data.length; i++) {
-    arrComponents.push(<RecipePost key={i} recipe={data[i]} />);
+  
+  const smallHeight = {
+    root: {
+    height: "30px"
+      }
   }
-
-  return(
-    arrComponents
-  )
-}
-
-
-export default function SavedPageContent () {
-  const [data, setData] = useState(GetSavedRecipeData())
-  // const [recipePostsList, updateRecipePostsList] = useState([]);
-  // useEffect(() => {
-  //   // declare the async data fetching function
-  //   const fetchData = async () => {
-  //     // get the data from the api
-      
-  //     const data = await ShowSavedRecipeConent();
-  
-  //     // set state with the result
-  //     setData(data);
-  //   }
-  
-  //   // call the function
-  //   fetchData()
-  //     // make sure to catch any error
-  //     .catch(console.error);;
-  // }, [])
-  console.log(data);
- 
 
   return (
-    <>
-    
-
-    </>
-  )
-
-}
+    // draggable area
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="droppable">
+        {(provided, snapshot) => (
+          <div
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+          >
+            {recipePostsList.map((savedRecipe, index) => (
+              <Draggable
+                key={savedRecipe.id}
+                draggableId={"q-" + savedRecipe.id}
+                index={index}
+              >
+                {(provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    styles={true ? bigHeight : smallHeight}
+                  >
+                    <div>
+                    <SavedRecipePost 
+                      deletePost = {() => {
+                          const newRecipePostsList = [...recipePostsList];
+                          newRecipePostsList.splice(index, 1);
+                          updateRecipePostsList(newRecipePostsList);}
+                          //update database(fix here)
+                        
+                        }
+                      key={index} 
+                      recipe={savedRecipe} />
+                    </div>
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </DragDropContext>
+  );
+};

@@ -25,4 +25,5 @@ const deleteUser = async (req, res, next) => {
     }
 };
 
+
 export { addUser, deleteUser };

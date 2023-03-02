@@ -15,7 +15,7 @@ export default function Navbars() {
 
   const username = currentUser.displayName;
 
-  async function handleLogout() {
+  async function handleLogout () {
     try {
       setError("");
       await logout();

@@ -4,15 +4,14 @@ import { Link } from 'react-router-dom';
 
 import { renderIngredients } from "./functions/RecipePostFunctions";
 import { Button } from "react-bootstrap";
-import { useAuth } from "../../contexts/AuthContext";
-import DeleteButton from "../deleteModal/deleteModal";
-import saveButton from "../saveButton/saveButton";
+import { useAuth } from "../../../contexts/AuthContext";
+import DeleteButton from "../../deleteModal/deleteModal";
 
 /*
 What does calling useState do? It declares a “state variable”. Our variable is called response but we could call it anything else, like banana. This is a way to “preserve” some values between the function calls. Normally, variables “disappear” when the function exits but state variables are preserved by React.
 */
 
-function RecipePost({ recipe }) {
+function RecipePost({deletePost,index, recipe }) {
     const [showFullRecipe, toggleShowFullRecipe] = useState(false);
     const [editPostPath, setEditPostPath] = useState(`/edit-recipe/${recipe.id}`);
 
@@ -63,6 +62,7 @@ function RecipePost({ recipe }) {
                 className="bg-white overflow-hidden pb-10 mb-10 border-b border-neutral-300 text-left"
                 onClick={toggleShowFull}
             >
+                <button className = "deleteSavedPost" onClick={deletePost}>delete</button>
                 {currentUser.uid === recipe.uid && (
                     <a
                         type="button"
@@ -72,7 +72,6 @@ function RecipePost({ recipe }) {
                         Edit
                     </a>
                 )}
-                <saveButton></saveButton>
                 <header className="header mb-2">
                     <h2 className="font-extrabold text-left text-4xl">{displayRecipeTitle(recipe)}</h2>
                 </header>
