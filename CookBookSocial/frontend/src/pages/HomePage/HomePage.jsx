@@ -16,6 +16,7 @@ function HomePage() {
   useEffect(() => {
     const handleBeforeUnload = () => {
       sessionStorage.setItem("scrollPosition", window.scrollY);
+      console.log("pos=",window.scrollY);
     };
     console.log("AHHH");
     window.addEventListener("beforeunload", handleBeforeUnload);
