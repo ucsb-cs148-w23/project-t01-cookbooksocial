@@ -5,6 +5,7 @@ import Navbars from "../../components/navbars/Navbars";
 import PostModal from "../../components/postModal/postModal";
 import "./ProfilePage.css";
 import { useAuth } from "../../contexts/AuthContext";
+import FriendRequestsDisplay from "../../components/friendRequestsDisplay/FriendRequestsDisplay";
 // import { useParams } from "react-router-dom";
 
 
@@ -14,7 +15,16 @@ import { useAuth } from "../../contexts/AuthContext";
 function ProfilePage() {
     const [profileRecipePostsList, updateProfileRecipePostsList] = useState([]);
     const { currentUser } = useAuth();
-    const username = currentUser.displayName;
+
+
+
+    let username = "No Username Found";
+
+    if('displayName' in currentUser){
+        username = currentUser.displayName;
+    } else if ('email' in currentUser){
+        username = currentUser.email;
+    } 
 
 
     //useAuth has information from Firebase about user, we will get userId from here
@@ -32,6 +42,7 @@ function ProfilePage() {
         fetch(URL_GET_PROFILE_RECIPE_POSTS_DATA)
             .then((response) => response.json())
             .then((data) => updateProfileRecipePostsList(data));
+
     }, []);
 
     function renderProfileRecipePostComponents() {
@@ -56,6 +67,8 @@ function ProfilePage() {
             return arrComponents;
         }
     }
+
+
     //have user info at top
     return (
         <div>
@@ -67,6 +80,9 @@ function ProfilePage() {
             <div className={"bioProfileName"}>
             {username ? username : "No username"}
             </div>
+            <FriendRequestsDisplay
+            currentUserId={currentUser.uid}
+            />
             </Container>
             <div className="profile-page">
                 <PostModal></PostModal>

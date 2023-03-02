@@ -17,3 +17,13 @@
     height: 15%;
     margin-right: 12%;
 }
+
+.friend-button{
+    text-align: justify;
+    margin-right: 15%;
+    padding-top: 15px;
+}
+
+.friend-button > span{
+    cursor: pointer;
+}

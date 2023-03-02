@@ -8,6 +8,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useParams } from "react-router-dom";
 import {db } from "../../config/firebase";
 import { doc, getDoc } from "firebase/firestore"; 
+import AddFriendButton from "../../components/addFriendButton/AddFriendButton";
 // import renderRecipePostComponents from "./pages/HomePage/HomePage";
 //FIXME: ProfilePage is very similar to HomePage code so probably a way to re-use
 
@@ -16,6 +17,8 @@ function PeoplePage() {
     const [profileInfo, updateProfileInfo] = useState([]);
     //uses param from route :userId
     const { userId} = useParams();
+
+    const {currentUser} = useAuth();
 
     //useAuth has information from Firebase about user, we will get email from here
     /*
@@ -75,7 +78,11 @@ function PeoplePage() {
             return arrComponents;
         }
     }
-    console.log(profileInfo)
+
+
+
+
+    // console.log(profileInfo)
     return (
         <div>
             <Navbars />
@@ -84,6 +91,13 @@ function PeoplePage() {
             
             <ul>
             <li className="bioProfileName" key={profileInfo.id}>{profileInfo.data?.profile ? profileInfo.data?.profile.displayName: "No username"}</li>
+            <li className="friend-button">
+               <AddFriendButton
+                currentUserId={currentUser.uid}
+                profileUid = {userId}
+                profileInfo = {profileInfo.data}
+               />
+            </li>
             </ul>
             </Container>
             <div className="profile-page">
