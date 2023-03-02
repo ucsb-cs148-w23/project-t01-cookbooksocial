@@ -4,7 +4,7 @@ import { addDoc, setDoc, doc, collection, serverTimestamp } from "firebase/fires
 const addSavedRecipe = async (req, res, next) => {
     try {
         const id = req.params.id;
-        const docRef = doc(db, "users", uid);
+        const docRef = doc(db, "users", id);
         const docSnap = await getDoc(docRef);
         const savedPosts =[];
         if (docSnap.exists() && docSnap().data.savedPosts) {
