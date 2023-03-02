@@ -23,8 +23,6 @@ function RecipePage() {
 
   const { currentUser } = useAuth();
 
-  
-
   useEffect(() => {
     
     setRecipId(id);
@@ -47,7 +45,7 @@ function RecipePage() {
 
   }, [id]);
 
-  const UPDATE_URL = `/api/recipe/${recipeId}`;
+  const Recipe_URL = `/api/recipe/${recipeId}`;
 
   useEffect(() => {
     if (initialRender) {
@@ -62,11 +60,12 @@ function RecipePage() {
     }
   }, [recipe])
   
-  /*
   useEffect(() => {
-    updateNumLikes(recipe.likesByUid.length);
-  }, [isLiked])
-  */
+    fetch(Recipe_URL)
+        .then((response) => response.json())
+        .then((data) => updateNumLikes(data.likesByUid.length));
+}, [isLiked])
+
 
   async function toggleLiked() {
     
@@ -87,8 +86,7 @@ function RecipePage() {
         }
     }
     const newBody = { likesByUid: newLikesByUid };
-    const response = await axios.put(UPDATE_URL, newBody);
-    
+    const response = await axios.put(Recipe_URL, newBody);
     setIsLiked(!isLiked);
     
   }
