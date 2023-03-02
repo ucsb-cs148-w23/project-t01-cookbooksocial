@@ -20,7 +20,7 @@ function HomePage() {
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     const scrollPosition = sessionStorage.getItem("scrollPosition");
-    console.log("scrollpos:",scrollPosition)
+    console.log("scrollpos:",scrollPosition) 
     if (scrollPosition !== null) {
       window.scrollTo(0, parseInt(scrollPosition));
     }
