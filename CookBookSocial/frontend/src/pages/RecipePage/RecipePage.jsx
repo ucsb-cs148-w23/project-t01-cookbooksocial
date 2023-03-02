@@ -56,7 +56,6 @@ function RecipePage() {
             setIsLiked(true);
         }
       }
-      updateNumLikes(recipe.likesByUid.length);
     }
   }, [recipe])
   
