@@ -18,6 +18,7 @@ function RecipePage() {
   const [recipeId, setRecipId] = useState();
   const [isLiked, setIsLiked] = useState(false);
   const [numLikes, updateNumLikes] = useState(0);
+  const [isLikedAnimation, setIsLikedAnimation] = useState(false);
 
   const [initialRender, setInitialRender] = useState(true);
 
@@ -70,7 +71,7 @@ function RecipePage() {
 
 
   async function toggleLiked() {
-    
+    setIsLikedAnimation(!isLikedAnimation);
     let newLikesByUid = [...(recipe.likesByUid)];
     if (isLiked) {
         //remove current user.id from recipe list of users who liked the post
@@ -125,7 +126,7 @@ function RecipePage() {
             <img className={styles.recipeImage} src={recipe.image} alt={recipe.title} />
           </div>
           <div className={styles.likesElement}>
-              {isLiked ? <IconContext.Provider value={{ color: 'red' }}><div><BsHeartFill className={styles.icon} onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>
+              {isLikedAnimation ? <IconContext.Provider value={{ color: 'red' }}><div><BsHeartFill className={styles.icon} onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>
                       : <IconContext.Provider value={{ color: 'black' }}><div><BsHeart className={styles.icon} onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>}
           </div>
           <div className={styles.recipeDetails}>
