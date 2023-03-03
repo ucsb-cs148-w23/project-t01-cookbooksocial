@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useEffect } from 'react';
 
 import { renderIngredients } from "./functions/RecipePostFunctions";
 import { Button } from "react-bootstrap";
@@ -17,6 +18,11 @@ What does calling useState do? It declares a “state variable”. Our variable 
 
 
 function RecipePost({ recipe }) {
+
+
+    const handleLinkClick = () => {
+        window.dispatchEvent(new Event('beforeunload'));
+    };
     const [showFullRecipe, toggleShowFullRecipe] = useState(false);
     const [editPostPath, setEditPostPath] = useState(`/edit-recipe/${recipe.id}`);
 
@@ -136,7 +142,7 @@ function RecipePost({ recipe }) {
                     <h2 className="font-extrabold text-left text-4xl">{displayRecipeTitle(recipe)}</h2>
                 </header>
                 <p className="text-gray-700 mb-0">
-                    By:
+                    
                     <a href={"profile/" + recipe.uid}>By: {displayName(recipe)}</a>
                     {/* We concatenate the user ID to the profile route, so it redirects us to the user page on click */}
                 </p>
@@ -144,7 +150,7 @@ function RecipePost({ recipe }) {
 
                 <p>{recipe.description}</p>
                 <div className="pb-2/3">
-                    <Link to={`/recipe/${recipe.id}`}>
+                    <Link to={`/recipe/${recipe.id}`} onClick={handleLinkClick}>
                         <img
                             className="h-full w-full object-cover aspect-[3/2]"
                             src={recipe.image}

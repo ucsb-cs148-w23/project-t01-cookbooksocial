@@ -19,3 +19,22 @@
 .newPostCont {
     margin-bottom: 5%;
 }
+.loading-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .loading-spinner {
+    font-size: 6rem;
+    margin-top: 1rem;
+    animation: spin 1s linear infinite;
+  }
+  
+  
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
