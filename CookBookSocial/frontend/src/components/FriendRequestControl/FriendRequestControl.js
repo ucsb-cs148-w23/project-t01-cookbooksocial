@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import './FriendRequestControl.css'
 import CancelFriendRequest from "../cancelFriendRequest/cancelFriendRequest";
 
-export default function FriendRequestControl({senderId, receiverId, displayName, setReceivedFriendRequests}){
+export default function FriendRequestControl({senderId, receiverId, setReceivedFriendRequests}){
 
     const [isLoading, setIsLoading] = useState(false);
 
@@ -44,7 +44,7 @@ export default function FriendRequestControl({senderId, receiverId, displayName,
     if(!isLoading){
         return( 
     
-            <div className="friendRequest" key={senderId}>{displayName}
+            <span>
             <span className="rec-friend-req-btn text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2.5 text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-600 dark:focus:ring-blue-800"
                 onClick={() => acceptFriend(senderId)}
             >
@@ -58,14 +58,12 @@ export default function FriendRequestControl({senderId, receiverId, displayName,
         
         
         
-        </div>)
+        </span>)
     } else {
         return (
-            <div className="friendRequest" key={senderId}>{displayName}
-              <svg class="animate-spin h-5 w-5 mr-3 ..." viewBox="0 0 24 24">
-
-             </svg>
-        </div>)
+            <span className="friendRequest" key={senderId}>
+                <span className="friend-request-loader"></span>
+        </span>)
     }
     
 }

@@ -8,7 +8,7 @@ export default function CancelFriendRequest(receiverId, senderId) {
         headers: {
             'Content-type': 'application/json'
         }
-    });
+    }).then((data) => console.log(data));
 
 
 }

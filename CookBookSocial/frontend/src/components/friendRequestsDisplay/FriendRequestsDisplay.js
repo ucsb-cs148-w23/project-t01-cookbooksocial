@@ -24,13 +24,13 @@ export default function FriendRequestsDisplay({currentUserId}){
 
         if (receivedFriendRequests[key].profile){
             receivedFriendReqDisplay.push(
-
+                <div className="friendRequest" key={receivedFriendRequests[key].uid}>{receivedFriendRequests[key].profile.displayName || receivedFriendRequests[key].profile} 
                 <FriendRequestControl
                 senderId = {receivedFriendRequests[key].uid}
                 receiverId = {currentUserId}
-                displayName = {receivedFriendRequests[key].profile.displayName || receivedFriendRequests[key].profile} 
                 setReceivedFriendRequests = {setReceivedFriendRequests}
                 />
+                </div>
             );
         }
     })

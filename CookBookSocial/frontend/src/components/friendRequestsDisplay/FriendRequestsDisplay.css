@@ -8,3 +8,7 @@
     width: max-content;
     cursor: pointer;
 }
+
+.friendRequest {
+    height: 50px;
+}

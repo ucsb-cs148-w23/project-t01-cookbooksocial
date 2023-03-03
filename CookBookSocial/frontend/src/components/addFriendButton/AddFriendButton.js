@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CancelFriendRequest from "../cancelFriendRequest/cancelFriendRequest";
+import FriendRequestControl from "../FriendRequestControl/FriendRequestControl";
 import '../friendRequestsDisplay/FriendRequestsDisplay.css'
 
 export default function AddFriendButton({ currentUserId, profileUid, profileInfo }) {
