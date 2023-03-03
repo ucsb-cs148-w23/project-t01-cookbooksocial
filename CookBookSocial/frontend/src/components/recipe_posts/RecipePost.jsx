@@ -1,20 +1,87 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useEffect } from 'react';
 
 import { renderIngredients } from "./functions/RecipePostFunctions";
 import { Button } from "react-bootstrap";
 import { useAuth } from "../../contexts/AuthContext";
 import DeleteButton from "../deleteModal/deleteModal";
 
+import { BsHeart, BsHeartFill } from 'react-icons/bs';
+import axios from 'axios';
+
+import './RecipePost.css'
+import { IconContext } from "react-icons/lib";
 /*
 What does calling useState do? It declares a “state variable”. Our variable is called response but we could call it anything else, like banana. This is a way to “preserve” some values between the function calls. Normally, variables “disappear” when the function exits but state variables are preserved by React.
 */
 
+
 function RecipePost({ recipe }) {
+
+
+    const handleLinkClick = () => {
+        window.dispatchEvent(new Event('beforeunload'));
+    };
     const [showFullRecipe, toggleShowFullRecipe] = useState(false);
     const [editPostPath, setEditPostPath] = useState(`/edit-recipe/${recipe.id}`);
 
+    const [isLiked, setIsLiked] = useState(false);
+    const [numLikes, updateNumLikes] = useState(0);
+
     const { currentUser } = useAuth();
+
+    const Recipe_URL = `/api/recipe/${recipe.id}`;
+
+    /*
+    useEffect(() => {
+        updateNumLikes(recipe.likesByUid.length);
+    }, [])
+    */
+
+    useEffect(() => {
+        for (let i = 0; i < recipe.likesByUid.length; i++) {
+            if (currentUser.uid === recipe.likesByUid[i]) {
+                setIsLiked(true);
+                return;
+            }
+        }
+        setIsLiked(false);
+    }, [])
+    
+    
+
+    async function toggleLiked() {
+        let newLikesByUid = [...(recipe.likesByUid)];
+        if (isLiked) {
+            //remove current user.id from recipe list of users who liked the post
+            for (let i = 0; i < newLikesByUid.length; i++) {
+                if (currentUser.uid === newLikesByUid[i]) {
+                    //UPDATE the array of uid's of the recipe post
+                    newLikesByUid.splice(i, 1);
+                }
+            }
+        } else {
+            //add current user.id to recipe list of users who liked the post
+            //UPDATE the array of uid's of the recipe post
+            if (!recipe.likesByUid.includes(currentUser.uid)) {
+                newLikesByUid.push(currentUser.uid);
+            }
+        }
+        const newBody = {likesByUid: newLikesByUid};
+        const response = await axios.put(Recipe_URL, newBody);
+        setIsLiked(!isLiked);
+    }
+
+    //set num likes after like/unlike button pressed
+    useEffect(() => {
+        fetch(Recipe_URL)
+            .then((response) => response.json())
+            .then((data) => updateNumLikes(data.likesByUid.length));
+    }, [isLiked])
+
+    
+    
 
     function toggleShowFull() {
         toggleShowFullRecipe(!showFullRecipe);
@@ -75,7 +142,7 @@ function RecipePost({ recipe }) {
                     <h2 className="font-extrabold text-left text-4xl">{displayRecipeTitle(recipe)}</h2>
                 </header>
                 <p className="text-gray-700 mb-0">
-                    By:
+                    
                     <a href={"profile/" + recipe.uid}>By: {displayName(recipe)}</a>
                     {/* We concatenate the user ID to the profile route, so it redirects us to the user page on click */}
                 </p>
@@ -83,13 +150,18 @@ function RecipePost({ recipe }) {
 
                 <p>{recipe.description}</p>
                 <div className="pb-2/3">
-                    <Link to={`/recipe/${recipe.id}`}>
+                    <Link to={`/recipe/${recipe.id}`} onClick={handleLinkClick}>
                         <img
                             className="h-full w-full object-cover aspect-[3/2]"
                             src={recipe.image}
                             alt="Recipe"
                         />
                     </Link>
+                </div>
+
+                <div className="likes-element">
+                    {isLiked ? <IconContext.Provider value={{ color: 'red' }}><div><BsHeartFill className="icon" onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>
+                        : <IconContext.Provider value={{ color: 'black' }}><div><BsHeart className="icon" onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>}
                 </div>
 
                 {showFullRecipe && (

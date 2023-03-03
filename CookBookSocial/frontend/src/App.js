@@ -15,7 +15,7 @@ import WithPrivateRoute from "./utils/WithPrivateRoute";
 import PasswordReset from "./pages/PasswordReset/PasswordReset";
 import PeoplePage from "./pages/PeoplePage/PeoplePage";
 import RecipePage from "./pages/RecipePage/RecipePage";
-
+import InvalidURL from "./pages/Invalid URL/InvalidURL";
 function App() {
 
   return (
@@ -36,6 +36,7 @@ function App() {
           />
 
           <Route exact path="/register" element={<Signup />} />
+          <Route exact path="/Invalid" element={<InvalidURL />} />
           <Route exact path="/password-reset" element={<PasswordReset />} />
           <Route
             exact
