@@ -18,6 +18,7 @@ function RecipePage() {
   const [recipeId, setRecipId] = useState();
   const [isLiked, setIsLiked] = useState(false);
   const [numLikes, updateNumLikes] = useState(0);
+  const [isLikedAnimation, setIsLikedAnimation] = useState(false);
 
   const [initialRender, setInitialRender] = useState(true);
 
@@ -56,6 +57,7 @@ function RecipePage() {
       for (let i = 0; i < recipe.likesByUid.length; i++) {
         if (currentUser.uid === recipe.likesByUid[i]) {
           setIsLiked(true);
+          setIsLikedAnimation(true);
         }
       }
       updateNumLikes(recipe.likesByUid.length);
@@ -70,7 +72,7 @@ function RecipePage() {
 
 
   async function toggleLiked() {
-
+    setIsLikedAnimation(!isLikedAnimation);
     let newLikesByUid = [...(recipe.likesByUid)];
     if (isLiked) {
       //remove current user.id from recipe list of users who liked the post
@@ -116,8 +118,7 @@ function RecipePage() {
   }
 
   return (
-    <div>
-
+    <>
       <Navbars />
       <div className={styles.recipePage}>
         <h1 className={styles.recipeTitle}>{recipe.title}</h1>
@@ -148,30 +149,34 @@ function RecipePage() {
                 </li>
               ))}
             </ul>
-          </div>
-          <div className={styles.recipeInstructions}>
-            <h2 className={styles.recipeSubheading}>Instructions</h2>
-            <ol className={styles.recipeInstructionsList}>
-              {recipe.instructions.map((instruction, index) => (
-                <li key={index} className={styles.recipeInstruction}>
-                  {instruction}
-                </li>
-              ))}
-            </ol>
+            {/* <div className={styles.likesElement}>
+              {isLikedAnimation ? <IconContext.Provider value={{ color: 'red' }}><div><BsHeartFill className={styles.icon} onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>
+                : <IconContext.Provider value={{ color: 'black' }}><div><BsHeart className={styles.icon} onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>}
+            </div> */}
+            <div className={styles.recipeInstructions}>
+              <h2 className={styles.recipeSubheading}>Instructions</h2>
+              <ol className={styles.recipeInstructionsList}>
+                {recipe.instructions.map((instruction, index) => (
+                  <li key={index} className={styles.recipeInstruction}>
+                    {instruction}
+                  </li>
+                ))}
+              </ol>
+            </div>
           </div>
         </div>
+        {currentUser.uid === recipe.uid && (
+          <div>
+            <a type="button" className="text-white bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-lg px-5 py-2.5 text-center mr-2 mb-2 mt-4"
+              href={editPostPath}
+            >Edit</a>
+            <DeleteButton
+              recipeId={recipeId}
+            ></DeleteButton>
+          </div>
+        )}
       </div>
-      {currentUser.uid === recipe.uid && (
-        <div>
-          <a type="button" className="text-white bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-lg px-5 py-2.5 text-center mr-2 mb-2 mt-4"
-            href={editPostPath}
-          >Edit</a>
-          <DeleteButton
-            recipeId={recipeId}
-          ></DeleteButton>
-        </div>
-      )}
-    </div>
+    </>
   );
 
 
