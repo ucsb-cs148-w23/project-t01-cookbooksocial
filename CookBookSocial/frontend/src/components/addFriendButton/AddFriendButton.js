@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CancelFriendRequest from "../cancelFriendRequest/cancelFriendRequest";
 import FriendRequestControl from "../FriendRequestControl/FriendRequestControl";
+import UnfriendButton from "../unfriendButton/UnfriendButton";
 import '../friendRequestsDisplay/FriendRequestsDisplay.css'
 
 export default function AddFriendButton({ currentUserId, profileUid, profileInfo }) {
@@ -131,9 +132,12 @@ export default function AddFriendButton({ currentUserId, profileUid, profileInfo
         )
     } else if (friendedState === FRIEND){
         return (
-            <span>
-                Friended! (Unfriend Placeholder)
-            </span>
+            <UnfriendButton 
+            currentUserId={currentUserId}
+            profileUid = {profileUid}
+            setFriendedState = {setFriendedState}
+            />
+
         )
     } else if (friendedState === IS_CURRENT_USER){
         return(<span></span>);

@@ -369,4 +369,64 @@ const rejectFriendRequest = async (req, res, next) => {
     }
 }
 
-export { addUser, deleteUser, sendFriendRequest, acceptFriendRequest, getFriendRequests, rejectFriendRequest };
+
+
+const unfriend = async (req, res, next) => {
+    /*
+        idReceiver is the current user that is accepting a friend request.  The idSender is the one who sent the friend request.  They will both be added to eachother's friends list, and removed from 'sendFriendRequests' and 'receivedFriendRequest' lists
+    */
+
+    try {
+        const idReceiver = req.params['idReceived'];
+        const idSender = req.params['idSent'];
+
+        if (!idReceiver || !idSender) {
+            throw new Error("Got invalid parameters.");
+        }
+
+
+        if (idReceiver === idSender) {
+            throw new Error("Cannot unfriend yourself!");
+        }
+
+        const docRefSender = doc(db, "users", idSender);
+        const docRefReceiver = doc(db, "users", idReceiver);
+
+        const docSnapSender = await getDoc(docRefSender);
+        const docSnapReceiver = await getDoc(docRefReceiver);
+
+        if (!docSnapSender.exists() || !docSnapReceiver.exists()) {
+            throw new Error("One of these users does not exist!");
+        }
+
+        const updateDataSend = docSnapSender.data();
+        const updateDataRec = docSnapReceiver.data();
+
+        if ("friends" in updateDataSend) {
+            if (idReceiver in updateDataSend['friends']) {
+                delete updateDataSend['friends'][idReceiver];
+            } 
+        } 
+
+
+        if ("friends" in updateDataRec) {
+            if (idSender in updateDataRec['friends']) {
+                delete updateDataRec['friends'][idSender];
+            }
+        } 
+
+
+        await updateDoc(docRefSender, updateDataSend);
+        await updateDoc(docRefReceiver, updateDataRec);
+
+        res.status(200).send(`Success.  Unfriended.`);
+
+
+    } catch(e){
+        res.status(400).send(`Error: ${e}`);
+        console.log(e);
+        return;
+    }
+}
+
+export { addUser, deleteUser, sendFriendRequest, acceptFriendRequest, getFriendRequests, rejectFriendRequest, unfriend };
