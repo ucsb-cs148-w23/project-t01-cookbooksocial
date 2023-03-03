@@ -57,6 +57,7 @@ function RecipePage() {
       for (let i = 0; i < recipe.likesByUid.length; i++) {
         if (currentUser.uid === recipe.likesByUid[i]) {
             setIsLiked(true);
+            setIsLikedAnimation(true);
         }
       }
       updateNumLikes(recipe.likesByUid.length);
