@@ -156,6 +156,17 @@
     z-index: 9999;
     animation: fadeOut 4s forwards;
   }
+
+  .likesElement {
+    margin-top: 20px;
+    display: flex;
+    align-items: right;
+  }
+
+  .icon {
+    display: inline;
+    cursor: pointer;
+  }
   
   
   @keyframes fadeOut {
