@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+
 import { renderIngredients } from "./functions/RecipePostFunctions";
 import { Button } from "react-bootstrap";
 import { useAuth } from "../../contexts/AuthContext";
@@ -27,6 +28,8 @@ function RecipePost({ recipe }) {
     const [isLiked, setIsLiked] = useState(false);
     const [numLikes, updateNumLikes] = useState(0);
 
+    const [isLikedAnimation, setIsLikedAnimation] = useState(false);
+
     const { currentUser } = useAuth();
 
     const Recipe_URL = `/api/recipe/${recipe.id}`;
@@ -41,6 +44,7 @@ function RecipePost({ recipe }) {
         for (let i = 0; i < recipe.likesByUid.length; i++) {
             if (currentUser.uid === recipe.likesByUid[i]) {
                 setIsLiked(true);
+                setIsLikedAnimation(true);
                 return;
             }
         }
@@ -50,6 +54,7 @@ function RecipePost({ recipe }) {
     
 
     async function toggleLiked() {
+        setIsLikedAnimation(!isLikedAnimation);
         let newLikesByUid = [...(recipe.likesByUid)];
         if (isLiked) {
             //remove current user.id from recipe list of users who liked the post
@@ -158,7 +163,7 @@ function RecipePost({ recipe }) {
                 </div>
 
                 <div className="likes-element">
-                    {isLiked ? <IconContext.Provider value={{ color: 'red' }}><div><BsHeartFill className="icon" onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>
+                    {isLikedAnimation ? <IconContext.Provider value={{ color: 'red' }}><div><BsHeartFill className="icon" onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>
                         : <IconContext.Provider value={{ color: 'black' }}><div><BsHeart className="icon" onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>}
                 </div>
 
