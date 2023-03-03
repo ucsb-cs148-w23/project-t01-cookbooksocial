@@ -12,12 +12,12 @@
 
 ## Roles:
 
-Product owner: Jacob
-Scrum Master: Gita
-Testing Coordinator: Will
-Retro 3 Leader: Jacob
-UX Coordinator: Bryan
-Design Document coordinator: Terry
-Deployment Document coordinator: Nick
-User Manual coordinator: Daoyi
-Final Presentation leader: Bryan
+- Product owner: Jacob
+- Scrum Master: Gita
+- Testing Coordinator: Will
+- Retro 3 Leader: Jacob
+- UX Coordinator: Bryan
+- Design Document coordinator: Terry
+- Deployment Document coordinator: Nick
+- User Manual coordinator: Daoyi
+- Final Presentation leader: Bryan
