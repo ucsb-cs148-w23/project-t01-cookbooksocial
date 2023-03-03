@@ -28,6 +28,8 @@ function RecipePost({ recipe }) {
     const [isLiked, setIsLiked] = useState(false);
     const [numLikes, updateNumLikes] = useState(0);
 
+    const [isLikedAnimation, setIsLikedAnimation] = useState(false);
+
     const { currentUser } = useAuth();
 
     const Recipe_URL = `/api/recipe/${recipe.id}`;
@@ -42,6 +44,7 @@ function RecipePost({ recipe }) {
         for (let i = 0; i < recipe.likesByUid.length; i++) {
             if (currentUser.uid === recipe.likesByUid[i]) {
                 setIsLiked(true);
+                setIsLikedAnimation(true);
                 return;
             }
         }
@@ -51,6 +54,7 @@ function RecipePost({ recipe }) {
     
 
     async function toggleLiked() {
+        setIsLikedAnimation(!isLikedAnimation);
         let newLikesByUid = [...(recipe.likesByUid)];
         if (isLiked) {
             //remove current user.id from recipe list of users who liked the post
@@ -142,7 +146,7 @@ function RecipePost({ recipe }) {
                 </header>
                 <p className="text-gray-700 mb-0">
                     
-                    <a href={"profile/" + recipe.uid}>By: {displayName(recipe)}</a>
+                By: <Link to={"/profile/" + recipe.uid}>{displayName(recipe)}</Link>
                     {/* We concatenate the user ID to the profile route, so it redirects us to the user page on click */}
                 </p>
                 <p className="text-gray-500">{timeStamptoDate(recipe.createdAt)}</p>
@@ -159,23 +163,10 @@ function RecipePost({ recipe }) {
                 </div>
 
                 <div className="likes-element">
-                    {isLiked ? <IconContext.Provider value={{ color: 'red' }}><div><BsHeartFill className="icon" onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>
+                    {isLikedAnimation ? <IconContext.Provider value={{ color: 'red' }}><div><BsHeartFill className="icon" onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>
                         : <IconContext.Provider value={{ color: 'black' }}><div><BsHeart className="icon" onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>}
                 </div>
 
-                {showFullRecipe && (
-                    <footer>
-                        <div className="ingredients">
-                            <h2 className="ingredients-header">Ingredients</h2>
-                            <ul className="post-list">{renderIngredients(recipe.ingredients)}</ul>
-                        </div>
-                        <div className="instructions">
-                            <h2 className="instructions-header">Instructions</h2>
-                            <ol className="post-list">{renderInstructions()}</ol>
-                        </div>
-
-                    </footer>
-                )}
             </div >
             {
                 showFullRecipe && currentUser.uid === recipe.uid && (
