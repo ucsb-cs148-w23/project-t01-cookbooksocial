@@ -205,6 +205,33 @@ const acceptFriendRequest = async (req, res, next) => {
         const updateDataRec = docSnapReceiver.data();
 
 
+        if ("sentFriendRequests" in updateDataSend) {
+
+            if (idReceiver in updateDataSend['sentFriendRequests']) {
+                delete updateDataSend['sentFriendRequests'][idReceiver];
+            } else {
+                throw new Error("Friend Request was Canceled");
+            }
+
+        } else {
+            throw new Error("Friend Request was Canceled");
+        }
+
+        if ("receivedFriendRequests" in updateDataRec) {
+
+
+            if (idSender in updateDataRec['receivedFriendRequests']) {
+                delete updateDataRec['receivedFriendRequests'][idSender];
+            } else {
+                throw new Error("Friend Request was Canceled");
+            }
+
+
+        } else {
+            throw new Error("Friend Request was Canceled");
+        }
+
+
         let recProfile = {};
         if ('profile' in updateDataRec) {
             recProfile = updateDataRec['profile'];
@@ -251,17 +278,7 @@ const acceptFriendRequest = async (req, res, next) => {
             updateDataRec['friends'][idSender] = infoForRec;
         }
 
-        if ("sentFriendRequests" in updateDataSend) {
-            delete updateDataSend['sentFriendRequests'][idReceiver];
 
-
-        } 
-
-        if ("receivedFriendRequests" in updateDataRec) {
-
-            delete updateDataRec['receivedFriendRequests'][idSender];
-
-        } 
 
 
 
@@ -282,6 +299,8 @@ const acceptFriendRequest = async (req, res, next) => {
 const rejectFriendRequest = async (req, res, next) => {
     /*
         idReceiver is the current user that is accepting a friend request.  The idSender is the one who sent the friend request.  They will both be added to eachother's friends list, and removed from 'sendFriendRequests' and 'receivedFriendRequest' lists
+
+        This is also used for cancelling a friend request
     */
 
     try {
@@ -307,22 +326,33 @@ const rejectFriendRequest = async (req, res, next) => {
 
 
         if ("sentFriendRequests" in updateDataSend) {
-            delete updateDataSend['sentFriendRequests'][idReceiver];
-            // if (Object.keys(updateDataSend['sentFriendRequests']).length === 0) {
-            //     delete updateDataSend['sentFriendRequests'];
-            // }
+
+            if (idReceiver in updateDataSend['sentFriendRequests']){
+                delete updateDataSend['sentFriendRequests'][idReceiver];
+            } else {
+                throw new Error("Friend Request was Canceled");
+            }
 
 
+
+
+        } else {
+            throw new Error("Friend Request was Canceled");
         }
 
         if ("receivedFriendRequests" in updateDataRec) {
 
-            delete updateDataRec['receivedFriendRequests'][idSender];
-            // if (Object.keys(updateDataRec['receivedFriendRequests']).length === 0) {
-            //     delete updateDataRec['receivedFriendRequests'];
-            // }
 
-        } 
+            if (idSender in updateDataRec['receivedFriendRequests']) {
+                delete updateDataRec['receivedFriendRequests'][idSender];
+            } else {
+                throw new Error("Friend Request was Canceled");
+            }
+
+
+        } else {
+            throw new Error("Friend Request was Canceled");
+        }
 
 
 
