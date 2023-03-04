@@ -97,7 +97,12 @@
   padding: 0;
   }
   
+
+  
+
+
   .recipeInstruction {
+  counter-increment: step-counter;
   font-size: 1.2rem;
   line-height: 1.5;
   margin-bottom: 0.5rem;
@@ -105,10 +110,8 @@
   position: relative;
   padding-left: 20px;
   }
-  
   .recipeInstruction:before {
-  content: counter(item) ".";
-  counter-increment: item;
+  content: counter(step-counter) ". ";
   position: absolute;
   left: 0;
   color: #FF8C00;

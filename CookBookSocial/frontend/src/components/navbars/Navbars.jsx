@@ -84,7 +84,7 @@ export default function Navbars() {
                     >
                         <span className="sr-only">Open user menu</span>
                         <img
-                            className="w-8 h-8 rounded-full"
+                            className="md:w-10 md:h-10 h-8 w-8 rounded-full"
                             src={currentUser?.photoURL}
                             alt="user"
                         />

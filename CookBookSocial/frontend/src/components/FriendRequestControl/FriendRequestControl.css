@@ -1,0 +1,33 @@
+.rec-friend-req-btn {
+    cursor: pointer;
+}
+
+.rec-friend-req-btn:hover {
+    cursor: pointer;
+}
+
+.friendRequest{
+    height: 50px;
+}
+
+.friend-request-loader {
+    width: 24px;
+    height: 24px;
+    border: 3px solid #000;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    margin-left: 10px;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

@@ -3,14 +3,12 @@
 
 }
 
-.rec-friend-req-btn {
+
+.rec-friend-cancel-btn{
+    width: max-content;
     cursor: pointer;
 }
 
-.rec-friend-req-btn:hover {
-    cursor: pointer;
-}
-
-.friendRequest{
+.friendRequest {
     height: 50px;
 }
