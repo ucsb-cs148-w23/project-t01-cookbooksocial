@@ -94,8 +94,6 @@ function RecipePost({ recipe }) {
     }
 
     function displayName(recipe) {
-        console.log(recipe, recipe["user"]);
-
         // There is no 'user' in the recipe.
 
         if ("user" in recipe && "profile" in recipe.user) {
@@ -123,7 +121,7 @@ function RecipePost({ recipe }) {
                 {currentUser.uid === recipe.uid && (
                     <a
                         type="button"
-                        class="text-white bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-lg px-5 py-2.5 text-center mr-2 mb-2 mt-4"
+                        className="text-white bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-lg px-5 py-2.5 text-center mr-2 mb-2 mt-4"
                         href={editPostPath}
                     >
                         Edit

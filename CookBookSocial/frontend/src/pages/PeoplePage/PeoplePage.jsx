@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Container from "react-bootstrap/Container";
 import RecipePost from "../../components/recipe_posts/RecipePost";
 import Navbars from "../../components/navbars/Navbars";
 import PostModal from "../../components/postModal/postModal";
@@ -83,7 +82,7 @@ function PeoplePage() {
     return (
         <div>
             <Navbars />
-            <Container>
+            <div className="container">
                 <img
                     src={profileInfo.data?.profile ? profileInfo.data?.profile.photoURL : null}
                     className={"bioProfilePic"}
@@ -104,7 +103,7 @@ function PeoplePage() {
                         />
                     </li>
                 </ul>
-            </Container>
+            </div>
             <div className="profile-page">
                 <ul>{renderProfileRecipePostComponents()}</ul>
             </div>
