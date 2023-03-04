@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import SearchBar from "../../components/Search/Search";
 
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -41,16 +42,16 @@ export default function Navbars() {
                         </span>
                     </a>
                     <div
-                        className={`items-center justify-between w-full border-y-2 border-gray-800 md:border-0 md:flex md:w-auto md:order-1 absolute md:static top-full left-0 bg-chef-orange md:z-0 z-40 ${
+                        className={`items-center mr-3 justify-between w-full md:border-0 md:flex md:w-auto absolute md:static top-full left-0 bg-chef-orange md:z-0 z-40 ${
                             navigationVisible ? "block" : "hidden"
                         }`}
                         id="mobile-menu-2"
                     >
-                        <ul className="flex flex-col p-2 rounded-lg  md:flex-row md:space-x-6 md:mt-0 md:text-m md:font-medium md:border-0  ">
+                        <ul className=" flex flex-col p-2 rounded-lg  md:flex-row md:space-x-6 md:mt-0 md:text-m md:font-medium md:border-0  ">
                             <li>
                                 <a
                                     href="/"
-                                    className="block py-2 pl-3 pr-4 font-semibold md:text-gray-800 rounded md:bg-transparent md:p-0"
+                                    className="block py-2 pl-3 pr-4 font-semibold md:text-gray-900 rounded md:bg-transparent md:p-0"
                                     aria-current="page"
                                 >
                                     Home
@@ -58,13 +59,16 @@ export default function Navbars() {
                             </li>
                             <li>
                                 <a
-                                    href="#"
-                                    className="block py-2 pl-3 pr-4 font-semibold text-gray-800 rounded hover:bg-gray-100 md:hover:bg-transparent md:p-0 "
+                                    href="/"
+                                    className="block py-2 pl-3 pr-4 font-semibold text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:p-0 "
                                 >
-                                    Featured
+                                    New Post
                                 </a>
                             </li>
                         </ul>
+                    </div>
+                    <div className="border-l pl-4 border-gray-800 hidden md:block">
+                        <SearchBar />
                     </div>
                 </div>
                 <div className="flex items-center md:order-2 relative">

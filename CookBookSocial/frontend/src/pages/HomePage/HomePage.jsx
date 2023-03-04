@@ -49,9 +49,7 @@ function HomePage() {
     return (
         <div>
             <Navbars />
-            <div className="mt-8">
-                <SearchBar setSearchState={setSearchState} />
-            </div>
+            <div className="mt-8"></div>
             <div className="max-w-2xl mx-auto my-2">
                 <PostModal />
                 {isLoading ? (
