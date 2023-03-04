@@ -60,12 +60,21 @@ function ProfilePage() {
     return (
         <div>
             <Navbars />
-            <img src={currentUser?.photoURL} className={"bioProfilePic"} alt="No-Pic" />
-            <div className={"bioProfileName"}>{username ? username : "No username"}</div>
-            <FriendRequestsDisplay currentUserId={currentUser.uid} />
-            <div className="profile-page">
-                <PostModal></PostModal>
-                <ul>{renderProfileRecipePostComponents()}</ul>
+            <div className="max-w-2xl mx-auto mt-8">
+                <div className="bg-gray-100 h-32 w-32 rounded">
+                    <img src={currentUser?.photoURL} className="" alt="No-Pic" />
+                </div>
+
+                <div className="mt-2 text-xl text-left font-bold">
+                    {username ? username : "No username"}
+                </div>
+                <div className="text-xl text-gray-600 text-left ">{currentUser.email}</div>
+                <h2 className="mt-4 text-left text-xl font-bold">Recent posts</h2>
+                <FriendRequestsDisplay currentUserId={currentUser.uid} />
+                <div className="profile-page">
+                    <PostModal></PostModal>
+                    <ul>{renderProfileRecipePostComponents()}</ul>
+                </div>
             </div>
         </div>
     );

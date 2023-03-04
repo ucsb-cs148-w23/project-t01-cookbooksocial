@@ -9,10 +9,6 @@ import styles from "./ProfilePic.module.css";
 import { db } from "../../config/firebase";
 import { doc, setDoc } from "firebase/firestore";
 
-function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
-}
-
 export default function ProfilePic() {
     const navigate = useNavigate();
 
@@ -38,7 +34,6 @@ export default function ProfilePic() {
 
     const picClicked = (index) => {
         setSelectedAvatar(index);
-        console.log("Clicked: ", index);
     };
 
     // Function to generate a random tailwind backgroun color
@@ -53,8 +48,15 @@ export default function ProfilePic() {
             "bg-purple-100",
             "bg-pink-100",
         ];
-        const random = Math.floor(Math.random() * colors.length);
-        return colors[random];
+
+        const result = [];
+        while (result.length < 6) {
+            const random = Math.floor(Math.random() * colors.length);
+            const color = colors[random];
+            result.push(color);
+        }
+
+        return result;
     }, []);
 
     const handleFormSubmit = async (e) => {
@@ -85,19 +87,26 @@ export default function ProfilePic() {
     };
 
     return (
-        <div className="max-w-3xl mx-auto mt-4">
-            <button className={styles.backButton} onClick={backClick}>
+        <div className="max-w-3xl mx-auto mt-8 px-4">
+            <button
+                className="font-medium text-white bg-red-600 hover:bg-red-800 py-2 px-4 rounded rounded-15 flex"
+                onClick={backClick}
+            >
                 Back
             </button>
-            <div className="text-left">
+            <div className="text-left mt-4">
                 <h1 className="text-3xl font-bold border-b-2 py-2">Edit Profile</h1>
                 <h2 className="mt-4 text-lg font-semibold text-black">Pick an avatar</h2>
 
                 <form className="" onSubmit={handleFormSubmit}>
-                    <div className="flex ml-0 space-x-3 p-2">
+                    <div className="flex flex-wrap ml-0 p-2">
                         {avatars.map((avatar, index) => (
                             <div key={index}>
-                                <div className={`h-24 w-24 rounded-full ${randomColor[index]} p-3`}>
+                                <div
+                                    className={`h-24 w-24 rounded-full ${randomColor[index]} ${
+                                        index === selectedAvatar ? "ring" : ""
+                                    } p-3 m-2 hover:scale-110 transform transition duration-500 ease-in-out`}
+                                >
                                     <img
                                         alt="gallery"
                                         src={avatar}
