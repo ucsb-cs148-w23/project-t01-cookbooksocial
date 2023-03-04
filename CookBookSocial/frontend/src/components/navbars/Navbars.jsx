@@ -30,7 +30,7 @@ export default function Navbars() {
 
     return (
         <nav className="relative bg-chef-orange border-gray-200 px-2 sm:px-4 md:py-4 py-2">
-            <div className="container flex flex-wrap items-center justify-between mx-auto">
+            <div className="container flex flex-wrap items-center justify-between mx-auto max-w-7xl">
                 <div className="flex items-center justify-between">
                     <a href="/" className="flex mr-6">
                         <img
@@ -38,7 +38,7 @@ export default function Navbars() {
                             className="h-6 mr-2 sm:h-9"
                             alt="Cookbook Social"
                         />
-                        <span className="self-center text-xl font-semibold whitespace-nowra">
+                        <span className="self-center text-xl font-bold whitespace-nowra">
                             Cookbook Social
                         </span>
                     </a>
@@ -48,7 +48,7 @@ export default function Navbars() {
                         }`}
                         id="mobile-menu-2"
                     >
-                        <ul className="flex flex-col p-2 rounded-lg  md:flex-row md:space-x-6 md:mt-0 md:text-sm md:font-medium md:border-0  ">
+                        <ul className="flex flex-col p-2 rounded-lg  md:flex-row md:space-x-6 md:mt-0 md:text-m md:font-medium md:border-0  ">
                             <li>
                                 <a
                                     href="/"
@@ -63,14 +63,14 @@ export default function Navbars() {
                                     href="#"
                                     className="block py-2 pl-3 pr-4 font-semibold text-gray-800 rounded hover:bg-gray-100 md:hover:bg-transparent md:p-0 "
                                 >
-                                    About
+                                    Featured
                                 </a>
                             </li>
                         </ul>
                     </div>
                 </div>
                 <div className="flex items-center md:order-2 relative">
-                    <p className="font-semibold mr-2 hidden md:block md:text-gray-800 md:text-sm">
+                    <p className="font-semibold mr-2 hidden md:block md:text-gray-800 md:text-m">
                         Hello {currentUser.displayName}!
                     </p>
                     <button
@@ -172,38 +172,3 @@ export default function Navbars() {
         </nav>
     );
 }
-// Navbar object wrapper as a whole
-
-// <Navbar className={styles.navColor} sticky="top" expand="lg">
-//   <Container>
-//     <Navbar.Brand href="/home">
-//       <text className={styles.titlePage}> ServesUp</text>
-//     </Navbar.Brand>
-//     <div className={styles.usernameText}>
-//       Hello! {username ? username : "No username"}
-//     </div>
-//     <img
-//       src={currentUser?.photoURL}
-//       className={styles.profilePic}
-//       alt="No-Pic"
-//     />
-//     <Navbar.Toggle aria-controls="basic-navbar-nav" />
-//     <Navbar.Collapse id="basic-navbar-nav">
-//       <Nav className="me-auto">
-//         {/* Setting links for navbar */}
-//         <Nav.Link href="/home">
-//           <text className={styles.navLinks}>Home</text>
-//         </Nav.Link>
-//         <Nav.Link href="/profile">
-//           <text className={styles.navLinks}>Profile</text>
-//         </Nav.Link>
-//         <Nav.Link href="/edit-profile">
-//           <text className={styles.navLinks}>Edit Profile </text>
-//         </Nav.Link>
-//         <Nav.Link onClick={handleLogout}>
-//           <text className={styles.navLinks}>Logout </text>
-//         </Nav.Link>
-//       </Nav>
-//     </Navbar.Collapse>
-//   </Container>
-// </Navbar>

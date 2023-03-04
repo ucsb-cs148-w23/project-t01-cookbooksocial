@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../../contexts/AuthContext";
@@ -41,6 +41,22 @@ export default function ProfilePic() {
         console.log("Clicked: ", index);
     };
 
+    // Function to generate a random tailwind backgroun color
+    // Memoized function to generate a random tailwind background color
+    const randomColor = useMemo(() => {
+        const colors = [
+            "bg-red-100",
+            "bg-yellow-100",
+            "bg-green-100",
+            "bg-blue-100",
+            "bg-indigo-100",
+            "bg-purple-100",
+            "bg-pink-100",
+        ];
+        const random = Math.floor(Math.random() * colors.length);
+        return colors[random];
+    }, []);
+
     const handleFormSubmit = async (e) => {
         e.preventDefault();
 
@@ -69,59 +85,55 @@ export default function ProfilePic() {
     };
 
     return (
-        <>
+        <div className="max-w-3xl mx-auto mt-4">
             <button className={styles.backButton} onClick={backClick}>
                 Back
             </button>
-            <div className="d-flex justify-content-center">
-                <div className="">
-                    <div className="text-center">
-                        <h2 className="mt-4 text-3xl text-center tracking-tight font-light dark:text-white">
-                            Pick an avatar
-                        </h2>
+            <div className="text-left">
+                <h1 className="text-3xl font-bold border-b-2 py-2">Edit Profile</h1>
+                <h2 className="mt-4 text-lg font-semibold text-black">Pick an avatar</h2>
+
+                <form className="" onSubmit={handleFormSubmit}>
+                    <div className="flex ml-0 space-x-3 p-2">
+                        {avatars.map((avatar, index) => (
+                            <div key={index}>
+                                <div className={`h-24 w-24 rounded-full ${randomColor[index]} p-3`}>
+                                    <img
+                                        alt="gallery"
+                                        src={avatar}
+                                        onClick={() => picClicked(index)}
+                                    />
+                                </div>
+                            </div>
+                        ))}
                     </div>
 
-                    <form className="" onSubmit={handleFormSubmit}>
-                        <div className={styles.imagesContainer}>
-                            {avatars.map((avatar, index) => (
-                                <div key={index}>
-                                    <div className={styles.picSize}>
-                                        <img
-                                            alt="gallery"
-                                            src={avatar}
-                                            onClick={() => picClicked(index)}
-                                        />
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                    <h2 className="text-lg font-semibold text-black py-2">Name</h2>
+                    <div className={styles.nameField}>
+                        <input
+                            id="username"
+                            name="username"
+                            type="text"
+                            autoComplete="username"
+                            required
+                            className="px-3 py-2 border border-gray-300 "
+                            placeholder="Enter a Display Name"
+                            defaultValue={currentUser.displayName && currentUser.displayName}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
+                    </div>
 
-                        <div className={styles.nameField}>
-                            <input
-                                id="username"
-                                name="username"
-                                type="text"
-                                autoComplete="username"
-                                required
-                                className="px-3 py-2 border border-gray-300"
-                                placeholder="Enter a Display Name"
-                                defaultValue={currentUser.displayName && currentUser.displayName}
-                                onChange={(e) => setUsername(e.target.value)}
-                            />
-                        </div>
-
-                        <div>
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                className="py-2 px-4 border border-transparent"
-                            >
-                                Update Profile
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                    <div>
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        >
+                            Update Profile
+                        </button>
+                    </div>
+                </form>
             </div>
-        </>
+        </div>
     );
 }
