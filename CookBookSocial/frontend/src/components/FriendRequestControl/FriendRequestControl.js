@@ -45,12 +45,12 @@ export default function FriendRequestControl({senderId, receiverId, setReceivedF
         return( 
     
             <span>
-            <span className="rec-friend-req-btn text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2.5 text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-600 dark:focus:ring-blue-800"
+                <span className="rec-friend-req-btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded-full"
                 onClick={() => acceptFriend(senderId)}
             >
                 Accept</span>
         
-            <span className="rec-friend-req-btn text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-2.5 text-center mr-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900"
+                <span className="rec-friend-req-btn bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-full"
                 onClick={() => rejectFriend(senderId)}
             >
                 Reject</span>
@@ -61,7 +61,7 @@ export default function FriendRequestControl({senderId, receiverId, setReceivedF
         </span>)
     } else {
         return (
-            <span className="friendRequest" key={senderId}>
+            <span key={senderId} className="friend-request-loader-container">
                 <span className="friend-request-loader"></span>
         </span>)
     }

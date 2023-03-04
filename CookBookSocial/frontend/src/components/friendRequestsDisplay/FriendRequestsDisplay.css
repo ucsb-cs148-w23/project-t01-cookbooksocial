@@ -1,7 +1,24 @@
-.rec-friend-req-container {
-    margin-bottom: 20px;
+.friend-req-display-container{
+    background-color: #ededed;
+    max-width: max-content;
+    margin: 0 auto 0 auto;
+    
+}
+
+.friend-req-display-container h3{
+    background-color: #d3d2d2;
+    padding: 8px 0 8px 0;
 
 }
+
+
+.rec-friend-req-container {
+    background-color: #ededed;
+    padding: 0 20px 10px 20px;
+    margin: 0 auto 20px auto;
+
+}
+
 
 
 .rec-friend-cancel-btn{
@@ -11,6 +28,19 @@
 
 .friendRequest {
     height: 50px;
+    padding: 5px 0 5px 0;
+    border-bottom: 1px solid #d3d2d2;
+}
+
+.friendRequest .friend-names-display {
+    width: 50%;
+    text-align: left;
+
+}
+
+.friendRequest .friend-image-display{
+    width: 50px;
+    margin: 8px 10px 8px 0;
 }
 
 .friend-buttons:disabled{
