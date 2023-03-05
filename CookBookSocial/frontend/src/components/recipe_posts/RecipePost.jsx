@@ -6,22 +6,16 @@ import { Button } from "react-bootstrap";
 import { useAuth } from "../../contexts/AuthContext";
 import DeleteButton from "../deleteModal/deleteModal";
 
-import { BsHeart, BsHeartFill } from 'react-icons/bs';
-import axios from 'axios';
+import { BsHeart, BsHeartFill } from "react-icons/bs";
+import axios from "axios";
 
-import './RecipePost.css'
+import "./RecipePost.css";
 import { IconContext } from "react-icons/lib";
 /*
 What does calling useState do? It declares a “state variable”. Our variable is called response but we could call it anything else, like banana. This is a way to “preserve” some values between the function calls. Normally, variables “disappear” when the function exits but state variables are preserved by React.
 */
 
-
 function RecipePost({ recipe }) {
-
-
-    const handleLinkClick = () => {
-        window.dispatchEvent(new Event('beforeunload'));
-    };
     const [showFullRecipe, toggleShowFullRecipe] = useState(false);
     const [editPostPath, setEditPostPath] = useState(`/edit-recipe/${recipe.id}`);
 
@@ -49,13 +43,11 @@ function RecipePost({ recipe }) {
             }
         }
         setIsLiked(false);
-    }, [])
-    
-    
+    }, []);
 
     async function toggleLiked() {
         setIsLikedAnimation(!isLikedAnimation);
-        let newLikesByUid = [...(recipe.likesByUid)];
+        let newLikesByUid = [...recipe.likesByUid];
         if (isLiked) {
             //remove current user.id from recipe list of users who liked the post
             for (let i = 0; i < newLikesByUid.length; i++) {
@@ -71,7 +63,7 @@ function RecipePost({ recipe }) {
                 newLikesByUid.push(currentUser.uid);
             }
         }
-        const newBody = {likesByUid: newLikesByUid};
+        const newBody = { likesByUid: newLikesByUid };
         const response = await axios.put(Recipe_URL, newBody);
         setIsLiked(!isLiked);
     }
@@ -81,15 +73,11 @@ function RecipePost({ recipe }) {
         fetch(Recipe_URL)
             .then((response) => response.json())
             .then((data) => updateNumLikes(data.likesByUid.length));
-    }, [isLiked])
-
-    
-    
+    }, [isLiked]);
 
     function toggleShowFull() {
         toggleShowFullRecipe(!showFullRecipe);
     }
-
 
     function renderInstructions() {
         const arrComponents = [];
@@ -106,16 +94,14 @@ function RecipePost({ recipe }) {
     }
 
     function displayName(recipe) {
-        console.log(recipe, recipe['user']);
+        // There is no 'user' in the recipe.
 
-        // There is no 'user' in the recipe.  
-
-        if ('user' in recipe && 'profile' in recipe.user) {
-            if ('displayName' in recipe.user.profile) {
+        if ("user" in recipe && "profile" in recipe.user) {
+            if ("displayName" in recipe.user.profile) {
                 return recipe.user.profile.displayName;
             }
         }
-        if ('email' in recipe) {
+        if ("email" in recipe) {
             return recipe.email;
         } else {
             return "No author found!";
@@ -135,25 +121,26 @@ function RecipePost({ recipe }) {
                 {currentUser.uid === recipe.uid && (
                     <a
                         type="button"
-                        class="text-white bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-lg px-5 py-2.5 text-center mr-2 mb-2 mt-4"
+                        className="text-white bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-lg px-5 py-2.5 text-center mr-2 mb-2 mt-4"
                         href={editPostPath}
                     >
                         Edit
                     </a>
                 )}
                 <header className="header mb-2">
-                    <h2 className="font-extrabold text-left text-4xl">{displayRecipeTitle(recipe)}</h2>
+                    <h2 className="font-extrabold text-left text-4xl">
+                        {displayRecipeTitle(recipe)}
+                    </h2>
                 </header>
                 <p className="text-gray-700 mb-0">
-                    
-                By: <Link to={"/profile/" + recipe.uid}>{displayName(recipe)}</Link>
+                    By: <Link to={"/profile/" + recipe.uid}>{displayName(recipe)}</Link>
                     {/* We concatenate the user ID to the profile route, so it redirects us to the user page on click */}
                 </p>
                 <p className="text-gray-500">{timeStamptoDate(recipe.createdAt)}</p>
 
                 <p>{recipe.description}</p>
                 <div className="pb-2/3">
-                    <Link to={`/recipe/${recipe.id}`} onClick={handleLinkClick}>
+                    <Link to={`/recipe/${recipe.id}`}>
                         <img
                             className="h-full w-full object-cover aspect-[3/2]"
                             src={recipe.image}
@@ -163,25 +150,50 @@ function RecipePost({ recipe }) {
                 </div>
 
                 <div className="likes-element">
-                    {isLikedAnimation ? <IconContext.Provider value={{ color: 'red' }}><div><BsHeartFill className="icon" onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>
-                        : <IconContext.Provider value={{ color: 'black' }}><div><BsHeart className="icon" onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>}
+                    {isLiked ? (
+                        <IconContext.Provider value={{ color: "red" }}>
+                            <div>
+                                <BsHeartFill className="icon" onClick={toggleLiked} size="2em" />
+                                {" " + numLikes + " likes"}
+                            </div>
+                        </IconContext.Provider>
+                    ) : (
+                        <IconContext.Provider value={{ color: "black" }}>
+                            <div>
+                                <BsHeart className="icon" onClick={toggleLiked} size="2em" />
+                                {" " + numLikes + " likes"}
+                            </div>
+                        </IconContext.Provider>
+                    )}
                 </div>
 
-            </div >
-            {
-                showFullRecipe && currentUser.uid === recipe.uid && (
-                    <div>
-                        <a type="button" className="text-white bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-lg px-5 py-2.5 text-center mr-5 mb-5"
-                            href={editPostPath}
-                        >Edit</a>
-                        <DeleteButton
-                            recipeId={recipe.id}
-                        ></DeleteButton>
-                        <hr></hr>
-                    </div>
-                )
-            }
-        </div >
+                {showFullRecipe && (
+                    <footer>
+                        <div className="ingredients">
+                            <h2 className="ingredients-header">Ingredients</h2>
+                            <ul className="post-list">{renderIngredients(recipe.ingredients)}</ul>
+                        </div>
+                        <div className="instructions">
+                            <h2 className="instructions-header">Instructions</h2>
+                            <ol className="post-list">{renderInstructions()}</ol>
+                        </div>
+                    </footer>
+                )}
+            </div>
+            {showFullRecipe && currentUser.uid === recipe.uid && (
+                <div>
+                    <a
+                        type="button"
+                        className="text-white bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-lg px-5 py-2.5 text-center mr-5 mb-5"
+                        href={editPostPath}
+                    >
+                        Edit
+                    </a>
+                    <DeleteButton recipeId={recipe.id}></DeleteButton>
+                    <hr></hr>
+                </div>
+            )}
+        </div>
     );
 }
 

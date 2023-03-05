@@ -1,23 +1,30 @@
 .ais-SearchBox-submit {
     display: none;
-  }
-  .ais-SearchBox-reset {
+}
+.ais-SearchBox-reset {
     display: none;
-  }
-  .ais-Hits-list {
+}
+.ais-Hits-list {
     padding: 0;
     margin: 0;
-  }
-  
-  .ais-Hits-item {
+}
+
+.ais-Hits-item {
     width: 100%;
     margin: 0;
     padding: 0;
-  }
-  
-  .ais-SearchBox-input {
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-  }
-  
+}
+
+.ais-SearchBox-input {
+    border-radius: 30px;
+    padding: 8px 20px;
+    background-color: #ffa597;
+    color: black;
+    width: 300px;
+}
+
+.ais-SearchBox-input::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #64362e;
+    opacity: 1; /* Firefox */
+}
