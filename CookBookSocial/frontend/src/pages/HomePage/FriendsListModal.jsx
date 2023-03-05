@@ -10,13 +10,16 @@ function FriendsListModal({ isOpen, onRequestClose }) {
   const [isLoading, setIsLoading] = useState(true);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedFriend, setSelectedFriend] = useState(null);
+  const [friendName, setFriendName] = useState(null);
   const auth = getAuth();
   const userID = auth.currentUser.uid;
 
   const openModal = (friend) => {
     setSelectedFriend(friend);
     setModalIsOpen(true);
+    setFriendName(friend.displayName);
   };
+  
 
   const closeModal = () => {
     setModalIsOpen(false);
