@@ -33,7 +33,9 @@ export default function FriendRequestsDisplay({currentUserId}){
                     </th>
 
                     <th className="friend-names-display">
-                        {receivedFriendRequests[key].profile.displayName || receivedFriendRequests[key].profile} 
+                        <a href={`/profile/${key}`} >
+                            {receivedFriendRequests[key].profile.displayName || receivedFriendRequests[key].profile} 
+                        </a>
                     </th>
                     <th>
                         <FriendRequestControl
