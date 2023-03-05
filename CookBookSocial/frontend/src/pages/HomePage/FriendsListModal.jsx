@@ -3,10 +3,26 @@ import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { Link } from 'react-router-dom';
 import Modal from 'react-modal';
+import ConfirmationModal from "./Confirmation";
+
 
 function FriendsListModal({ isOpen, onRequestClose }) {
   const [friends, setFriends] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
+  const handleConfirm = (currID, friendID) => {
+    // Handle confirm logic here
+    console.log(`Confirming friend request from ${friendID} for user ${currID}`);
+  };
 
   useEffect(() => {
     async function fetchFriends() {
@@ -37,6 +53,9 @@ function FriendsListModal({ isOpen, onRequestClose }) {
       fetchFriends();
     }
   }, [isOpen]);
+  
+
+
   return (
     <Modal
       isOpen={isOpen}
@@ -69,15 +88,16 @@ function FriendsListModal({ isOpen, onRequestClose }) {
               }}
             >
               {friends.map(({ displayName, photoURL, id }, index) => (
-                <Link to={`/profile/${id}`} key={displayName}>
-                  <li
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      padding: '8px 0',
-                      borderBottom: index < friends.length - 1 && '1px solid #f2f2f2',
-                    }}
-                  >
+                <li
+                  key={displayName}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: '8px 0',
+                    borderBottom: index < friends.length - 1 && '1px solid #f2f2f2',
+                  }}
+                >
+                  <Link to={`/profile/${id}`} style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                     <img
                       src={photoURL}
                       alt={`${displayName}'s profile picture`}
@@ -89,9 +109,18 @@ function FriendsListModal({ isOpen, onRequestClose }) {
                       }}
                     />
                     <span>{displayName}</span>
-                    <button style={{ marginLeft: 'auto' }} onClick={(e) => { e.preventDefault(); console.log(`Unfriend ${displayName}`) }}>Unfriend</button>
-                  </li>
-                </Link>
+                  </Link>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <button onClick={(e) => { e.stopPropagation(); openModal(`Unfriend ${displayName}`) }}>Unfriend</button>
+                    <ConfirmationModal
+                      currID={123} // pass current user ID as a prop
+                      friendID={456} // pass friend ID as a prop
+                      isOpen={modalIsOpen}
+                      onRequestClose={closeModal}
+                      onConfirm={handleConfirm}
+                    />
+                  </div>
+                </li>
               ))}
             </ul>
           ) : (
@@ -102,6 +131,9 @@ function FriendsListModal({ isOpen, onRequestClose }) {
     </Modal>
   );
 
-}
 
+
+
+
+}
 export default FriendsListModal;

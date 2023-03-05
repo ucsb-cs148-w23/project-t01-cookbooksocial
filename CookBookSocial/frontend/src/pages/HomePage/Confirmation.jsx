@@ -6,6 +6,7 @@ function ConfirmationModal({ currID, friendID, isOpen, onRequestClose, onConfirm
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleConfirm = async () => {
+    console.log("delete")
     setIsSubmitting(true);
     await onConfirm(currID, friendID);
     setIsSubmitting(false);
