@@ -71,7 +71,7 @@ export default function Login() {
                     </div>
 
                     <div className={styles.inputFields}>
-                        <button type="submit" disabled={loading} className={styles.button}>
+                        <button type="submit" disabled={loading} className={styles.submit_button}>
                             Login
                         </button>
                     </div>

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Container from "react-bootstrap/Container";
 import RecipePost from "../../components/recipe_posts/RecipePost";
 import Navbars from "../../components/navbars/Navbars";
 import PostModal from "../../components/postModal/postModal";
@@ -8,7 +7,6 @@ import { useAuth } from "../../contexts/AuthContext";
 import FriendRequestsDisplay from "../../components/friendRequestsDisplay/FriendRequestsDisplay";
 // import { useParams } from "react-router-dom";
 
-
 // import renderRecipePostComponents from "./pages/HomePage/HomePage";
 //FIXME: ProfilePage is very similar to HomePage code so probably a way to re-use
 
@@ -16,16 +14,13 @@ function ProfilePage() {
     const [profileRecipePostsList, updateProfileRecipePostsList] = useState([]);
     const { currentUser } = useAuth();
 
-
-
     let username = "No Username Found";
 
-    if('displayName' in currentUser){
+    if ("displayName" in currentUser) {
         username = currentUser.displayName;
-    } else if ('email' in currentUser){
+    } else if ("email" in currentUser) {
         username = currentUser.email;
-    } 
-
+    }
 
     //useAuth has information from Firebase about user, we will get userId from here
     /*
@@ -42,21 +37,14 @@ function ProfilePage() {
         fetch(URL_GET_PROFILE_RECIPE_POSTS_DATA)
             .then((response) => response.json())
             .then((data) => updateProfileRecipePostsList(data));
-
     }, []);
 
     function renderProfileRecipePostComponents() {
         const arrComponents = [];
         for (let i = 0; i < profileRecipePostsList.length; i++) {
             if (profileRecipePostsList[i].uid === currentUser.uid) {
-
-                console.log("This is the recipe in Profile Page", profileRecipePostsList[i])
-                arrComponents.unshift(
-                    <RecipePost
-                        key={i}
-                        recipe={profileRecipePostsList[i]}
-                    />
-                );
+                console.log("This is the recipe in Profile Page", profileRecipePostsList[i]);
+                arrComponents.unshift(<RecipePost key={i} recipe={profileRecipePostsList[i]} />);
             }
         }
         if (arrComponents.size === 0) {
@@ -68,25 +56,25 @@ function ProfilePage() {
         }
     }
 
-
     //have user info at top
     return (
         <div>
             <Navbars />
-            <Container>
-            <img src={currentUser?.photoURL}
-            className={"bioProfilePic"}
-            alt="No-Pic"/>
-            <div className={"bioProfileName"}>
-            {username ? username : "No username"}
-            </div>
-            <FriendRequestsDisplay
-            currentUserId={currentUser.uid}
-            />
-            </Container>
-            <div className="profile-page">
-                <PostModal></PostModal>
-                <ul>{renderProfileRecipePostComponents()}</ul>
+            <div className="max-w-2xl mx-auto mt-8">
+                <div className="bg-gray-100 h-32 w-32 rounded">
+                    <img src={currentUser?.photoURL} className="" alt="No-Pic" />
+                </div>
+
+                <div className="mt-2 text-xl text-left font-bold">
+                    {username ? username : "No username"}
+                </div>
+                <div className="text-xl text-gray-600 text-left ">{currentUser.email}</div>
+                <h2 className="mt-4 text-left text-xl font-bold">Recent posts</h2>
+                <FriendRequestsDisplay currentUserId={currentUser.uid} />
+                <div className="profile-page">
+                    <PostModal></PostModal>
+                    <ul>{renderProfileRecipePostComponents()}</ul>
+                </div>
             </div>
         </div>
     );
