@@ -1,72 +1,24 @@
-import React, { useEffect, useState } from "react";
-import RecipePost from "../../components/recipe_posts/RecipePost";
-import Navbars from "../../components/navbars/Navbars";
-import PostModal from "../../components/postModal/postModal";
-import SearchBar from "../../components/Search/Search";
-import { FaSpinner } from "react-icons/fa";
-
-import "./HomePage.css";
-
+import { useState } from 'react';
+import FriendsListModal from './FriendsListModal';
+import modal from './Confirmation'
 function HomePage() {
-    const [recipePostsList, updateRecipePostsList] = useState([]);
-    const URL_GET_RECIPE_POSTS_DATA = "/api/recipe/all";
-    const [searchState, setSearchState] = useState({});
-    const [isLoading, setIsLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-    useEffect(() => {
-        const handleBeforeUnload = () => {
-            sessionStorage.setItem("scrollPosition", window.scrollY);
-            console.log("pos=", window.scrollY);
-        };
-   
-        window.addEventListener("beforeunload", handleBeforeUnload);
+  function handleOpenModal() {
+    setIsModalOpen(true);
+  }
 
-        const scrollPosition = sessionStorage.getItem("scrollPosition");
-        if (scrollPosition !== null) {
-            window.scrollTo(0, parseInt(scrollPosition));
-        }
+  function handleCloseModal() {
+    setIsModalOpen(false);
+  }
 
-        fetch(URL_GET_RECIPE_POSTS_DATA)
-            .then((response) => response.json())
-            .then((data) => {
-                updateRecipePostsList(data);
-                setIsLoading(false);
-            })
-            .catch((error) => console.log(error));
-
-        return () => {
-            window.removeEventListener("beforeunload", handleBeforeUnload);
-        };
-    }, []);
-
-    useEffect(() => {
-        const scrollPosition = sessionStorage.getItem("scrollPosition");
-        if (scrollPosition !== null) {
-             document.documentElement.style.scrollBehavior = 'smooth'; //make the scroll smooth again, tailwind overrided this before
-            window.scrollTo(0, parseInt(scrollPosition));
-        }
-    }, [recipePostsList]);
-
-    return (
-        <div>
-            <Navbars />
-            <div className="mt-8"></div>
-            <div className="max-w-2xl mx-auto my-2">
-                <PostModal />
-                {isLoading ? (
-                    <div className="loading-container">
-                        <FaSpinner className="loading-spinner" />
-                    </div>
-                ) : (
-                    <ul>
-                        {recipePostsList.map((recipe, index) => (
-                            <RecipePost key={index} recipe={recipe} />
-                        ))}
-                    </ul>
-                )}
-            </div>
-        </div>
-    );
+  return (
+    <div>
+      <h1>Welcome to My App</h1>
+      <button onClick={handleOpenModal}>View Friends List</button>
+      <FriendsListModal isOpen={isModalOpen} onRequestClose={handleCloseModal} />
+    </div>
+  );
 }
 
 export default HomePage;
