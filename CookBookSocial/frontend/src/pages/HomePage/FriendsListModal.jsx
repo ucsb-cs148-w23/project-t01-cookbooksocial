@@ -10,7 +10,8 @@ function FriendsListModal({ isOpen, onRequestClose }) {
   const [friends, setFriends] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-
+  const auth = getAuth();
+  const userID = auth.currentUser.uid;
   const openModal = () => {
     setModalIsOpen(true);
   };
@@ -26,8 +27,7 @@ function FriendsListModal({ isOpen, onRequestClose }) {
 
   useEffect(() => {
     async function fetchFriends() {
-      const auth = getAuth();
-      const userID = auth.currentUser.uid;
+
 
       const db = getFirestore();
       const userDoc = doc(db, 'users', userID);
@@ -113,7 +113,7 @@ function FriendsListModal({ isOpen, onRequestClose }) {
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <button onClick={(e) => { e.stopPropagation(); openModal(`Unfriend ${displayName}`) }}>Unfriend</button>
                     <ConfirmationModal
-                      currID={123} // pass current user ID as a prop
+                      currID={userID} // pass current user ID as a prop
                       friendID={456} // pass friend ID as a prop
                       isOpen={modalIsOpen}
                       onRequestClose={closeModal}
