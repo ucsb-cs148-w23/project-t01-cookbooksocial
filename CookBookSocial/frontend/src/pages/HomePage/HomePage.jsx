@@ -42,6 +42,7 @@ function HomePage() {
     useEffect(() => {
         const scrollPosition = sessionStorage.getItem("scrollPosition");
         if (scrollPosition !== null) {
+             document.documentElement.style.scrollBehavior = 'smooth'; //make the scroll smooth again, tailwind overrided this before
             window.scrollTo(0, parseInt(scrollPosition));
         }
     }, [recipePostsList]);
