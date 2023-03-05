@@ -77,22 +77,10 @@ function FriendsListModal({ isOpen, onRequestClose }) {
       ) : (
         <>
           {friends.length > 0 ? (
-            <ul
-              style={{
-                listStyle: 'none',
-                margin: 0,
-                padding: 0,
-              }}
-            >
-              {friends.map(({ displayName, photoURL, id }, index) => (
-                <li
-                  key={displayName}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '8px 0',
-                    borderBottom: index < friends.length - 1 && '1px solid #f2f2f2',
-                  }}
+            <ul>
+              {friends.map(({ displayName, photoURL, id }) => (
+                <li key={id}
+                style={{
                   display: 'flex',
                   alignItems: 'center',
                   padding: '8px 0',
