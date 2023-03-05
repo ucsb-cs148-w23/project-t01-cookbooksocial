@@ -116,7 +116,7 @@ function RecipePost({ recipe }) {
         <div>
             <div
                 className="bg-white overflow-hidden pb-10 mb-10 border-b border-neutral-300 text-left"
-                onClick={toggleShowFull}
+              //  onClick={toggleShowFull}
             >
                 {currentUser.uid === recipe.uid && (
                     <a
