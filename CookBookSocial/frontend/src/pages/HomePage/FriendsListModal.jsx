@@ -5,14 +5,16 @@ import { Link } from 'react-router-dom';
 import Modal from 'react-modal';
 import ConfirmationModal from "./Confirmation";
 
-
 function FriendsListModal({ isOpen, onRequestClose }) {
   const [friends, setFriends] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedFriend, setSelectedFriend] = useState(null);
   const auth = getAuth();
   const userID = auth.currentUser.uid;
-  const openModal = () => {
+
+  const openModal = (friend) => {
+    setSelectedFriend(friend);
     setModalIsOpen(true);
   };
 
@@ -27,8 +29,6 @@ function FriendsListModal({ isOpen, onRequestClose }) {
 
   useEffect(() => {
     async function fetchFriends() {
-
-
       const db = getFirestore();
       const userDoc = doc(db, 'users', userID);
       const userSnap = await getDoc(userDoc);
@@ -36,13 +36,12 @@ function FriendsListModal({ isOpen, onRequestClose }) {
       const userFriends = userData.friends;
 
       const friendIDs = Object.keys(userFriends);
-      console.log(friendIDs)
       const friendDocs = friendIDs.map((friendID) => doc(db, 'users', friendID));
       const friendSnaps = await Promise.all(friendDocs.map(getDoc));
       const friendData = friendSnaps
         .map((friendSnap, index) => ({
           ...friendSnap.data()?.profile,
-          id: friendIDs[index] // add friendID as 'id' property
+          id: friendIDs[index]
         }))
         .filter(Boolean);
       setFriends(friendData);
@@ -53,8 +52,6 @@ function FriendsListModal({ isOpen, onRequestClose }) {
       fetchFriends();
     }
   }, [isOpen]);
-  
-
 
   return (
     <Modal
@@ -96,29 +93,34 @@ function FriendsListModal({ isOpen, onRequestClose }) {
                     padding: '8px 0',
                     borderBottom: index < friends.length - 1 && '1px solid #f2f2f2',
                   }}
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '8px 0',
+                  borderBottom:  '1px solid #f2f2f2',
+                }}
+                
                 >
+
                   <Link to={`/profile/${id}`} style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                     <img
                       src={photoURL}
                       alt={`${displayName}'s profile picture`}
-                      style={{
-                        width: '40px',
-                        height: '40px',
-                        borderRadius: '50%',
-                        marginRight: '8px',
-                      }}
+                      style={{ width: '40px', height: '40px' }}
                     />
                     <span>{displayName}</span>
                   </Link>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <button onClick={(e) => { e.stopPropagation(); openModal(`Unfriend ${displayName}`) }}>Unfriend</button>
-                    <ConfirmationModal
-                      currID={userID} // pass current user ID as a prop
-                      friendID={456} // pass friend ID as a prop
-                      isOpen={modalIsOpen}
-                      onRequestClose={closeModal}
-                      onConfirm={handleConfirm}
-                    />
+                    <button onClick={() => openModal({ id, displayName })}>Unfriend</button>
+                    {selectedFriend && (
+                      <ConfirmationModal
+                        currID={userID}
+                        friendID={selectedFriend.id}
+                        friendName={selectedFriend.displayName}
+                        isOpen={modalIsOpen}
+                        onRequestClose={closeModal}
+                        onConfirm={handleConfirm}
+                      />
+                    )}
                   </div>
                 </li>
               ))}
@@ -130,10 +132,6 @@ function FriendsListModal({ isOpen, onRequestClose }) {
       )}
     </Modal>
   );
-
-
-
-
-
 }
+
 export default FriendsListModal;
