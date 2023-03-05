@@ -8,6 +8,20 @@ const [isSubmitting, setIsSubmitting] = useState(false);
 const handleConfirm = async () => {
 setIsSubmitting(true);
 await onConfirm(currID);
+const URL_UNFRIEND = `/api/user/unfriend/${'GdEsoCp4u4Pns98ShO7muM3FtVR2'}/${'HLewmuX74pgo34fLXYw8ZUDXUDP2'}`;
+const response = fetch(URL_UNFRIEND, {
+    method: 'PUT',
+    headers: {
+        'Content-type': 'application/json'
+    }
+}).then(function (data) {
+   
+    console.log(data);
+
+});
+
+console.log(`Confirming friend request from ${friendID} for user ${currID}`);
+
 setIsSubmitting(false);
 };
 

@@ -42,11 +42,17 @@ function FriendsListModal({ isOpen, onRequestClose }) {
       const friendDocs = friendIDs.map((friendID) => doc(db, 'users', friendID));
       const friendSnaps = await Promise.all(friendDocs.map(getDoc));
       const friendData = friendSnaps
-        .map((friendSnap, index) => ({
-          ...friendSnap.data()?.profile,
+      .map((friendSnap, index) => {
+        const userData = friendSnap.data();
+        const profileData = userData?.profile;
+        const displayName = typeof profileData === 'object' ? profileData.displayName :"No DisplayName";
+        return {
+          ...profileData,
+          displayName,
           id: friendIDs[index]
-        }))
-        .filter(Boolean);
+        };
+      })
+      .filter(Boolean);
       setFriends(friendData);
       setIsLoading(false);
     }
