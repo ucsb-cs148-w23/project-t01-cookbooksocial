@@ -24,23 +24,47 @@ export default function FriendRequestsDisplay({currentUserId}){
 
         if (receivedFriendRequests[key].profile){
             receivedFriendReqDisplay.push(
-                <div className="friendRequest" key={receivedFriendRequests[key].uid}>{receivedFriendRequests[key].profile.displayName || receivedFriendRequests[key].profile} 
-                <FriendRequestControl
-                senderId = {receivedFriendRequests[key].uid}
-                receiverId = {currentUserId}
-                setReceivedFriendRequests = {setReceivedFriendRequests}
-                />
-                </div>
+                <tr className="friendRequest" key={receivedFriendRequests[key].uid}>
+
+                    <th>
+                        <img src={receivedFriendRequests[key].profile.photoURL || ""} alt="Profile Image"
+                        className="friend-image-display"
+                        />
+                    </th>
+
+                    <th className="friend-names-display">
+                        <a href={`/profile/${key}`} >
+                            {receivedFriendRequests[key].profile.displayName || receivedFriendRequests[key].profile} 
+                        </a>
+                    </th>
+                    <th>
+                        <FriendRequestControl
+                            senderId={receivedFriendRequests[key].uid}
+                            receiverId={currentUserId}
+                            setReceivedFriendRequests={setReceivedFriendRequests}
+                        />
+                    </th>
+
+                </tr>
             );
         }
-    })
+    });
 
-
-    return(
-        <div className="rec-friend-req-container">
-            {receivedFriendRequests.length !== 0 && (
-                receivedFriendReqDisplay
-            )}
+    if (receivedFriendReqDisplay.length > 0){
+         return(
+        <div className="friend-req-display-container">
+            <h3>Friend Requests</h3>
+            <div className="rec-friend-req-container">
+                <table >
+                    {receivedFriendRequests.length !== 0 && (
+                        receivedFriendReqDisplay
+                    )}
+                </table>
+            </div>
         </div>
-    )
+        )
+    } else {
+        return (<></>)
+    }
+   
 }   

@@ -69,8 +69,9 @@ function ProfilePage() {
                     {username ? username : "No username"}
                 </div>
                 <div className="text-xl text-gray-600 text-left ">{currentUser.email}</div>
-                <h2 className="mt-4 text-left text-xl font-bold">Recent posts</h2>
+                
                 <FriendRequestsDisplay currentUserId={currentUser.uid} />
+                <h2 className="mt-4 text-left text-xl font-bold">Recent posts</h2>
                 <div className="profile-page">
                     <PostModal></PostModal>
                     <ul>{renderProfileRecipePostComponents()}</ul>
