@@ -132,9 +132,6 @@ export function Modal({ show, setShow }) {
     const [isError, setIsError] = useState(false);
     const [errorOutput, setErrorOutput] = useState("");
 
-    const [image, setImage] = useState("");
-    const [prevImg, setPrevImg] = useState("");
-
     const [formData, setFormData] = useState({
         title: "",
         description: "",
@@ -142,9 +139,11 @@ export function Modal({ show, setShow }) {
         ingredientList: [],
         stepList: [],
         stepText: "",
+        image: [],
+        prevImg: "",
     });
 
-    const { title, description, stepText, stepList, ingredientList, uid } = formData;
+    const { title, description, stepText, stepList, ingredientList, prevImg, image } = formData;
 
     const { currentUser } = useAuth();
 
@@ -154,6 +153,25 @@ export function Modal({ show, setShow }) {
             uid: currentUser.uid,
         });
     }, [currentUser.uid]);
+
+    const [recipe, updateRecipe] = useState({
+        title: "",
+        description: "",
+        uid: currentUser.uid,
+        ingredients: [],
+        instructions: [],
+    });
+
+    useEffect(() => {
+        updateRecipe({
+            ...recipe,
+            title: title,
+            description: description,
+            uid: currentUser.uid,
+            ingredients: ingredientList,
+            instructions: stepList,
+        });
+    }, [title, description, currentUser.uid, ingredientList, stepList]);
 
     function validate(input) {
         const errorMessages = [];
@@ -182,14 +200,13 @@ export function Modal({ show, setShow }) {
     };
 
     function handleImage(pic) {
-        setImage(pic);
-        setPrevImg(URL.createObjectURL(pic));
+        setFormData({ ...formData, image: pic });
+        setFormData({ ...formData, prevImg: URL.createObjectURL(pic) });
     }
 
     function modalClosing() {
         setShow(false);
-        setImage([]);
-        setPrevImg("");
+        setShow(false);
         setIsError(false);
         setErrorOutput("");
         setFormData({
@@ -199,22 +216,16 @@ export function Modal({ show, setShow }) {
             ingredientList: [],
             stepList: [],
             stepText: "",
+            image: [],
+            prevImg: "",
         });
     }
 
     function postRecipe() {
         // add step text to step List if it is not empty
-        if (stepText === "") {
+        if (stepText !== "") {
             stepList.push(stepText);
         }
-
-        const recipe = {
-            title: title,
-            description: description,
-            uid: uid,
-            ingredients: ingredientList,
-            instructions: stepList,
-        };
 
         // Validate the input
         const validationError = validate({
