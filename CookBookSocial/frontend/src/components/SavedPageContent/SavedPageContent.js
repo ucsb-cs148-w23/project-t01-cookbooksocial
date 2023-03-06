@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import SavedRecipePost from "./SavedRecipePost/SavedRecipePost";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { deleteDoc } from "firebase/firestore";
+import { useAuth } from "../../contexts/AuthContext";
 
 // reorder item
 const reorder = (list, startIndex, endIndex) => {
@@ -13,9 +13,10 @@ const reorder = (list, startIndex, endIndex) => {
 };
 export default function SavedPageContent () {
   const [recipePostsList, updateRecipePostsList] = useState([]);
+  const { currentUser } = useAuth();
   useEffect(() => {
     //change here to user/saved
-    const URL_GET_SAVED_RECIPE_POSTS_DATA = "/api/user/saved";
+    const URL_GET_SAVED_RECIPE_POSTS_DATA = `/api/recipe/savedPost/${currentUser.uid}`;
     const access_db = () => {
       fetch(URL_GET_SAVED_RECIPE_POSTS_DATA)
         .then((response) => response.json())
@@ -50,19 +51,7 @@ export default function SavedPageContent () {
     //update data at database(fix here)
 
   };
-
-  const bigHeight = {
-    root: {
-    height: "200px"
-      }
-  }
-  
-  const smallHeight = {
-    root: {
-    height: "30px"
-      }
-  }
-
+  console.log(recipePostsList)
   return (
     // draggable area
     <DragDropContext onDragEnd={onDragEnd}>
@@ -83,16 +72,22 @@ export default function SavedPageContent () {
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
-                    styles={true ? bigHeight : smallHeight}
                   >
                     <div>
                     <SavedRecipePost 
                       deletePost = {() => {
                           const newRecipePostsList = [...recipePostsList];
                           newRecipePostsList.splice(index, 1);
-                          updateRecipePostsList(newRecipePostsList);}
-                          //update database(fix here)
-                        
+                          updateRecipePostsList(newRecipePostsList);
+                          //update database
+                          console.log(recipePostsList[index].id)
+                          const URL_DELETE_SAVED_RECIPE_POSTS = `/api/recipe/savedPost/${recipePostsList[index].id}/${currentUser.uid}`;
+                          const response = fetch(URL_DELETE_SAVED_RECIPE_POSTS, {
+                            method: 'DELETE',
+                            headers: {
+                            }
+                         });
+                        }
                         }
                       key={index} 
                       recipe={savedRecipe} />

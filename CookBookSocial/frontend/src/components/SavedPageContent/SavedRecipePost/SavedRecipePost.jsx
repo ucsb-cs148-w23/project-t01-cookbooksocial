@@ -11,7 +11,7 @@ import DeleteButton from "../../deleteModal/deleteModal";
 What does calling useState do? It declares a “state variable”. Our variable is called response but we could call it anything else, like banana. This is a way to “preserve” some values between the function calls. Normally, variables “disappear” when the function exits but state variables are preserved by React.
 */
 
-function RecipePost({deletePost,index, recipe }) {
+function SavedRecipePost({deletePost,index, recipe }) {
     const [showFullRecipe, toggleShowFullRecipe] = useState(false);
     const [editPostPath, setEditPostPath] = useState(`/edit-recipe/${recipe.id}`);
 
@@ -37,7 +37,6 @@ function RecipePost({deletePost,index, recipe }) {
     }
 
     function displayName(recipe) {
-        console.log(recipe, recipe['user']);
 
         // There is no 'user' in the recipe.  
         if ('profile' in recipe.user) {
@@ -124,4 +123,4 @@ function RecipePost({deletePost,index, recipe }) {
     );
 }
 
-export default RecipePost;
+export default SavedRecipePost;

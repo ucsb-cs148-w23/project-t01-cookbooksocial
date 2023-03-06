@@ -5,6 +5,9 @@ import {
     deleteRecipe,
     getRecipe,
     getAllRecipes,
+    addSavedPost,
+    deleteSavedPost,
+    showSavedPost,
 } from "../controllers/recipeController.js";
 
 const recipeRouter = express.Router();
@@ -81,5 +84,9 @@ recipeRouter.put("/:id", updateRecipe);
  *         description: Success message
  */
 recipeRouter.delete("/:id", deleteRecipe);
+
+recipeRouter.put("/savedPost/:id/:uid", addSavedPost);
+recipeRouter.delete("/savedPost/:id/:uid", deleteSavedPost);
+recipeRouter.get("/savedPost/:uid", showSavedPost);
 
 export default recipeRouter;

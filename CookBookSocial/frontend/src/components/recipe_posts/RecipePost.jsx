@@ -6,7 +6,7 @@ import { renderIngredients } from "./functions/RecipePostFunctions";
 import { Button } from "react-bootstrap";
 import { useAuth } from "../../contexts/AuthContext";
 import DeleteButton from "../deleteModal/deleteModal";
-import saveButton from "../saveButton/saveButton";
+import SaveButton from "../saveButton/saveButton";
 
 /*
 What does calling useState do? It declares a “state variable”. Our variable is called response but we could call it anything else, like banana. This is a way to “preserve” some values between the function calls. Normally, variables “disappear” when the function exits but state variables are preserved by React.
@@ -73,7 +73,7 @@ function RecipePost({ recipe }) {
                         Edit
                     </a>
                 )}
-                <saveButton></saveButton>
+                <SaveButton RecipeId ={recipe.id}></SaveButton>
                 <header className="header mb-2">
                     <h2 className="font-extrabold text-left text-4xl">{displayRecipeTitle(recipe)}</h2>
                 </header>

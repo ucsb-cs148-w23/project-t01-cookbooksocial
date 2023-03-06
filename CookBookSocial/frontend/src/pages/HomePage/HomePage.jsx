@@ -3,43 +3,70 @@ import RecipePost from "../../components/recipe_posts/RecipePost";
 import Navbars from "../../components/navbars/Navbars";
 import PostModal from "../../components/postModal/postModal";
 import SearchBar from "../../components/Search/Search";
+import { FaSpinner } from "react-icons/fa";
 
 import "./HomePage.css";
 
 function HomePage() {
-  //state to hold an array of json objects of recipe posts (TWO FILLER POSTS FOR NOW AS EXAMPLES)
-  const [recipePostsList, updateRecipePostsList] = useState([]);
-  const URL_GET_RECIPE_POSTS_DATA = "/api/recipe/all";
-  const [searchState, setSearchState] = useState({});
+    const [recipePostsList, updateRecipePostsList] = useState([]);
+    const URL_GET_RECIPE_POSTS_DATA = "/api/recipe/all";
+    const [searchState, setSearchState] = useState({});
+    const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    fetch(URL_GET_RECIPE_POSTS_DATA)
-      .then((response) => response.json())
-      .then((data) => updateRecipePostsList(data));
-  }, []);
+    useEffect(() => {
+        const handleBeforeUnload = () => {
+            sessionStorage.setItem("scrollPosition", window.scrollY);
+            console.log("pos=", window.scrollY);
+        };
+   
+        window.addEventListener("beforeunload", handleBeforeUnload);
 
-  function renderRecipePostComponents() {
-    const arrComponents = [];
-    for (let i = 0; i < recipePostsList.length; i++) {
-      arrComponents.unshift(<RecipePost key={i} recipe={recipePostsList[i]} />);
-    }
-    return arrComponents;
-  }
+        const scrollPosition = sessionStorage.getItem("scrollPosition");
+        if (scrollPosition !== null) {
+            window.scrollTo(0, parseInt(scrollPosition));
+        }
 
-  return (
-    <div>
-      <Navbars />
-      <SearchBar setSearchState={setSearchState} />
-      <div className="max-w-2xl mx-auto my-2">
-        <PostModal></PostModal>
-        <ul>
-          {recipePostsList.map((recipe) => (
-            <RecipePost key={recipe.id} recipe={recipe} />
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
+        fetch(URL_GET_RECIPE_POSTS_DATA)
+            .then((response) => response.json())
+            .then((data) => {
+                updateRecipePostsList(data);
+                setIsLoading(false);
+            })
+            .catch((error) => console.log(error));
+
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+    }, []);
+
+    useEffect(() => {
+        const scrollPosition = sessionStorage.getItem("scrollPosition");
+        if (scrollPosition !== null) {
+             document.documentElement.style.scrollBehavior = 'smooth'; //make the scroll smooth again, tailwind overrided this before
+            window.scrollTo(0, parseInt(scrollPosition));
+        }
+    }, [recipePostsList]);
+
+    return (
+        <div>
+            <Navbars />
+            <div className="mt-8"></div>
+            <div className="max-w-2xl mx-auto my-2">
+                <PostModal />
+                {isLoading ? (
+                    <div className="loading-container">
+                        <FaSpinner className="loading-spinner" />
+                    </div>
+                ) : (
+                    <ul>
+                        {recipePostsList.map((recipe, index) => (
+                            <RecipePost key={index} recipe={recipe} />
+                        ))}
+                    </ul>
+                )}
+            </div>
+        </div>
+    );
 }
 
 export default HomePage;
