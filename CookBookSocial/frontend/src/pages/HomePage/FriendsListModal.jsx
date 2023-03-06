@@ -11,6 +11,7 @@ function FriendsListModal({ isOpen, onRequestClose }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedFriend, setSelectedFriend] = useState(null);
   const [friendName, setFriendName] = useState(null);
+  const [isFriendConfirmed, setIsFriendConfirmed] = useState(false); // add new state variable
   const auth = getAuth();
   const userID = auth.currentUser.uid;
 
@@ -26,26 +27,11 @@ function FriendsListModal({ isOpen, onRequestClose }) {
   };
   const handleConfirm = (currID, friendID) => {
     console.log(`Confirming friend request from ${friendID} for user ${currID}`);
-    setIsLoading(true);
-    const URL_UNFRIEND = `/api/user/unfriend/${currID}/${friendID}`;
-    fetch(URL_UNFRIEND, {
-      method: 'PUT',
-      headers: {
-        'Content-type': 'application/json'
-      }
-    })
-    .then(function (response) {
-      setIsLoading(false);
-      console.log(response);
-      onRequestClose();
-    })
-    .catch(function (error) {
-      setIsLoading(false);
-      console.log(error);
-    });
+    setIsFriendConfirmed(true); // set state variable to true when friend is confirmed
   };
-  
-
+  useEffect(() => {
+    document.body.style.backgroundColor = isOpen ? 'rgba(0,0,0,0.5)' : 'transparent';
+  }, [isOpen]);
   useEffect(() => {
     async function fetchFriends() {
       const db = getFirestore();
@@ -61,7 +47,12 @@ function FriendsListModal({ isOpen, onRequestClose }) {
         .map((friendSnap, index) => {
           const userData = friendSnap.data();
           const profileData = userData?.profile;
-          const displayName = typeof profileData === 'object' ? profileData.displayName : "No DisplayName";
+          const displayName = typeof profileData === 'object' 
+  ? profileData.displayName.length > 15 
+    ? profileData.displayName.slice(0, 25) + "..." 
+    : profileData.displayName 
+  : "NoName";
+
           return {
             ...profileData,
             displayName,
@@ -73,10 +64,18 @@ function FriendsListModal({ isOpen, onRequestClose }) {
       setIsLoading(false);
     }
 
-    if (isOpen) {
+    if (isOpen || isFriendConfirmed) { 
       fetchFriends();
+      setIsFriendConfirmed(false); 
     }
-  }, [isOpen]);
+  }, [isOpen, isFriendConfirmed]); 
+
+
+
+
+ 
+
+
 
   return (
     <Modal
@@ -86,7 +85,8 @@ function FriendsListModal({ isOpen, onRequestClose }) {
       contentLabel="Friends List"
       style={{
         content: {
-          width: '300px',
+          
+          width: '400px',
           height: '400px',
           top: '50%',
           left: '50%',
@@ -98,6 +98,8 @@ function FriendsListModal({ isOpen, onRequestClose }) {
         },
       }}
     >
+      
+      <h2 style={{ textAlign: 'center', marginBottom: '16px' }}>Friends List</h2>
       {isLoading ? (
         <p>Loading friends...</p>
       ) : (
@@ -124,7 +126,7 @@ function FriendsListModal({ isOpen, onRequestClose }) {
                     <span>{displayName}</span>
                   </Link>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <button onClick={() => openModal({ id, displayName })}>Unfriend</button>
+                  <button onClick={() => openModal({ id, displayName })} style={{ backgroundColor: 'lightgrey', borderRadius: '8px', color: 'black', padding: '12px 16px' }}>Unfriend</button>
                     {selectedFriend && (
                       <ConfirmationModal
                         currID={userID}
