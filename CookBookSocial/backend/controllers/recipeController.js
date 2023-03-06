@@ -134,7 +134,7 @@ const getRecipe = async (req, res, next) => {
 
 const getAllRecipes = async (req, res, next) => {
     try {
-        const querySnapshot = await getDocs(query(collection(db, "recipes"), orderBy("createdAt")));
+        const querySnapshot = await getDocs(query(collection(db, "recipes"), orderBy("createdAt","desc")));
         const recipes = [];
         for (const doc of querySnapshot.docs) {
             let recipe = doc.data();

@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
-import Container from "react-bootstrap/Container";
 import RecipePost from "../../components/recipe_posts/RecipePost";
 import Navbars from "../../components/navbars/Navbars";
 import PostModal from "../../components/postModal/postModal";
 import "./PeoplePage.css";
 import { useAuth } from "../../contexts/AuthContext";
 import { useParams } from "react-router-dom";
-import {db } from "../../config/firebase";
-import { doc, getDoc } from "firebase/firestore"; 
+import { db } from "../../config/firebase";
+import { doc, getDoc } from "firebase/firestore";
 import AddFriendButton from "../../components/addFriendButton/AddFriendButton";
 // import renderRecipePostComponents from "./pages/HomePage/HomePage";
 //FIXME: ProfilePage is very similar to HomePage code so probably a way to re-use
@@ -16,9 +15,9 @@ function PeoplePage() {
     const [profileRecipePostsList, updateProfileRecipePostsList] = useState([]);
     const [profileInfo, updateProfileInfo] = useState([]);
     //uses param from route :userId
-    const { userId} = useParams();
+    const { userId } = useParams();
 
-    const {currentUser} = useAuth();
+    const { currentUser } = useAuth();
 
     //useAuth has information from Firebase about user, we will get email from here
     /*
@@ -39,35 +38,35 @@ function PeoplePage() {
 
     //get profile info
     useEffect(() => {
-        getProfileInfo()
-    }, [])
-    useEffect(() => {
-    }, [profileInfo])
+        getProfileInfo();
+    }, []);
+    useEffect(() => {}, [profileInfo]);
 
     //get user's data from firestore doc identified with their userID
-    function getProfileInfo(){
-        const userInfoRef =doc(db, "users", userId);
-        getDoc(userInfoRef).then(snapshot => {
-            const profileInfData= ({
-               data: snapshot.data(),
-               id: snapshot.id, 
+    function getProfileInfo() {
+        const userInfoRef = doc(db, "users", userId);
+
+        getDoc(userInfoRef)
+            .then((snapshot) => {
+                if (!snapshot.exists()) {
+                    console.log("invalid user");
+                    window.location.href = "/Invalid";
+                }
+                const profileInfData = {
+                    data: snapshot.data(),
+                    id: snapshot.id,
+                };
+                console.log("data to update with", profileInfData.data.email);
+                updateProfileInfo(profileInfData);
             })
-            console.log("data to update with", profileInfData.data.email);
-            updateProfileInfo(profileInfData)
-        })
-        .catch(error => console.log(error.message))
+            .catch((error) => console.log(error.message));
     }
 
     function renderProfileRecipePostComponents() {
         const arrComponents = [];
         for (let i = 0; i < profileRecipePostsList.length; i++) {
             if (profileRecipePostsList[i].uid === userId) {
-                arrComponents.unshift(
-                    <RecipePost
-                        key={i}
-                        recipe={profileRecipePostsList[i]}
-                    />
-                );
+                arrComponents.unshift(<RecipePost key={i} recipe={profileRecipePostsList[i]} />);
             }
         }
         if (arrComponents.size === 0) {
@@ -79,32 +78,36 @@ function PeoplePage() {
         }
     }
 
-
-
-
     // console.log(profileInfo)
     return (
         <div>
             <Navbars />
-            <Container>
-            <img src= {profileInfo.data?.profile ? profileInfo.data?.profile.photoURL: null}            className={"bioProfilePic"} alt="No-Pic" />
-            
-            <ul>
-            <li className="bioProfileName" key={profileInfo.id}>{profileInfo.data?.profile ? profileInfo.data?.profile.displayName: "No username"}</li>
-            <li className="friend-button">
-               <AddFriendButton
-                currentUserId={currentUser.uid}
-                profileUid = {userId}
-                profileInfo = {profileInfo.data}
-               />
-            </li>
-            </ul>
-            </Container>
+            <div className="container">
+                <img
+                    src={profileInfo.data?.profile ? profileInfo.data?.profile.photoURL : null}
+                    className={"bioProfilePic"}
+                    alt="No-Pic"
+                />
+
+                <ul>
+                    <li className="bioProfileName" key={profileInfo.id}>
+                        {profileInfo.data?.profile
+                            ? profileInfo.data?.profile.displayName
+                            : "No username"}
+                    </li>
+                    <li className="friend-button">
+                        <AddFriendButton
+                            currentUserId={currentUser.uid}
+                            profileUid={userId}
+                            profileInfo={profileInfo.data}
+                        />
+                    </li>
+                </ul>
+            </div>
             <div className="profile-page">
                 <ul>{renderProfileRecipePostComponents()}</ul>
             </div>
         </div>
-        
     );
 }
 
