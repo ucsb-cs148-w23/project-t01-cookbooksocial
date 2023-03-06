@@ -3,7 +3,7 @@ import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { Link } from 'react-router-dom';
 import Modal from 'react-modal';
-import ConfirmationModal from "./Confirmation";
+import ConfirmationModal from "../ConfirmRemoveFriend/Confirmation";
 
 function FriendsListModal({ isOpen, onRequestClose }) {
   const [friends, setFriends] = useState([]);
@@ -60,6 +60,11 @@ function FriendsListModal({ isOpen, onRequestClose }) {
           };
         })
         .filter(Boolean);
+        friendData.sort((friend1, friend2) => {//Prevent them from displaying in dif order every time u click view friends
+          if (friend1.displayName < friend2.displayName) return -1;
+          if (friend1.displayName > friend2.displayName) return 1;
+          return 0;
+        });
       setFriends(friendData);
       setIsLoading(false);
     }
