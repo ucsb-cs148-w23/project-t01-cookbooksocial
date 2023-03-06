@@ -11,7 +11,7 @@ function FriendsListModal({ isOpen, onRequestClose }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedFriend, setSelectedFriend] = useState(null);
   const [friendName, setFriendName] = useState(null);
-  const [isFriendConfirmed, setIsFriendConfirmed] = useState(false); // add new state variable
+  const [isFriendConfirmed, setIsFriendConfirmed] = useState(false); 
   const auth = getAuth();
   const userID = auth.currentUser.uid;
 
@@ -27,7 +27,7 @@ function FriendsListModal({ isOpen, onRequestClose }) {
   };
   const handleConfirm = (currID, friendID) => {
     console.log(`Confirming friend request from ${friendID} for user ${currID}`);
-    setIsFriendConfirmed(true); // set state variable to true when friend is confirmed
+    setIsFriendConfirmed(true); 
   };
   useEffect(() => {
     document.body.style.backgroundColor = isOpen ? 'rgba(0,0,0,0.5)' : 'transparent';
