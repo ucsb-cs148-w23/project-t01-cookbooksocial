@@ -379,7 +379,7 @@ const unfriend = async (req, res, next) => {
     try {
         const idReceiver = req.params['idReceived'];
         const idSender = req.params['idSent'];
-      
+
         if (!idReceiver || !idSender) {
             throw new Error("Got invalid parameters.");
         }
@@ -423,7 +423,6 @@ const unfriend = async (req, res, next) => {
 
 
     } catch(e){
-        console.log("errpr",e);
         res.status(400).send(`Error: ${e}`);
         console.log(e);
         return;
