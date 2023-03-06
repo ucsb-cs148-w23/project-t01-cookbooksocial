@@ -423,6 +423,7 @@ const unfriend = async (req, res, next) => {
 
 
     } catch(e){
+        console.log("errpr",e);
         res.status(400).send(`Error: ${e}`);
         console.log(e);
         return;

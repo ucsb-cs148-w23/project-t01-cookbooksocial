@@ -19,16 +19,32 @@ function FriendsListModal({ isOpen, onRequestClose }) {
     setModalIsOpen(true);
     setFriendName(friend.displayName);
   };
-  
+
 
   const closeModal = () => {
     setModalIsOpen(false);
   };
-
   const handleConfirm = (currID, friendID) => {
-    // Handle confirm logic here
     console.log(`Confirming friend request from ${friendID} for user ${currID}`);
+    setIsLoading(true);
+    const URL_UNFRIEND = `/api/user/unfriend/${currID}/${friendID}`;
+    fetch(URL_UNFRIEND, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json'
+      }
+    })
+    .then(function (response) {
+      setIsLoading(false);
+      console.log(response);
+      onRequestClose();
+    })
+    .catch(function (error) {
+      setIsLoading(false);
+      console.log(error);
+    });
   };
+  
 
   useEffect(() => {
     async function fetchFriends() {
@@ -42,17 +58,17 @@ function FriendsListModal({ isOpen, onRequestClose }) {
       const friendDocs = friendIDs.map((friendID) => doc(db, 'users', friendID));
       const friendSnaps = await Promise.all(friendDocs.map(getDoc));
       const friendData = friendSnaps
-      .map((friendSnap, index) => {
-        const userData = friendSnap.data();
-        const profileData = userData?.profile;
-        const displayName = typeof profileData === 'object' ? profileData.displayName :"No DisplayName";
-        return {
-          ...profileData,
-          displayName,
-          id: friendIDs[index]
-        };
-      })
-      .filter(Boolean);
+        .map((friendSnap, index) => {
+          const userData = friendSnap.data();
+          const profileData = userData?.profile;
+          const displayName = typeof profileData === 'object' ? profileData.displayName : "No DisplayName";
+          return {
+            ...profileData,
+            displayName,
+            id: friendIDs[index]
+          };
+        })
+        .filter(Boolean);
       setFriends(friendData);
       setIsLoading(false);
     }
@@ -65,6 +81,7 @@ function FriendsListModal({ isOpen, onRequestClose }) {
   return (
     <Modal
       isOpen={isOpen}
+      ariaHideApp={false}
       onRequestClose={onRequestClose}
       contentLabel="Friends List"
       style={{
@@ -89,13 +106,13 @@ function FriendsListModal({ isOpen, onRequestClose }) {
             <ul>
               {friends.map(({ displayName, photoURL, id }) => (
                 <li key={id}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  padding: '8px 0',
-                  borderBottom:  '1px solid #f2f2f2',
-                }}
-                
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: '8px 0',
+                    borderBottom: '1px solid #f2f2f2',
+                  }}
+
                 >
 
                   <Link to={`/profile/${id}`} style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
@@ -115,9 +132,10 @@ function FriendsListModal({ isOpen, onRequestClose }) {
                         friendName={selectedFriend.displayName}
                         isOpen={modalIsOpen}
                         onRequestClose={closeModal}
-                        onConfirm={handleConfirm}
+                        onConfirm={(currID, friendID) => handleConfirm(currID, friendID)}
                       />
                     )}
+
                   </div>
                 </li>
               ))}

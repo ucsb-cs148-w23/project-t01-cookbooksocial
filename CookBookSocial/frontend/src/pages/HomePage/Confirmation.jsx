@@ -5,28 +5,15 @@ import './Confirmation.css';
 function ConfirmationModal({ currID,friendID, friendName, isOpen, onRequestClose, onConfirm }) {
 const [isSubmitting, setIsSubmitting] = useState(false);
 
-const handleConfirm = async () => {
-setIsSubmitting(true);
-await onConfirm(currID);
-const URL_UNFRIEND = `/api/user/unfriend/${'GdEsoCp4u4Pns98ShO7muM3FtVR2'}/${'HLewmuX74pgo34fLXYw8ZUDXUDP2'}`;
-const response = fetch(URL_UNFRIEND, {
-    method: 'PUT',
-    headers: {
-        'Content-type': 'application/json'
-    }
-}).then(function (data) {
-   
-    console.log(data);
+const handleConfirm = () => {
+    onConfirm(currID, friendID);
+   // onRequestClose();
+  };
 
-});
-
-console.log(`Confirming friend request from ${friendID} for user ${currID}`);
-
-setIsSubmitting(false);
-};
 
 return (
 <Modal
+    ariaHideApp={false}
    isOpen={isOpen}
    onRequestClose={onRequestClose}
    overlayClassName="modal-overlay"
