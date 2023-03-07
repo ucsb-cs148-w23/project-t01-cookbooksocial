@@ -1,6 +1,6 @@
 import "./postModalStyles.css";
 import React, { useState, useEffect } from "react";
-import { firebaseUpload } from "../Api";
+import { firebaseUpload } from "../../utils/Api";
 import { FaSpinner } from "react-icons/fa";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -20,15 +20,15 @@ const IngreLists = (props) => {
     const onClickAdd = () => {
         if (ingreText === "") return;
 
-        props.ingreList.push(ingreText);
+        props.ingredientList.push(ingreText);
         setIngreText("");
     };
 
     // delete ingre form list
     const onClickDelete = (index) => {
-        const deletedIngreList = [...props.ingreList];
+        const deletedIngreList = [...props.ingredientList];
         deletedIngreList.splice(index, 1);
-        props.setIngreList(deletedIngreList);
+        props.setIngredientList(deletedIngreList);
     };
 
     return (
@@ -37,7 +37,7 @@ const IngreLists = (props) => {
             <table>
                 {
                     <tbody id="ingre-body">
-                        {props.ingreList.map((ingre, index) => (
+                        {props.ingredientList.map((ingre, index) => (
                             <tr key={index}>
                                 <td className="modalSub">{ingre}</td>
                                 <td>
@@ -131,27 +131,35 @@ const StepLists = (props) => {
 export function Modal({ show, setShow }) {
     const [isError, setIsError] = useState(false);
     const [errorOutput, setErrorOutput] = useState("");
-    const [title, setTitle] = useState("");
-    const [desc, setDesc] = useState("");
 
-    //FIXME not using email, remove?
-    const [email, setMail] = useState("");
-
-    const [uid, setUID] = useState("");
-
-    const [ingreList, setIngreList] = useState([]);
-    const [stepList, setStepList] = useState([]);
     const [image, setImage] = useState([]);
     const [prevImg, setPrevImg] = useState("");
-    const [stepText, setStepText] = useState("");
+
+    const [formData, setFormData] = useState({
+        title: "",
+        description: "",
+        uid: "",
+        ingredientList: [],
+        stepList: [],
+        stepText: "",
+    });
+
+    const { title, description, stepText, stepList, ingredientList } = formData;
+
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { currentUser } = useAuth();
 
-    const [fullRecipeInfo, updateFullRecipeInfo] = useState({
+    useEffect(() => {
+        setFormData({
+            ...formData,
+            uid: currentUser.uid,
+        });
+    }, [currentUser.uid]);
+
+    const [recipe, updateRecipe] = useState({
         title: "",
         description: "",
-        email: currentUser.email,
         uid: currentUser.uid,
         ingredients: [],
         instructions: [],
@@ -159,70 +167,41 @@ export function Modal({ show, setShow }) {
     });
 
     useEffect(() => {
-        updateFullRecipeInfo({
-            ...fullRecipeInfo,
+        updateRecipe({
+            ...recipe,
             title: title,
-            description: desc,
-            email: currentUser.email,
+            description: description,
             uid: currentUser.uid,
-            ingredients: ingreList,
+            ingredients: ingredientList,
             instructions: stepList,
         });
-    }, [title, desc, email, uid, ingreList, stepList]);
+    }, [title, description, currentUser.uid, ingredientList, stepList]);
 
-    function validateTitle() {
-        if (fullRecipeInfo.title.trim() == "") {
-            setIsError(true);
-            setErrorOutput(errorOutput + "Invalid Title! ");
-            return false;
-        }
-        return true;
+    function validate(input) {
+        const errorMessages = [];
+        Object.keys(input).forEach((key) => {
+            const value = input[key];
+            const rules = validationRules[key];
+            if (!rules) {
+                return;
+            }
+            if (rules.required && !value) {
+                errorMessages.push(`Invalid ${key}!`);
+            }
+            if (rules.isArray && (!value || !value.length)) {
+                errorMessages.push(`Invalid ${key}!`);
+            }
+        });
+        return errorMessages.join(" ");
     }
 
-    function validateDescription() {
-        if (fullRecipeInfo.description.trim() == "") {
-            setIsError(true);
-            setErrorOutput(errorOutput + "Invalid Description! ");
-            return false;
-        }
-        return true;
-    }
-
-    function validateEmail() {
-        if (fullRecipeInfo.email.trim() == "") {
-            setIsError(true);
-            setErrorOutput(errorOutput + "Invalid Email! ");
-            return false;
-        }
-        return true;
-    }
-
-    function validateUID() {
-        if (fullRecipeInfo.uid.trim() == "") {
-            setIsError(true);
-            setErrorOutput(errorOutput + "Invalid User ID! ");
-            return false;
-        }
-        return true;
-    }
-
-    function validateIngredients() {
-        if (fullRecipeInfo.ingredients.length == 0) {
-            setIsError(true);
-            setErrorOutput(errorOutput + "Invalid Ingredients! ");
-            return false;
-        }
-        return true;
-    }
-
-    function validateFile() {
-        if (image.length == "0") {
-            setIsError(true);
-            setErrorOutput(errorOutput + "Invalid Image! ");
-            return false;
-        }
-        return true;
-    }
+    const validationRules = {
+        title: { required: true },
+        description: { required: true },
+        uid: { required: true },
+        ingredients: { isArray: true },
+        image: { required: true },
+    };
 
     function handleImage(pic) {
         setImage(pic);
@@ -231,29 +210,39 @@ export function Modal({ show, setShow }) {
 
     function modalClosing() {
         setShow(false);
-        setImage([]);
-        setTitle("");
-        setDesc("");
-        setUID("");
-        setIngreList([]);
-        setStepList([]);
-        setStepText("");
-        setPrevImg("");
+        setShow(false);
+        setIsError(false);
+        setErrorOutput("");
+        setFormData({
+            title: "",
+            description: "",
+            uid: "",
+            ingredientList: [],
+            stepList: [],
+            stepText: "",
+            image: [],
+            prevImg: "",
+        });
     }
 
     function postRecipe() {
-        // add step Text to step List if it is not empty
-        if (stepText != "") {
+        // add step text to step List if it is not empty
+        if (stepText !== "") {
             stepList.push(stepText);
         }
 
-        if (
-            !validateTitle() ||
-            !validateDescription() ||
-            !validateUID() ||
-            !validateIngredients() ||
-            !validateFile()
-        ) {
+        // Validate the input
+        const validationError = validate({
+            title: recipe.title,
+            description: recipe.description,
+            uid: recipe.uid,
+            ingredients: recipe.ingredients,
+            image: image,
+        });
+
+        if (validationError) {
+            setIsError(true);
+            setErrorOutput(validationError);
             return false;
         }
         setIsError(false);
@@ -261,29 +250,19 @@ export function Modal({ show, setShow }) {
         // console.log("IMAGE NAME: ", image.name);
 
         // Here we are uploading the image first, that way we can make sure the uploaded image is correct
-        console.log("RECIPE INFO: ", fullRecipeInfo);
+        console.log("RECIPE INFO: ", recipe);
+        console.log(image);
 
-
-        firebaseUpload(image, fullRecipeInfo)
+        firebaseUpload(image, recipe)
             .then(() => {
-                setImage([]);
-                setTitle("");
-                setDesc("");
-                setIngreList([]);
-                setStepList([]);
-                setStepText("");
-                setPrevImg("");
+                modalClosing();
                 console.log("Closing modal");
-                setShow(false);
                 window.location.reload(false);
             })
             .catch((error) => {
                 console.error(error);
                 alert("Error uploading image");
             });
-
-
-
     }
 
     if (show) {
@@ -291,7 +270,7 @@ export function Modal({ show, setShow }) {
             <div id="overlay">
                 <div id="content">
                     {isError && <div id="postModal-error-log">{errorOutput}</div>}
-    
+
                     <div className="container container-column">
                         <div className="putLeft">
                             <button className="postModal-close" onClick={() => modalClosing()}>
@@ -312,7 +291,7 @@ export function Modal({ show, setShow }) {
                                             onChange={(event) => handleImage(event.target.files[0])}
                                         />
                                     </form>
-    
+
                                     {prevImg && (
                                         <div className="prevPicContainer">
                                             <img className="prevImage" src={prevImg} />
@@ -325,9 +304,7 @@ export function Modal({ show, setShow }) {
                                     {isSubmitting ? (
                                         <FaSpinner className="loading-spinner" />
                                     ) : (
-                                        <a href="#" onClick={() => postRecipe()}>
-                                            Post Now
-                                        </a>
+                                        <button onClick={() => postRecipe()}>Post Now</button>
                                     )}
                                 </div>
                                 <div className="titleContainers">
@@ -335,16 +312,23 @@ export function Modal({ show, setShow }) {
                                     <input
                                         className="text-xl h-8 w-4/5 text-black"
                                         value={title}
-                                        onChange={(event) => setTitle(event.target.value)}
+                                        onChange={(event) =>
+                                            setFormData({ ...formData, title: event.target.value })
+                                        }
                                         placeholder="Recipe Name"
                                     />
                                 </div>
-    
+
                                 <p className="modalTitle">Description</p>
                                 <textarea
                                     className="modalRecipeDesc text-black"
-                                    value={desc}
-                                    onChange={(event) => setDesc(event.target.value)}
+                                    value={description}
+                                    onChange={(event) =>
+                                        setFormData({
+                                            ...formData,
+                                            description: event.target.value,
+                                        })
+                                    }
                                     placeholder="Description"
                                 ></textarea>
                             </div>
@@ -352,15 +336,23 @@ export function Modal({ show, setShow }) {
                         {/* second Part */}
                         <div className="flex_second-box">
                             <div className="flex_second-item">
-                                <IngreLists ingreList={ingreList} setIngreList={setIngreList} />
+                                <IngreLists
+                                    ingredientList={ingredientList}
+                                    setIngredientList={(ingredientList) =>
+                                        setFormData({ ...formData, ingredientList })
+                                    }
+                                />
                             </div>
                             <div className="flex_second-item">
                                 <StepLists
                                     stepList={stepList}
-                                    setStepList={setStepList}
+                                    setStepList={(stepList) =>
+                                        setFormData({ ...formData, stepList })
+                                    }
                                     stepText={stepText}
-                                    setStepText={setStepText
-    }
+                                    setStepText={(stepText) => {
+                                        setFormData({ ...formData, stepText });
+                                    }}
                                 />
                             </div>
                         </div>

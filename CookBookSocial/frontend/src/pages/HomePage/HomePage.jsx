@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import RecipePost from "../../components/recipe_posts/RecipePost";
 import Navbars from "../../components/navbars/Navbars";
-import PostModal from "../../components/postModal/postModal";
-import SearchBar from "../../components/Search/Search";
 import { FaSpinner } from "react-icons/fa";
 
 import "./HomePage.css";
@@ -18,7 +16,7 @@ function HomePage() {
             sessionStorage.setItem("scrollPosition", window.scrollY);
             console.log("pos=", window.scrollY);
         };
-   
+
         window.addEventListener("beforeunload", handleBeforeUnload);
 
         const scrollPosition = sessionStorage.getItem("scrollPosition");
@@ -42,7 +40,7 @@ function HomePage() {
     useEffect(() => {
         const scrollPosition = sessionStorage.getItem("scrollPosition");
         if (scrollPosition !== null) {
-             document.documentElement.style.scrollBehavior = 'smooth'; //make the scroll smooth again, tailwind overrided this before
+            document.documentElement.style.scrollBehavior = "smooth"; //make the scroll smooth again, tailwind overrided this before
             window.scrollTo(0, parseInt(scrollPosition));
         }
     }, [recipePostsList]);
@@ -52,7 +50,6 @@ function HomePage() {
             <Navbars />
             <div className="mt-8"></div>
             <div className="max-w-2xl mx-auto my-2">
-                <PostModal />
                 {isLoading ? (
                     <div className="loading-container">
                         <FaSpinner className="loading-spinner" />
