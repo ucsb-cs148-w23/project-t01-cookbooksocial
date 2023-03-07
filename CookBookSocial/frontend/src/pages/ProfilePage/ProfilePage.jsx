@@ -5,6 +5,8 @@ import PostModal from "../../components/postModal/postModal";
 import "./ProfilePage.css";
 import { useAuth } from "../../contexts/AuthContext";
 import FriendRequestsDisplay from "../../components/friendRequestsDisplay/FriendRequestsDisplay";
+import FriendsListModal from '../../components/FriendsList/FriendsListModal';
+
 // import { useParams } from "react-router-dom";
 
 // import renderRecipePostComponents from "./pages/HomePage/HomePage";
@@ -13,6 +15,15 @@ import FriendRequestsDisplay from "../../components/friendRequestsDisplay/Friend
 function ProfilePage() {
     const [profileRecipePostsList, updateProfileRecipePostsList] = useState([]);
     const { currentUser } = useAuth();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    function handleOpenModal() {
+      setIsModalOpen(true);
+    }
+  
+    function handleCloseModal() {
+      setIsModalOpen(false);
+    }
 
     let username = "No Username Found";
 
@@ -69,7 +80,22 @@ function ProfilePage() {
                     {username ? username : "No username"}
                 </div>
                 <div className="text-xl text-gray-600 text-left ">{currentUser.email}</div>
-                
+                <button 
+  onClick={handleOpenModal}
+  style={{
+    backgroundColor: '#007bff',
+    color: '#fff',
+    padding: '0.5rem 1rem',
+    border: 'none',
+    borderRadius: '0.25rem',
+    cursor: 'pointer',
+  }}
+>
+  View Friends List
+</button>
+
+
+      <FriendsListModal isOpen={isModalOpen} onRequestClose={handleCloseModal} />
                 <FriendRequestsDisplay currentUserId={currentUser.uid} />
                 <h2 className="mt-4 text-left text-xl font-bold">Recent posts</h2>
                 <div className="profile-page">
