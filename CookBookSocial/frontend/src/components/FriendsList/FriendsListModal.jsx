@@ -38,8 +38,12 @@ function FriendsListModal({ isOpen, onRequestClose }) {
       const userDoc = doc(db, 'users', userID);
       const userSnap = await getDoc(userDoc);
       const userData = userSnap.data();
-      const userFriends = userData.friends;
-
+      const userFriends = userData?.friends;
+      if (!userFriends) {
+        setFriends([]);
+        setIsLoading(false);
+        return;
+      }
       const friendIDs = Object.keys(userFriends);
       const friendDocs = friendIDs.map((friendID) => doc(db, 'users', friendID));
       const friendSnaps = await Promise.all(friendDocs.map(getDoc));
