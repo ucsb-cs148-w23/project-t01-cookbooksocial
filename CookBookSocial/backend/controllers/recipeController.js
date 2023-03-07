@@ -151,7 +151,7 @@ const getAllRecipes = async (req, res, next) => {
     }
 };
 
-///////////////////////// save function//////////////////
+/////////////////////// save recipe api  ///////////////////////
 
 const addSavedPost = async (req, res, next) => {
     try {
@@ -175,7 +175,6 @@ const addSavedPost = async (req, res, next) => {
             await setDoc(docRef, docSnapData); 
             res.status(200).send("successful to save");
         } else {
-            // doc.data() will be undefined in this case
             res.status(400).send("Document not found");
         }
     }catch(e){
@@ -203,9 +202,8 @@ const deleteSavedPost = async (req, res, next) => {
             docSnapData['savedPosts'] = savedPosts
            
             await setDoc(docRef, docSnapData); 
-            res.status(200).send("successful to save");
+            res.status(200).send("successful to delete");
         } else {
-            // doc.data() will be undefined in this case
             res.status(400).send("Document not found");
         }
     }catch(e){
@@ -242,19 +240,69 @@ const showSavedPost = async (req, res, next) => {
                 else{
                     deletedPostsId.push(postId)
                 }
+            }           
+            //delete "deleted Posts" and update data
+            if (deletedPostsId != []){
+                savedPostsId = savedPostsId.filter((savedId, index) => (!(deletedPostsId.includes(savedId)))) 
+                docSnapData['savedPosts'] = savedPostsId
+                setDoc(docRef, docSnapData);
+            }
+            res.status(200).send(savedRecipesDatas);
+        } else {
+            res.status(400).send("Document not found");
+        }
+    }catch(e){
+        res.status(400).send(e);
+    }
+}
+
+const reorderSavedPost = async (req, res, next) => {
+
+    try {
+        const indexBefore = req.params['indexBefore'];
+        const indexAfter = req.params['indexAfter'];
+        const uid = req.params['uid'];
+        const docRef = await doc(db, "users", uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            let docSnapData = docSnap.data();
+            let savedPosts =[];  
+            if('savedPosts' in docSnapData){
+                savedPosts = docSnapData['savedPosts']
+            }
+            const [removed] =  savedPosts.splice(indexBefore, 1);
+            savedPosts.splice(indexAfter, 0, removed);
+            docSnapData['savedPosts'] = savedPosts
+            await setDoc(docRef, docSnapData); 
+            res.status(200).send("successful to reorder");
+        } else {
+
+            res.status(400).send("Document not found");
+        }
+    }catch(e){
+        res.status(400).send(e);
+    }
+}
+
+const checkSavedPost = async (req, res, next) => {
+
+    try {
+        const id = req.params['id'];
+        const uid = req.params['uid'];
+        const docRef = await doc(db, "users", uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            let docSnapData = docSnap.data();
+            let savedPosts =[];  
+            if('savedPosts' in docSnapData){
+                savedPosts = docSnapData['savedPosts']
             }
 
-           
-            //delete deleted Posts
-            savedPostsId = savedPostsId.filter((savedId, index) => (!(deletedPostsId.includes(savedId)))) 
-            docSnapData['savedPosts'] = savedPostsId
-            //send updated data to database
-            setDoc(docRef, docSnapData);
-
-            res.status(200).send(savedRecipesDatas);
-
+            const result = (savedPosts.includes(id))
+            
+            res.status(200).send(result);
         } else {
-            // doc.data() will be undefined in this case
+
             res.status(400).send("Document not found");
         }
     }catch(e){
@@ -265,4 +313,8 @@ const showSavedPost = async (req, res, next) => {
 
 
 
-export { addRecipe, updateRecipe, deleteRecipe, getRecipe, getAllRecipes, addFile ,addSavedPost,deleteSavedPost,showSavedPost};
+export
+{ 
+    addRecipe, updateRecipe, deleteRecipe, getRecipe, getAllRecipes, addFile, 
+    addSavedPost,deleteSavedPost,showSavedPost,reorderSavedPost,checkSavedPost,
+};

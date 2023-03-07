@@ -8,6 +8,8 @@ import {
     addSavedPost,
     deleteSavedPost,
     showSavedPost,
+    reorderSavedPost,
+    checkSavedPost,
 } from "../controllers/recipeController.js";
 
 const recipeRouter = express.Router();
@@ -85,8 +87,12 @@ recipeRouter.put("/:id", updateRecipe);
  */
 recipeRouter.delete("/:id", deleteRecipe);
 
+
+//save recipe api 
 recipeRouter.put("/savedPost/:id/:uid", addSavedPost);
 recipeRouter.delete("/savedPost/:id/:uid", deleteSavedPost);
 recipeRouter.get("/savedPost/:uid", showSavedPost);
+recipeRouter.put("/reorderSavedPost/:uid/:indexBefore/:indexAfter", reorderSavedPost);
+recipeRouter.get("/checkSavedPost/:id/:uid", checkSavedPost);
 
 export default recipeRouter;

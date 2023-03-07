@@ -2,10 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { renderIngredients } from "./functions/RecipePostFunctions";
-import { Button } from "react-bootstrap";
 import { useAuth } from "../../../contexts/AuthContext";
 import DeleteButton from "../../deleteModal/deleteModal";
-import SaveButton from "../../saveButton/saveButton";
 
 import { BsHeart, BsHeartFill } from "react-icons/bs";
 import axios from "axios";
@@ -121,8 +119,9 @@ function RecipePost({ deletePost,recipe }) {
             >
                 <button 
                     className = "text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg  dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-lg px-5 py-2.5 text-center mr-2 mb-2 "
+                    onClick={deletePost}
                 >
-                    delete                
+                    unsaved               
                 </button>
                 {currentUser.uid === recipe.uid && (
                     <a

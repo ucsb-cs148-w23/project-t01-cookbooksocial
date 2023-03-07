@@ -3,7 +3,7 @@ import SavedRecipePost from "./SavedRecipePost/SavedRecipePost";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useAuth } from "../../contexts/AuthContext";
 
-// reorder item
+// reorder item function
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
@@ -11,11 +11,16 @@ const reorder = (list, startIndex, endIndex) => {
 
   return result;
 };
+
+
+
 export default function SavedPageContent () {
+
   const [recipePostsList, updateRecipePostsList] = useState([]);
   const { currentUser } = useAuth();
+
+  //get saved data
   useEffect(() => {
-    //change here to user/saved
     const URL_GET_SAVED_RECIPE_POSTS_DATA = `/api/recipe/savedPost/${currentUser.uid}`;
     const access_db = () => {
       fetch(URL_GET_SAVED_RECIPE_POSTS_DATA)
@@ -30,28 +35,26 @@ export default function SavedPageContent () {
     if (!result.destination) {
       return;
     }
+    const indexBefore = result.source.index;
+    const indexAfter = result.destination.index; 
+
     // reorder item
     let movedItems = reorder(
       recipePostsList,
-      result.source.index,
-      result.destination.index 
+      indexBefore,
+      indexAfter
     );
     updateRecipePostsList(movedItems);
-    //update data at database(fix here)
-
+    //update firebase data
+    const URL_DELETE_SAVED_RECIPE_POSTS = `/api/recipe/reorderSavedPost/${currentUser.uid}/${indexBefore}/${indexAfter}`;
+    
+    const response = fetch(URL_DELETE_SAVED_RECIPE_POSTS, {
+      method: 'PUT',
+      headers: {
+      }
+    });
   };
 
-  const deleteSavedRecipe = (index) => {
-
-    // reorder item
-    const result = Array.from(recipePostsList);
-    result.splice(index, 1);
-    //updateRecipePostsList(result);
-    console.log("deleted")
-    //update data at database(fix here)
-
-  };
-  console.log(recipePostsList)
   return (
     // draggable area
     <DragDropContext onDragEnd={onDragEnd}>
@@ -60,6 +63,7 @@ export default function SavedPageContent () {
           <div
             {...provided.droppableProps}
             ref={provided.innerRef}
+            
           >
             {recipePostsList.map((savedRecipe, index) => (
               <Draggable
@@ -80,7 +84,6 @@ export default function SavedPageContent () {
                           newRecipePostsList.splice(index, 1);
                           updateRecipePostsList(newRecipePostsList);
                           //update database
-                          console.log(recipePostsList[index].id)
                           const URL_DELETE_SAVED_RECIPE_POSTS = `/api/recipe/savedPost/${recipePostsList[index].id}/${currentUser.uid}`;
                           const response = fetch(URL_DELETE_SAVED_RECIPE_POSTS, {
                             method: 'DELETE',

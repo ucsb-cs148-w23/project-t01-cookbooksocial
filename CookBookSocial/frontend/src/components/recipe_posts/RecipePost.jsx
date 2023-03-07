@@ -5,7 +5,7 @@ import { renderIngredients } from "./functions/RecipePostFunctions";
 import { Button } from "react-bootstrap";
 import { useAuth } from "../../contexts/AuthContext";
 import DeleteButton from "../deleteModal/deleteModal";
-import SaveButton from "../saveButton/saveButton";
+import SaveButton from "./functions/saveButton";
 
 import { BsHeart, BsHeartFill } from "react-icons/bs";
 import axios from "axios";
