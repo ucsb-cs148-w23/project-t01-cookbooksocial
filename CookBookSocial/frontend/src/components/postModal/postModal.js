@@ -1,7 +1,7 @@
 import "./postModalStyles.css";
 import React, { useState, useEffect } from "react";
-import { firebaseUpload } from "../Api";
-
+import { firebaseUpload } from "../../utils/Api";
+import { FaSpinner } from "react-icons/fa";
 import { useAuth } from "../../contexts/AuthContext";
 
 //add Recipe modal button by adding <PostButton/>
@@ -132,6 +132,9 @@ export function Modal({ show, setShow }) {
     const [isError, setIsError] = useState(false);
     const [errorOutput, setErrorOutput] = useState("");
 
+    const [image, setImage] = useState([]);
+    const [prevImg, setPrevImg] = useState("");
+
     const [formData, setFormData] = useState({
         title: "",
         description: "",
@@ -139,11 +142,11 @@ export function Modal({ show, setShow }) {
         ingredientList: [],
         stepList: [],
         stepText: "",
-        image: [],
-        prevImg: "",
     });
 
-    const { title, description, stepText, stepList, ingredientList, prevImg, image } = formData;
+    const { title, description, stepText, stepList, ingredientList } = formData;
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { currentUser } = useAuth();
 
@@ -160,6 +163,7 @@ export function Modal({ show, setShow }) {
         uid: currentUser.uid,
         ingredients: [],
         instructions: [],
+        likesByUid: [],
     });
 
     useEffect(() => {
@@ -200,8 +204,8 @@ export function Modal({ show, setShow }) {
     };
 
     function handleImage(pic) {
-        setFormData({ ...formData, image: pic });
-        setFormData({ ...formData, prevImg: URL.createObjectURL(pic) });
+        setImage(pic);
+        setPrevImg(URL.createObjectURL(pic));
     }
 
     function modalClosing() {
@@ -242,16 +246,23 @@ export function Modal({ show, setShow }) {
             return false;
         }
         setIsError(false);
-
+        setIsSubmitting(true);
         // console.log("IMAGE NAME: ", image.name);
 
         // Here we are uploading the image first, that way we can make sure the uploaded image is correct
         console.log("RECIPE INFO: ", recipe);
+        console.log(image);
 
-        firebaseUpload(image, recipe).then(() => {
-            modalClosing();
-            console.log("Closing modal");
-        });
+        firebaseUpload(image, recipe)
+            .then(() => {
+                modalClosing();
+                console.log("Closing modal");
+                window.location.reload(false);
+            })
+            .catch((error) => {
+                console.error(error);
+                alert("Error uploading image");
+            });
     }
 
     if (show) {
@@ -290,9 +301,11 @@ export function Modal({ show, setShow }) {
                             </div>
                             <div className="flex_first-item">
                                 <div className="postConfirm">
-                                    <a href="#" onClick={() => postRecipe()}>
-                                        Post Now
-                                    </a>
+                                    {isSubmitting ? (
+                                        <FaSpinner className="loading-spinner" />
+                                    ) : (
+                                        <button onClick={() => postRecipe()}>Post Now</button>
+                                    )}
                                 </div>
                                 <div className="titleContainers">
                                     <p className="modalTitle">Title</p>

@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "../../components/postModal/postModalStyles.css";
-import {firebaseUpdateWithImage, firebaseUpdateWithOutImage} from "../../components/Api";
-import {useNavigate, useParams} from "react-router-dom";
+import { firebaseUpdateWithImage, firebaseUpdateWithOutImage } from "../../utils/Api";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import Navbars from "../../components/navbars/Navbars";
 import DeleteButton from "../../components/deleteModal/deleteModal";
 
 const IngreLists = (props) => {
-
     const [ingreText, setIngreText] = useState("");
     const onChangeIngreText = (event) => {
         setIngreText(event.target.value);
@@ -52,12 +51,15 @@ const IngreLists = (props) => {
             </table>
             <div className="add-Ingre">
                 <input
-                    className="ingInput form-control"
+                    className="ingInput form-control text-black outline"
                     value={ingreText}
-                    placeholder='add ingredient'
+                    placeholder="add ingredient"
                     onChange={onChangeIngreText}
                 />
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mt-1" onClick={onClickAdd}>
+                <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mt-1"
+                    onClick={onClickAdd}
+                >
                     Add
                 </button>
             </div>
@@ -102,7 +104,7 @@ const StepLists = (props) => {
                 <div className="stepList" key={index}>
                     <div className="stepListIndex">step {index + 1}:</div>
                     <textarea
-                        className="form-control"
+                        className="form-control text-black outline"
                         value={step}
                         readOnly
                         onChange={(event) => onChangeOldStep(index, event.target.value)}
@@ -118,12 +120,15 @@ const StepLists = (props) => {
             <div className="stepList">
                 <div className="stepListIndex">step {props.stepList.length + 1}:</div>
                 <textarea
-                    className="form-control"
+                    className="form-control text-black outline"
                     placeholder="add step"
                     value={props.stepText}
                     onChange={onChangeStepText}
                 />
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mt-1" onClick={onClickAdd}>
+                <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mt-1"
+                    onClick={onClickAdd}
+                >
                     +
                 </button>
             </div>
@@ -132,9 +137,7 @@ const StepLists = (props) => {
 };
 
 export default function EditPost() {
-
     const [recipeData, setRecipeData] = useState();
-
 
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
@@ -161,10 +164,7 @@ export default function EditPost() {
         instructions: [],
     });
 
-
-
-
-    const {id} = useParams();
+    const { id } = useParams();
     console.log(id);
 
     const URL_GET_RECIPE_BY_ID = `/api/recipe/${id}`;
@@ -176,7 +176,7 @@ export default function EditPost() {
                 setRecipeData(data);
                 if (currentUser && currentUser.uid !== data.uid) {
                     navigate("/home");
-                  }
+                }
                 // setUpdatedRecipeInfo({
                 //     ...updatedRecipeInfo,
                 //     title: data['title'],
@@ -184,11 +184,10 @@ export default function EditPost() {
                 //     ingredients: data['ingredients'],
                 //     instructions: data['instructions'],
                 // });
-                setTitle(data['title']);
-                setDesc(data['description']);
-                setIngreList(data['ingredients']);
-                setStepList(data['instructions']);
-
+                setTitle(data["title"]);
+                setDesc(data["description"]);
+                setIngreList(data["ingredients"]);
+                setStepList(data["instructions"]);
             });
     }, []);
 
@@ -230,7 +229,6 @@ export default function EditPost() {
         return true;
     }
 
-
     function validateIngredients() {
         if (updatedRecipeInfo.ingredients.length == 0) {
             setIsError(true);
@@ -240,58 +238,40 @@ export default function EditPost() {
         return true;
     }
 
-
     let navigate = useNavigate();
 
-    function postRecipe(){
-
-        if (
-            !validateTitle() ||
-            !validateDescription() ||
-            !validateIngredients()
-        ) {
+    function postRecipe() {
+        if (!validateTitle() || !validateDescription() || !validateIngredients()) {
             return false;
         }
         setIsError(false);
-
 
         if (stepText != "") {
             stepList.push(stepText);
         }
         console.log("RECIPE INFO: ", updatedRecipeInfo);
 
-        if(isImageChanged){
-            firebaseUpdateWithImage(id, image, updatedRecipeInfo, recipeData['image']).then(() =>{
+        if (isImageChanged) {
+            firebaseUpdateWithImage(id, image, updatedRecipeInfo, recipeData["image"]).then(() => {
                 let path = "/profile";
                 navigate(path);
             });
         } else {
-            firebaseUpdateWithOutImage(id, recipeData['image'], updatedRecipeInfo);
+            firebaseUpdateWithOutImage(id, recipeData["image"], updatedRecipeInfo);
             let path = "/profile";
             navigate(path);
         }
-
-
     }
 
-
-
-
-
-    
-
-        return ( 
-            <body>
-            <Navbars/>
-                {isError && <div id="postModal-error-log">{errorOutput}</div>}
+    return (
+        <body>
+            <Navbars />
+            {isError && <div id="postModal-error-log">{errorOutput}</div>}
             <div className="container container-column">
-                <div className="putLeft">
-                </div>
+                <div className="putLeft"></div>
                 <div className="flex_first-box">
                     <div className="flex_first-item mt-5">
-                    <DeleteButton
-                    recipeId={id}
-                    ></DeleteButton>    
+                        <DeleteButton recipeId={id}></DeleteButton>
                     </div>
                     <div className="flex_first-item">
                         <div>
@@ -322,7 +302,7 @@ export default function EditPost() {
                         <div className="titleContainers">
                             <p className="modalTitle">Title</p>
                             <input
-                                className="form-control"
+                                className="form-control text-black outline"
                                 value={title}
                                 onChange={(event) => setTitle(event.target.value)}
                                 placeholder="Recipe Name"
@@ -331,7 +311,7 @@ export default function EditPost() {
 
                         <p className="modalTitle">Description</p>
                         <textarea
-                            className="form-control"
+                            className="form-control text-black outline"
                             value={desc}
                             onChange={(event) => setDesc(event.target.value)}
                             placeholder="Description"
@@ -350,15 +330,8 @@ export default function EditPost() {
                             setStepText={setStepText}
                         />
                     </div>
-                    </div>
+                </div>
             </div>
-            </body>
-            
-
-        );
-
-
-   
+        </body>
+    );
 }
-
-

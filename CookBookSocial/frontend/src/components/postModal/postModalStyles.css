@@ -248,3 +248,13 @@ a{
     margin-top: 5%;
     margin-bottom: 5%;
 }
+.loading-spinner {
+    font-size: 6rem; /* set the font size to 3rem */
+    margin-top: 1rem;
+    animation: spin 1s linear infinite;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 0 auto;
+  }
+  

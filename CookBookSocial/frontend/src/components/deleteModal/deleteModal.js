@@ -57,13 +57,13 @@ function DeleteModal({recipeId, show, setShow}){
 
             {isLoading && !hasErrorDelete && (
                           <div className="delete-modal loading">
-                        <div className="spinner-border text-danger" role="status">
-                            <span className="sr-only">Deleting...</span>
-
-                        </div>
                         <div className="text-xl py-5 delete-modal confirmation-text">
                             Deleting...
                         </div>
+
+                            <span className="friend-request-loader-container">
+                                <span className="friend-request-loader"></span>
+                            </span>
 
                 </div>
 
@@ -73,24 +73,20 @@ function DeleteModal({recipeId, show, setShow}){
                             <div className="text-xl py-5 delete-modal confirmation-text">
                                 Are you sure you want to delete this recipe?
                             </div>
-                            <div>
 
-                            </div>
-
-                            <span
+                            <button
                                 onClick={() => modalClosing()}
-                                type="button"
-                                className="btn btn-info m-2"
+                                className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-full"
                             >
                                 Cancel
-                            </span>
-                            <span
+                            </button>
+                            <button
                                 onClick={() => deletePost()}
                                 type="button"
-                                className="btn btn-danger m-2"
+                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-full"
                             >
                                 Delete
-                            </span>
+                            </button>
                 </div>
 
             )}
@@ -103,13 +99,12 @@ function DeleteModal({recipeId, show, setShow}){
 
                             </div>
 
-                            <span
+                            <button
                                 onClick={() => modalClosing()}
-                                type="button"
-                                className="btn btn-info m-2"
+                                className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-full"
                             >
                                 Return
-                            </span>
+                            </button>
                 </div>
 
             )}
