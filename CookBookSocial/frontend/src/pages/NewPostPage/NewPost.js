@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbars from "../../components/navbars/Navbars";
+import { useNavigate } from "react-router-dom";
 import { firebaseUpload } from "../../utils/Api";
 import { FaSpinner } from "react-icons/fa";
 import { useAuth } from "../../contexts/AuthContext";
@@ -152,6 +153,7 @@ function NewPost({ show, setShow }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { currentUser } = useAuth();
+    let navigate = useNavigate();
 
     useEffect(() => {
         setFormData({
@@ -257,8 +259,7 @@ function NewPost({ show, setShow }) {
         firebaseUpload(image, recipe)
             .then(() => {
                 modalClosing();
-                console.log("Closing modal");
-                window.location.reload(false);
+                navigate("/");
             })
             .catch((error) => {
                 console.error(error);
