@@ -23,12 +23,12 @@ const getComments = async (req, res, next) => {
 
     const comments = [];
 
-    if (req.params.length === 0) {
+    if (req.params.comments.length === 0) {
       res.status(200).send(comments);
     }
 
-    for (i = 0; i < req.params.length; i++) {
-      const id = req.params[i];
+    for (i = 0; i < req.params.comments.length; i++) {
+      const id = req.params.comments[i];
 
       const docRef = doc(db, "comments", id);
       const docSnap = await getDoc(docRef);
@@ -50,19 +50,41 @@ const addComment = async (req, res, next) => {
   try {
     let comment = JSON.parse(req);
 
+    // The comment object contains
+    // body:
+    // username:
+    // userId:
+    // parentId:
+    // recipeId:
+
     comment["createdAt"] = serverTimestamp();
     console.log(comment);
 
+    // Now the comment object contains
+    // body:
+    // username:
+    // userId:
+    // parentId:
+    // recipeId:
+    // createdAt:
 
     let commentId = await addDoc(collection(db, "comments"), comment);
 
     commentId = commentId.id;
 
-    
+    const recipeRef = db.collection("recipes").doc(comment.recipeId);
 
+    const recipeDocSnap = await getDoc(recipeRef);
+    let recipe = recipeDocSnap.data();
 
+    let comments = recipe["comments"];
+    // We update the comments array from the recipe object
+    comments.push(commentId);
+    recipe["comments"] = comments;
 
-    const res = await updateDoc();
+    const res = await recipeRef.update(recipeRef, recipe);
+
+    // const res = await updateDoc();
 
     res.status(200).send(`Comment added`);
   } catch (e) {

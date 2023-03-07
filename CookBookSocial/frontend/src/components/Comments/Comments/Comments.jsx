@@ -7,7 +7,7 @@ import axios from "axios";
 
 // make api
 
-const Comments = ({ currentUserId }) => {
+const Comments = ({ currentUserId, recipeId, comments }) => {
   const [backendComments, setBackendComments] = useState([]);
 
   const [activeComment, setActiveComment] = useState(null);
@@ -26,14 +26,18 @@ const Comments = ({ currentUserId }) => {
       );
 
   const addComment = (text, parentId, displayName, currentUserId) => {
-    axios.post("/api/comments/", {
-      text: text,
-      
-
-    }).then((comment) => {
-      setBackendComments([comment, ...backendComments]);
-      setActiveComment(null);
-    });
+    axios
+      .post("/api/comments/", {
+        body: text,
+        username: displayName,
+        userId: currentUserId,
+        parentId: parentId,
+        recipeId: recipeId,
+      })
+      .then((comment) => {
+        setBackendComments([comment, ...backendComments]);
+        setActiveComment(null);
+      });
   };
 
   const updateComment = (text, commentId) => {
@@ -61,9 +65,15 @@ const Comments = ({ currentUserId }) => {
   };
 
   useEffect(() => {
-    getCommentsApi().then((data) => {
-      setBackendComments(data);
-    });
+    axios
+      .get("/api/comments/all", {
+        params: {
+          commentsArray: comments,
+        },
+      })
+      .then((data) => {
+        setBackendComments(data);
+      });
   }, []);
 
   return (
