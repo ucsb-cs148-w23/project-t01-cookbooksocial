@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { renderIngredients } from "./functions/RecipePostFunctions";
 import { useAuth } from "../../../contexts/AuthContext";
-import DeleteButton from "../../deleteModal/deleteModal";
+import DeleteButton from "../../../components/deleteModal/deleteModal";
 
 import { BsHeart, BsHeartFill } from "react-icons/bs";
 import axios from "axios";
