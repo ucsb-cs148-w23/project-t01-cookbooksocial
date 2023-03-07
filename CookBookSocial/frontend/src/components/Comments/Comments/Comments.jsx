@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import CommentForm from "../CommentForm/CommentForm";
 import Comment from "../Comment/Comment";
 
+import axios from "axios";
+
 // make api
 
 const Comments = ({ currentUserId }) => {
@@ -22,11 +24,16 @@ const Comments = ({ currentUserId }) => {
         (a, b) =>
           new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       );
-  const addComment = (text, parentId) => {
-    // createCommentApi(text, parentId).then((comment) => {
-    //   setBackendComments([comment, ...backendComments]);
-    //   setActiveComment(null);
-    // });
+
+  const addComment = (text, parentId, displayName, currentUserId) => {
+    axios.post("/api/comments/", {
+      text: text,
+      
+
+    }).then((comment) => {
+      setBackendComments([comment, ...backendComments]);
+      setActiveComment(null);
+    });
   };
 
   const updateComment = (text, commentId) => {

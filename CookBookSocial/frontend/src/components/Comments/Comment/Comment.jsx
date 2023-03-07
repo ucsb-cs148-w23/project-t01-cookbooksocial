@@ -1,5 +1,7 @@
 import CommentForm from "../CommentForm/CommentForm";
 
+import { useAuth } from "../../../contexts/AuthContext";
+
 const Comment = ({
   comment,
   replies,
@@ -30,6 +32,8 @@ const Comment = ({
   const replyId = parentId ? parentId : comment.id;
 
   const createdAt = new Date(comment.createdAt).toLocaleDateString();
+
+  const { currentUser } = useAuth();
 
   return (
     // Whole comment
@@ -90,7 +94,7 @@ const Comment = ({
         {isReplying && (
           <CommentForm
             submitLabel="Reply"
-            handleSubmit={(text) => addComment(text, replyId)}
+            handleSubmit={(text) => addComment(text, replyId, currentUser.displayName, currentUser.uid)}
           />
         )}
         {replies.length > 0 && (
