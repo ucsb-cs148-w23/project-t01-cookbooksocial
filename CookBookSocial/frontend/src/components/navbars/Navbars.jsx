@@ -65,6 +65,14 @@ export default function Navbars() {
                                     New Post
                                 </a>
                             </li>
+                            <li>
+                                <a
+                                    href="/saved-post"
+                                    className="block py-2 pl-3 pr-4 font-semibold text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:p-0 "
+                                >
+                                    Saved Posts
+                                </a>
+                            </li>
                         </ul>
                     </div>
                     <div className="border-l pl-4 border-gray-800 hidden md:block">
@@ -127,14 +135,6 @@ export default function Navbars() {
                                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                 >
                                     Edit Profile
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="/saved-post"
-                                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                >
-                                    Saved Posts
                                 </a>
                             </li>
                             <li>

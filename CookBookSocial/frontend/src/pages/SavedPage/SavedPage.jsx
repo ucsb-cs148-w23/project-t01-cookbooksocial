@@ -8,7 +8,7 @@ function SavedPage() {
   return (
     <div>
       <Navbars />
-      <div className="saved-page">
+      <div className="home-page">
         <SavedPageContent></SavedPageContent>
       </div>
     </div>
