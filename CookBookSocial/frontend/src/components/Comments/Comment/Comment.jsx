@@ -2,6 +2,8 @@ import CommentForm from "../CommentForm/CommentForm";
 
 import { useAuth } from "../../../contexts/AuthContext";
 
+import "./comment.css"
+
 const Comment = ({
   comment,
   replies,
@@ -37,11 +39,13 @@ const Comment = ({
 
   return (
     // Whole comment
-    <div key={comment.id} className="">
+    <div key={comment.id} className="comment">
       {/* Image container */}
-      <div className="">{/* <img src="" alt="userIcon"/> */}</div>
+      <div className="comment-image-container">
+        {/* <img src="" alt="userIcon"/> */}
+      </div>
       {/* Right side of the comment */}
-      <div className="">
+      <div className="comment-right-part">
         <div className="comment-content">
           <div className="comment-author">{comment.username}</div>
           <div>{createdAt}</div>
@@ -94,7 +98,14 @@ const Comment = ({
         {isReplying && (
           <CommentForm
             submitLabel="Reply"
-            handleSubmit={(text) => addComment(text, replyId, currentUser.displayName, currentUser.uid)}
+            handleSubmit={(text) =>
+              addComment(
+                text,
+                replyId,
+                currentUser.displayName,
+                currentUser.uid
+              )
+            }
           />
         )}
         {replies.length > 0 && (

@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import CommentForm from "../CommentForm/CommentForm";
 import Comment from "../Comment/Comment";
 
+import "./comments.css";
+
 import axios from "axios";
 
 // make api
