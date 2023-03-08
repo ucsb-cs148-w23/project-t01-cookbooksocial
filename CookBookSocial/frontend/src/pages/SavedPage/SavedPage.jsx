@@ -28,7 +28,6 @@ export default function SavedPage () {
     useEffect(() => {
         const handleBeforeUnload = () => {
             sessionStorage.setItem("scrollPosition", window.scrollY);
-            console.log("pos=", window.scrollY);
         };
    
         window.addEventListener("beforeunload", handleBeforeUnload);

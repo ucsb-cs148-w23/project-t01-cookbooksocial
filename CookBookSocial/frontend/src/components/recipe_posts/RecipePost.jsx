@@ -128,7 +128,7 @@ function RecipePost({ recipe }) {
                         Edit
                     </a>
                 )}
-                <SaveButton RecipeId ={recipe.id}></SaveButton>
+                
                 <header className="header mb-2">
                     <h2 className="font-extrabold text-left text-4xl">
                         {displayRecipeTitle(recipe)}
@@ -151,23 +151,29 @@ function RecipePost({ recipe }) {
                     </Link>
                 </div>
 
-                <div className="likes-element">
-                    {isLiked ? (
-                        <IconContext.Provider value={{ color: "red" }}>
-                            <div>
-                                <BsHeartFill className="icon" onClick={toggleLiked} size="2em" />
-                                {" " + numLikes + " likes"}
-                            </div>
-                        </IconContext.Provider>
-                    ) : (
-                        <IconContext.Provider value={{ color: "black" }}>
-                            <div>
-                                <BsHeart className="icon" onClick={toggleLiked} size="2em" />
-                                {" " + numLikes + " likes"}
-                            </div>
-                        </IconContext.Provider>
-                    )}
+                <div className="">
+                    <div className="likes-element">
+                        {isLiked ? (
+                            <IconContext.Provider value={{ color: "red" }}>
+                                <div>
+                                    <BsHeartFill className="icon" onClick={toggleLiked} size="2em" />
+                                    {" " + numLikes + " likes"}
+                                </div>
+                            </IconContext.Provider>
+                        ) : (
+                            <IconContext.Provider value={{ color: "black" }}>
+                                <div>
+                                    <BsHeart className="icon" onClick={toggleLiked} size="2em" />
+                                    {" " + numLikes + " likes"}
+                                </div>
+                            </IconContext.Provider>
+                        )}
+                    </div>
+                    <div className="padding: 0 0 0 auto;">
+                        <SaveButton RecipeId ={recipe.id}></SaveButton>
+                    </div>
                 </div>
+                
 
                 {showFullRecipe && (
                     <footer>
