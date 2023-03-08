@@ -1,6 +1,9 @@
 .comment {
   display: flex;
-  margin-bottom: 28px;
+  margin-bottom: 1%;
+  border-top: 1px solid #FF8C00;
+  /* border-bottom: 1px solid #FF8C00; */
+
 }
 
 .comment-image-container {
@@ -47,4 +50,5 @@
 
 .replies {
   margin-top: 20px;
+  margin-left: 3%;
 }

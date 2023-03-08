@@ -97,13 +97,36 @@ const addComment = async (req, res, next) => {
 
     await updateDoc(recipeRef, recipe);
 
-    console.log("This is the comment object", commentObj.data());
+    // console.log("This is the comment object", commentObj.data());
 
     res.status(200).send(commentObj.data());
   } catch (e) {
     res.status(400).send(`Error: ${e.message}`);
-    console.error("Error adding comment: \n", e);
+    // console.error("Error adding comment: \n", e);
   }
 };
 
-export { getComments, addComment };
+const updateComment = async (req, res, next) => {
+  try {
+    const commentId = req.body.commentId;
+    const text = req.body.body;
+
+    const commentRef = doc(db, "comments", commentId)
+
+    const commentSnap = await getDoc(commentRef);
+
+    let comment = commentSnap.data();
+
+    comment["body"] = text;
+
+    await updateDoc(commentRef, comment);
+
+    res.status(200).send(comment);
+
+    // console.log("This is the comment object", comment);
+  } catch (e) {
+    res.status(400).send(`Error: ${e.message}`);
+  }
+};
+
+export { getComments, addComment, updateComment };

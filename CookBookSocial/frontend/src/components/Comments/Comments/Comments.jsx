@@ -69,16 +69,20 @@ const Comments = ({ currentUserId, recipeId, comments }) => {
   }
 
   const updateComment = (text, commentId) => {
-    // updateCommentApi(text).then(() => {
-    //   const updatedBackendComments = backendComments.map((backendComment) => {
-    //     if (backendComment.id === commentId) {
-    //       return { ...backendComment, body: text };
-    //     }
-    //     return backendComment;
-    //   });
-    //   setBackendComments(updatedBackendComments);
-    //   setActiveComment(null);
-    // });
+
+    axios.put("/api/comments/edit", {
+      body: text,
+      commentId: commentId
+    }).then(() => {
+      const updatedBackendComments = backendComments.map((backendComment) => {
+        if (backendComment.id === commentId) {
+          return { ...backendComment, body: text };
+        }
+        return backendComment;
+      });
+      setBackendComments(updatedBackendComments);
+      setActiveComment(null);
+    });
   };
 
   const deleteComment = (commentId) => {

@@ -1,6 +1,10 @@
 import express from "express";
 
-import { addComment, getComments } from "../controllers/commentsController.js";
+import {
+  updateComment,
+  addComment,
+  getComments,
+} from "../controllers/commentsController.js";
 
 const commentsRouter = express.Router();
 
@@ -25,5 +29,16 @@ commentsRouter.get("/all", getComments);
  *         description: Returns success message
  */
 commentsRouter.post("/", addComment);
+
+/**
+ * @swagger
+ * /api/comments/edit:
+ *   post:
+ *     description: Edits comment in firestore
+ *     responses:
+ *       200:
+ *         description: Returns success message
+ */
+commentsRouter.put("/edit", updateComment);
 
 export default commentsRouter;
