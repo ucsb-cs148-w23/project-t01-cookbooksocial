@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import "./commentForm.css"
+
 const CommentForm = ({
   handleSubmit,
   submitLabel,
@@ -16,23 +18,25 @@ const CommentForm = ({
     setText("");
   };
 
+
+
   return (
     <>
       <form onSubmit={onSubmit}>
         <textarea
-          className=""
+          className="comment-form-textarea"
           value={text}
-          onChange={(e) => setText(e.target)}
+          onChange={(e) => setText(e.target.value)}
         />
-        <button className="" disabled={isTextAreaDisabled}>
+        <button className="comment-form-button" disabled={isTextAreaDisabled}>
           {submitLabel}
         </button>
         {hasCancelButton && (
           <button
-           type="button"
-           className=""
-           onClick={handleCancel}
-           >
+            type="button"
+            className="comment-form-button comment-form-cancel-button"
+            onClick={handleCancel}
+          >
             Cancel
           </button>
         )}

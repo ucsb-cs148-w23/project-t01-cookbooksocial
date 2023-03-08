@@ -23,23 +23,33 @@ const getComments = async (req, res, next) => {
 
     const comments = [];
 
-    if (req.params.comments.length === 0) {
+    // console.log("This is the request object");
+    // console.log(req);
+
+    // console.log("This is the query length");
+    // console.log(Object.keys(req.query).length);
+
+    if (Object.keys(req.query).length === 0) {
+      res.status(200).send(comments);
+    } else {
+      // console.log("This is the query::: ",req.query)
+
+      for (let i = 0; i < req.query.commentsArray.length; i++) {
+        const id = req.query.commentsArray[i];
+
+        const docRef = doc(db, "comments", id);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          let comment = docSnap.data();
+          comment["id"] = docSnap.id;
+
+          comments.push(comment);
+        }
+      }
+
       res.status(200).send(comments);
     }
-
-    for (i = 0; i < req.params.comments.length; i++) {
-      const id = req.params.comments[i];
-
-      const docRef = doc(db, "comments", id);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        comments.push(docSnap.data());
-      }
-    }
-
-    res.status(200).send(comments);
-
     // const comment =
   } catch (e) {
     res.status(400).send(`Error: ${e.message}`);
@@ -48,7 +58,9 @@ const getComments = async (req, res, next) => {
 
 const addComment = async (req, res, next) => {
   try {
-    let comment = JSON.parse(req);
+    // console.log("This is the req object", req.body);
+    // console
+    let comment = req.body;
 
     // The comment object contains
     // body:
@@ -58,7 +70,7 @@ const addComment = async (req, res, next) => {
     // recipeId:
 
     comment["createdAt"] = serverTimestamp();
-    console.log(comment);
+    // console.log("This is the comment object", comment);
 
     // Now the comment object contains
     // body:
@@ -69,24 +81,25 @@ const addComment = async (req, res, next) => {
     // createdAt:
 
     let commentId = await addDoc(collection(db, "comments"), comment);
+    const commentObj = await getDoc(commentId);
 
     commentId = commentId.id;
 
-    const recipeRef = db.collection("recipes").doc(comment.recipeId);
+    const recipeRef = doc(db, "recipes", comment.recipeId);
 
     const recipeDocSnap = await getDoc(recipeRef);
     let recipe = recipeDocSnap.data();
 
     let comments = recipe["comments"];
-    // We update the comments array from the recipe object
+    // // We update the comments array from the recipe object
     comments.push(commentId);
     recipe["comments"] = comments;
 
-    const res = await recipeRef.update(recipeRef, recipe);
+    await updateDoc(recipeRef, recipe);
 
-    // const res = await updateDoc();
+    console.log("This is the comment object", commentObj.data());
 
-    res.status(200).send(`Comment added`);
+    res.status(200).send(commentObj.data());
   } catch (e) {
     res.status(400).send(`Error: ${e.message}`);
     console.error("Error adding comment: \n", e);

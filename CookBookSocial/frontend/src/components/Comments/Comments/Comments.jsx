@@ -7,12 +7,16 @@ import "./comments.css";
 
 import axios from "axios";
 
+import { useAuth } from "../../../contexts/AuthContext";
+
 // make api
 
 const Comments = ({ currentUserId, recipeId, comments }) => {
   const [backendComments, setBackendComments] = useState([]);
 
   const [activeComment, setActiveComment] = useState(null);
+
+  const { currentUser } = useAuth();
 
   //   We know is a parent because its parent is a null
   const rootComments = backendComments.filter(
@@ -27,20 +31,42 @@ const Comments = ({ currentUserId, recipeId, comments }) => {
           new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       );
 
-  const addComment = (text, parentId, displayName, currentUserId) => {
+  const addComment = (text, parentId) => {
+
+    console.log("this is the parentID", parentId)
+
     axios
       .post("/api/comments/", {
         body: text,
-        username: displayName,
+        username: currentUser.displayName,
         userId: currentUserId,
         parentId: parentId,
         recipeId: recipeId,
+
       })
       .then((comment) => {
         setBackendComments([comment, ...backendComments]);
         setActiveComment(null);
       });
   };
+
+  const addRootComment = (text) => {
+    // console.log("this is a root comment", parentId)
+
+    axios
+      .post("/api/comments/", {
+        body: text,
+        username: currentUser.displayName,
+        userId: currentUserId,
+        parentId: null,
+        recipeId: recipeId,
+
+      })
+      .then((comment) => {
+        setBackendComments([comment, ...backendComments]);
+        setActiveComment(null);
+      });
+  }
 
   const updateComment = (text, commentId) => {
     // updateCommentApi(text).then(() => {
@@ -71,10 +97,12 @@ const Comments = ({ currentUserId, recipeId, comments }) => {
       .get("/api/comments/all", {
         params: {
           commentsArray: comments,
-        },
+        }
+
       })
       .then((data) => {
-        setBackendComments(data);
+        // console.log("This is the data: ", data.data)
+        setBackendComments(data.data);
       });
   }, []);
 
@@ -82,7 +110,7 @@ const Comments = ({ currentUserId, recipeId, comments }) => {
     <div className="comments">
       <h3 className="comments-title">Comments</h3>
       <div className="comment-form-title">Write comment</div>
-      <CommentForm submitLabel="Write" handleSubmit={addComment} />
+      <CommentForm submitLabel="Write" handleSubmit={addRootComment} />
       <div className="comments-container">
         {rootComments.map((rootComment) => (
           <Comment

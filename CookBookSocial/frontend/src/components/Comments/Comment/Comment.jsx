@@ -1,6 +1,5 @@
 import CommentForm from "../CommentForm/CommentForm";
 
-import { useAuth } from "../../../contexts/AuthContext";
 
 import "./comment.css"
 
@@ -33,9 +32,17 @@ const Comment = ({
 
   const replyId = parentId ? parentId : comment.id;
 
-  const createdAt = new Date(comment.createdAt).toLocaleDateString();
+  // const createdAt = new Date(comment.createdAt).toLocaleDateString();
 
-  const { currentUser } = useAuth();
+  function timeStamptoDate(createdAt) {
+    const date = new Date(createdAt.seconds * 1000 + createdAt.nanoseconds / 1000000);
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return date.toLocaleDateString("en-US", options);
+  }
+
+  const createdAt = timeStamptoDate(comment.createdAt);
+
+
 
   return (
     // Whole comment
@@ -99,12 +106,8 @@ const Comment = ({
           <CommentForm
             submitLabel="Reply"
             handleSubmit={(text) =>
-              addComment(
-                text,
-                replyId,
-                currentUser.displayName,
-                currentUser.uid
-              )
+              // console.log("replyId", replyId)
+              addComment(text, replyId)
             }
           />
         )}
