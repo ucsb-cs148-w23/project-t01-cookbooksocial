@@ -55,7 +55,7 @@ function ProfilePage() {
         for (let i = 0; i < profileRecipePostsList.length; i++) {
             if (profileRecipePostsList[i].uid === currentUser.uid) {
                 console.log("This is the recipe in Profile Page", profileRecipePostsList[i]);
-                arrComponents.unshift(<RecipePost key={i} recipe={profileRecipePostsList[i]} />);
+                arrComponents.push(<RecipePost key={i} recipe={profileRecipePostsList[i]} />);
             }
         }
         if (arrComponents.size === 0) {
