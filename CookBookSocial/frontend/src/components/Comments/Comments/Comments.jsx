@@ -87,12 +87,19 @@ const Comments = ({ currentUserId, recipeId, comments }) => {
 
   const deleteComment = (commentId) => {
     if (window.confirm("Are you sure you want to remove comment?")) {
-      //   deleteCommentApi().then(() => {
-      //     const updatedBackendComments = backendComments.filter(
-      //       (backendComment) => backendComment.id !== commentId
-      //     );
-      //     setBackendComments(updatedBackendComments);
-      //   });
+
+      // console.log("this is the object", { commentId: commentId, recipeId: recipeId })
+      axios.delete("/api/comments/delete", {
+        data: {
+          commentId: commentId,
+          recipeId: recipeId,
+        }
+      }).then(() => {
+        const updatedBackendComments = backendComments.filter(
+          (backendComment) => backendComment.id !== commentId
+        );
+        setBackendComments(updatedBackendComments);
+      });
     }
   };
 

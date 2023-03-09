@@ -90,10 +90,15 @@ const addComment = async (req, res, next) => {
     const recipeDocSnap = await getDoc(recipeRef);
     let recipe = recipeDocSnap.data();
 
-    let comments = recipe["comments"];
+    // console.log("The recipe on push", recipe);
+    if (recipe.hasOwnProperty("comments")) {
+      let comments = recipe["comments"];
+      comments.push(commentId);
+      recipe["comments"] = comments;
+    } else {
+      recipe["comments"] = [commentId];
+    }
     // // We update the comments array from the recipe object
-    comments.push(commentId);
-    recipe["comments"] = comments;
 
     await updateDoc(recipeRef, recipe);
 
@@ -111,7 +116,7 @@ const updateComment = async (req, res, next) => {
     const commentId = req.body.commentId;
     const text = req.body.body;
 
-    const commentRef = doc(db, "comments", commentId)
+    const commentRef = doc(db, "comments", commentId);
 
     const commentSnap = await getDoc(commentRef);
 
@@ -129,4 +134,41 @@ const updateComment = async (req, res, next) => {
   }
 };
 
-export { getComments, addComment, updateComment };
+const deleteComment = async (req, res, next) => {
+  try {
+    // console.log("the request", req);
+    const object = req.body;
+
+    const commentRef = doc(db, "comments", object.commentId);
+
+    await deleteDoc(commentRef);
+
+    const recipeRef = doc(db, "recipes", object.recipeId);
+
+    const recipeSnap = await getDoc(recipeRef);
+
+    let recipe = recipeSnap.data();
+
+    // console.log("This is the recipe", recipe);
+
+    let commentsArray = recipe["comments"];
+
+    // console.log("This is the comments array", commentsArray);
+
+    let commentIndex = commentsArray.indexOf(object.commentId);
+
+    commentsArray = commentsArray.splice(commentIndex, 1);
+
+    recipe["comments"] = commentsArray;
+
+    console.log("updated comments array:", commentsArray);
+
+    await updateDoc(recipeRef, recipe);
+
+    res.status(200).send("Comment deleted");
+  } catch (e) {
+    res.status(400).send(`Error: ${e.message}`);
+  }
+};
+
+export { getComments, addComment, updateComment, deleteComment };

@@ -4,6 +4,7 @@ import {
   updateComment,
   addComment,
   getComments,
+  deleteComment,
 } from "../controllers/commentsController.js";
 
 const commentsRouter = express.Router();
@@ -40,5 +41,16 @@ commentsRouter.post("/", addComment);
  *         description: Returns success message
  */
 commentsRouter.put("/edit", updateComment);
+
+/**
+ * @swagger
+ * /api/comments/delete:
+ *   post:
+ *     description: Deletes comment in firestore
+ *     responses:
+ *       200:
+ *         description: Returns success message
+ */
+commentsRouter.delete("/delete", deleteComment);
 
 export default commentsRouter;
