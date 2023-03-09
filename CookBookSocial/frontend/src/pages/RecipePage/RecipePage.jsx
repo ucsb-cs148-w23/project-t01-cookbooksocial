@@ -69,9 +69,11 @@ function RecipePage() {
   }, [recipe])
 
   useEffect(() => {
+    if (recipeId) {
     fetch(Recipe_URL)
       .then((response) => response.json())
       .then((data) => updateNumLikes(data.likesByUid.length));
+    }
   }, [isLiked])
 
 
