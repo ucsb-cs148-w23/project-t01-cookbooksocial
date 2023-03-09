@@ -18,6 +18,8 @@ function PeoplePage() {
     const { userId } = useParams();
 
     const { currentUser } = useAuth();
+    const POSTS_AT_A_TIME=5;
+    const [numPosts, setNumPosts] = useState(POSTS_AT_A_TIME);
 
     //useAuth has information from Firebase about user, we will get email from here
     /*
@@ -29,7 +31,6 @@ function PeoplePage() {
   */
     const URL_GET_PROFILE_RECIPE_POSTS_DATA = "/api/recipe/all";
 
-    // console.log("Current User: ",currentUser);
     useEffect(() => {
         fetch(URL_GET_PROFILE_RECIPE_POSTS_DATA)
             .then((response) => response.json())
@@ -56,7 +57,6 @@ function PeoplePage() {
                     data: snapshot.data(),
                     id: snapshot.id,
                 };
-                console.log("data to update with", profileInfData.data.email);
                 updateProfileInfo(profileInfData);
             })
             .catch((error) => console.log(error.message));
@@ -64,9 +64,11 @@ function PeoplePage() {
 
     function renderProfileRecipePostComponents() {
         const arrComponents = [];
-        for (let i = 0; i < profileRecipePostsList.length; i++) {
+        let profilePostCount=0; //count number of profile posts rendered, and keep under numPosts
+        for (let i = 0; i < profileRecipePostsList.length && profilePostCount < numPosts; i++) {
             if (profileRecipePostsList[i].uid === userId) {
                 arrComponents.unshift(<RecipePost key={i} recipe={profileRecipePostsList[i]} />);
+                profilePostCount+=1;
             }
         }
         if (arrComponents.size === 0) {
@@ -77,8 +79,21 @@ function PeoplePage() {
             return arrComponents;
         }
     }
-
-    // console.log(profileInfo)
+    const scrollCheck = () => {
+        const scrollTop = document.documentElement.scrollTop; //amount scrolled from the top
+        const scrollHeight = document.documentElement.scrollHeight; //total height of rendered
+        const clientHeight = document.documentElement.clientHeight //height of the window we see
+      
+        if((scrollTop +clientHeight >= (scrollHeight)) && (numPosts <= profileRecipePostsList.length)){
+          //if we are at bottom, and there are more recipes, update number of recipes to show
+          setNumPosts(numPosts+POSTS_AT_A_TIME);
+        }
+      }
+      useEffect (() => {
+        //when scrolling, call function to check if need to update number of posts
+        document.addEventListener('scroll', scrollCheck)
+        return () => document.removeEventListener('scroll',scrollCheck)
+      })
     return (
         <div>
             <Navbars />

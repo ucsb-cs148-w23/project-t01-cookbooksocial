@@ -16,7 +16,9 @@ function ProfilePage() {
     const [profileRecipePostsList, updateProfileRecipePostsList] = useState([]);
     const { currentUser } = useAuth();
     const [isModalOpen, setIsModalOpen] = useState(false);
-
+    const POSTS_AT_A_TIME=5;
+    const [numPosts, setNumPosts] = useState(POSTS_AT_A_TIME);
+  
     function handleOpenModal() {
       setIsModalOpen(true);
     }
@@ -43,7 +45,6 @@ function ProfilePage() {
   */
     const URL_GET_PROFILE_RECIPE_POSTS_DATA = "/api/recipe/all";
 
-    console.log("Current User: ", currentUser);
     useEffect(() => {
         fetch(URL_GET_PROFILE_RECIPE_POSTS_DATA)
             .then((response) => response.json())
@@ -52,10 +53,11 @@ function ProfilePage() {
 
     function renderProfileRecipePostComponents() {
         const arrComponents = [];
-        for (let i = 0; i < profileRecipePostsList.length; i++) {
+        let profilePostCount=0; //count number of profile posts rendered, and keep less than numPosts
+        for (let i = 0; i< profileRecipePostsList.length && profilePostCount < numPosts; i++) {
             if (profileRecipePostsList[i].uid === currentUser.uid) {
-                console.log("This is the recipe in Profile Page", profileRecipePostsList[i]);
                 arrComponents.push(<RecipePost key={i} recipe={profileRecipePostsList[i]} />);
+                profilePostCount+=1;
             }
         }
         if (arrComponents.size === 0) {
@@ -66,6 +68,21 @@ function ProfilePage() {
             return arrComponents;
         }
     }
+    const scrollCheck = () => {
+        const scrollTop = document.documentElement.scrollTop; //amount scrolled from the top
+        const scrollHeight = document.documentElement.scrollHeight; //total height of rendered
+        const clientHeight = document.documentElement.clientHeight //height of the window we see
+      
+        if((scrollTop +clientHeight >= (scrollHeight)) && (numPosts <= profileRecipePostsList.length)){
+          //if we are at bottom, and there are more recipes, update number of recipes to show
+          setNumPosts(numPosts+POSTS_AT_A_TIME);
+        }
+      }
+      useEffect (() => {
+        //when scrolling, call function to check if need to update number of posts
+        document.addEventListener('scroll', scrollCheck)
+        return () => document.removeEventListener('scroll',scrollCheck)
+      })
 
     //have user info at top
     return (
