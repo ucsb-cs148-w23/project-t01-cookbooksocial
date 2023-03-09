@@ -15,7 +15,6 @@ function RecipePage() {
   const { id } = useParams();
   const [recipe, setRecipe] = useState(null);
   const [editPostPath, setEditPostPath] = useState(``);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [recipeId, setRecipId] = useState();
   const [commentsArr, setCommentsArr] = useState([]);
   const [isLiked, setIsLiked] = useState(false);

@@ -116,6 +116,7 @@ const deleteRecipe = async (req, res, next) => {
 const getRecipe = async (req, res, next) => {
     try {
         const id = req.params.id;
+
         const docRef = doc(db, "recipes", id);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {

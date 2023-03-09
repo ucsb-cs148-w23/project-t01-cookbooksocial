@@ -33,8 +33,6 @@ const Comments = ({ currentUserId, recipeId, comments }) => {
 
   const addComment = (text, parentId) => {
 
-    console.log("this is the parentID", parentId)
-
     axios
       .post("/api/comments/", {
         body: text,
@@ -51,7 +49,6 @@ const Comments = ({ currentUserId, recipeId, comments }) => {
   };
 
   const addRootComment = (text) => {
-    // console.log("this is a root comment", parentId)
 
     axios
       .post("/api/comments/", {

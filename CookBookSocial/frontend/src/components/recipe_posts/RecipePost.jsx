@@ -188,22 +188,7 @@ function RecipePost({ recipe }) {
                     </div>
                 )
             }
-            <div className="pt-3 pb-6 border-t-2 ">
-                {currentUser && (
-                    <>
-                        <div align="left" className="pb-3 ml-5">
-                            <div className="inline pr-5"><img className="w-5 h-5 inline" src={likeIcon} alt="Like Icon" /> <p className="inline">Like</p> </div>
-                            <div className="inline"> <img className="w-5 h-5 inline" src={commentIcon} alt="Comment Icon" />  <p className="inline">Comment</p></div>
-                        </div>
 
-                        <div align="left" className="pl-5 pr-3 pt-3 border-t-2">
-                            <img className="w-12 h-12 inline pr-3" src={currentUser.photoURL}></img>
-                            <input className="inline w-10/12 placeholder:italic placeholder:text-slate-400 block bg-white border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" placeholder="Add a comment" type="text" name="comment" />
-                            <img src={addCommentIcon} className="inline ml-3 w-8 h-8" />
-                        </div>
-                    </>
-                )}
-            </div>
 
         </div >
     );

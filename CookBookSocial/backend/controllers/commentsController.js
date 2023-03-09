@@ -90,7 +90,6 @@ const addComment = async (req, res, next) => {
     const recipeDocSnap = await getDoc(recipeRef);
     let recipe = recipeDocSnap.data();
 
-    // console.log("The recipe on push", recipe);
     if (recipe.hasOwnProperty("comments")) {
       let comments = recipe["comments"];
       comments.push(commentId);
@@ -102,12 +101,9 @@ const addComment = async (req, res, next) => {
 
     await updateDoc(recipeRef, recipe);
 
-    // console.log("This is the comment object", commentObj.data());
-
     res.status(200).send(commentObj.data());
   } catch (e) {
     res.status(400).send(`Error: ${e.message}`);
-    // console.error("Error adding comment: \n", e);
   }
 };
 
@@ -136,12 +132,11 @@ const updateComment = async (req, res, next) => {
 
 const deleteComment = async (req, res, next) => {
   try {
-    // console.log("the request", req);
     const object = req.body;
 
     const commentRef = doc(db, "comments", object.commentId);
 
-    // await deleteDoc(commentRef);
+    await deleteDoc(commentRef);
 
     const recipeRef = doc(db, "recipes", object.recipeId);
 
@@ -149,11 +144,7 @@ const deleteComment = async (req, res, next) => {
 
     let recipe = recipeSnap.data();
 
-    // console.log("This is the recipe", recipe);
-
     let commentsArray = recipe["comments"];
-
-    // console.log("This is the comments array", commentsArray);
 
     let commentIndex = commentsArray.indexOf(object.commentId);
 
@@ -161,11 +152,7 @@ const deleteComment = async (req, res, next) => {
 
     recipe["comments"] = commentsArray;
 
-    console.log("This is the index: ", commentIndex);
-
-    console.log("updated comments array:", commentsArray);
-
-    // await updateDoc(recipeRef, recipe);
+    await updateDoc(recipeRef, recipe);
 
     res.status(200).send("Comment deleted");
   } catch (e) {
