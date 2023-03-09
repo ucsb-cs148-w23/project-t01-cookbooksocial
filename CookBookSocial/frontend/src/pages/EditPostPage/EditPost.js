@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../../components/postModal/postModalStyles.css";
-import { firebaseUpdateWithImage, firebaseUpdateWithOutImage } from "../../components/Api";
+import { firebaseUpdateWithImage, firebaseUpdateWithOutImage } from "../../utils/Api";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import Navbars from "../../components/navbars/Navbars";
