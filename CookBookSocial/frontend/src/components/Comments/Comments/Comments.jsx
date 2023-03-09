@@ -33,6 +33,7 @@ const Comments = ({ currentUserId, recipeId, comments }) => {
 
   const addComment = (text, parentId) => {
 
+    // Non root comments have as parent, the id of another comment
     axios
       .post("/api/comments/", {
         body: text,
@@ -43,12 +44,16 @@ const Comments = ({ currentUserId, recipeId, comments }) => {
 
       })
       .then((comment) => {
-        setBackendComments([comment, ...backendComments]);
+
+        setBackendComments([comment.data, ...backendComments]);
         setActiveComment(null);
       });
   };
 
   const addRootComment = (text) => {
+
+    // We have a function to distinguish between a root and a non root comment because root comments have as parent a null
+
 
     axios
       .post("/api/comments/", {
@@ -60,7 +65,8 @@ const Comments = ({ currentUserId, recipeId, comments }) => {
 
       })
       .then((comment) => {
-        setBackendComments([comment, ...backendComments]);
+
+        setBackendComments([comment.data, ...backendComments]);
         setActiveComment(null);
       });
   }
@@ -85,7 +91,6 @@ const Comments = ({ currentUserId, recipeId, comments }) => {
   const deleteComment = (commentId) => {
     if (window.confirm("Are you sure you want to remove comment?")) {
 
-      // console.log("this is the object", { commentId: commentId, recipeId: recipeId })
       axios.delete("/api/comments/delete", {
         data: {
           commentId: commentId,
@@ -108,9 +113,8 @@ const Comments = ({ currentUserId, recipeId, comments }) => {
         }
 
       })
-      .then((data) => {
-        // console.log("This is the data: ", data.data)
-        setBackendComments(data.data);
+      .then((comments) => {
+        setBackendComments(comments.data);
       });
   }, []);
 

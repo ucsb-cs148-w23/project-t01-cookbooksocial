@@ -1,21 +1,14 @@
 import { db } from "../firebase.js";
 
-import { getUser } from "../controllerFunctions/userFunctions.js";
-
 import {
-  query,
   doc,
   getDoc,
-  getDocs,
   updateDoc,
   addDoc,
   deleteDoc,
   collection,
   serverTimestamp,
-  orderBy,
 } from "firebase/firestore";
-
-import { getStorage, deleteObject, ref } from "firebase/storage";
 
 const getComments = async (req, res, next) => {
   try {
@@ -23,24 +16,23 @@ const getComments = async (req, res, next) => {
 
     const comments = [];
 
-    // console.log("This is the request object");
-    // console.log(req);
-
-    // console.log("This is the query length");
-    // console.log(Object.keys(req.query).length);
-
+    // When I wrote this, I did it to check if the comments array is undefined
+    // If the comments array is undefined, then the query length is 0
+    // (I probably should have sent an empty array or check beforehand on the front end, to avoid this)ß
     if (Object.keys(req.query).length === 0) {
       res.status(200).send(comments);
     } else {
-      // console.log("This is the query::: ",req.query)
-
+      // We traverse throught the comments array
       for (let i = 0; i < req.query.commentsArray.length; i++) {
         const id = req.query.commentsArray[i];
 
         const docRef = doc(db, "comments", id);
         const docSnap = await getDoc(docRef);
 
+        // We check if the doc exists
         if (docSnap.exists()) {
+          // If doc exists, we retrieve its data, and set the id field to be the docId.
+          // Then we push this comment into the array
           let comment = docSnap.data();
           comment["id"] = docSnap.id;
 
@@ -48,6 +40,7 @@ const getComments = async (req, res, next) => {
         }
       }
 
+      // We return the comments array
       res.status(200).send(comments);
     }
     // const comment =
@@ -58,8 +51,6 @@ const getComments = async (req, res, next) => {
 
 const addComment = async (req, res, next) => {
   try {
-    // console.log("This is the req object", req.body);
-    // console
     let comment = req.body;
 
     // The comment object contains
@@ -70,7 +61,6 @@ const addComment = async (req, res, next) => {
     // recipeId:
 
     comment["createdAt"] = serverTimestamp();
-    // console.log("This is the comment object", comment);
 
     // Now the comment object contains
     // body:
@@ -85,11 +75,15 @@ const addComment = async (req, res, next) => {
 
     commentId = commentId.id;
 
+    // We first add the comment into the comments collection.
+    // Then we retrieve its id because we need it to add it to the recipePost "comments" array
+
     const recipeRef = doc(db, "recipes", comment.recipeId);
 
     const recipeDocSnap = await getDoc(recipeRef);
     let recipe = recipeDocSnap.data();
 
+    // Safety check to see if the document currently has the comments property
     if (recipe.hasOwnProperty("comments")) {
       let comments = recipe["comments"];
       comments.push(commentId);
@@ -97,11 +91,17 @@ const addComment = async (req, res, next) => {
     } else {
       recipe["comments"] = [commentId];
     }
-    // // We update the comments array from the recipe object
 
+    // We update the comments array from the recipe object
     await updateDoc(recipeRef, recipe);
 
-    res.status(200).send(commentObj.data());
+    // We store the created comment into another variable so we can add the id field to it
+    let newComment = commentObj.data();
+
+    // We add the id to the comment, so the front end does not give us a "key-id" warning
+    newComment["id"] = commentId;
+
+    res.status(200).send(newComment);
   } catch (e) {
     res.status(400).send(`Error: ${e.message}`);
   }
@@ -113,18 +113,20 @@ const updateComment = async (req, res, next) => {
     const text = req.body.body;
 
     const commentRef = doc(db, "comments", commentId);
-
     const commentSnap = await getDoc(commentRef);
 
+    // We obtain the doc from the database
     let comment = commentSnap.data();
 
+    // We replace the old body with the new text
     comment["body"] = text;
 
+    // Update the comment doc in the collection
     await updateDoc(commentRef, comment);
 
-    res.status(200).send(comment);
+    // Return the updated comment
 
-    // console.log("This is the comment object", comment);
+    res.status(200).send(comment);
   } catch (e) {
     res.status(400).send(`Error: ${e.message}`);
   }
@@ -136,21 +138,26 @@ const deleteComment = async (req, res, next) => {
 
     const commentRef = doc(db, "comments", object.commentId);
 
+    // We delete the comment from the comments collection
+
     await deleteDoc(commentRef);
 
+    // We obtain the corresponding recipe post from the collection
     const recipeRef = doc(db, "recipes", object.recipeId);
 
     const recipeSnap = await getDoc(recipeRef);
 
     let recipe = recipeSnap.data();
 
+    // We delete the comment id from the comments array in the recipe document
     let commentsArray = recipe["comments"];
 
     let commentIndex = commentsArray.indexOf(object.commentId);
-
     commentsArray.splice(commentIndex, 1);
 
     recipe["comments"] = commentsArray;
+
+    // We update the recipe document in the collection, so it does not contain that comment
 
     await updateDoc(recipeRef, recipe);
 
