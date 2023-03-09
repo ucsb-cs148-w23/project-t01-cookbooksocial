@@ -32,7 +32,6 @@ const Comment = ({
 
   const replyId = parentId ? parentId : comment.id;
 
-  // const createdAt = new Date(comment.createdAt).toLocaleDateString();
 
   function timeStamptoDate(createdAt) {
     const date = new Date(createdAt.seconds * 1000 + createdAt.nanoseconds / 1000000);
@@ -58,8 +57,10 @@ const Comment = ({
           <div>{createdAt}</div>
         </div>
 
-        {/* Editing comment */}
+        {/* Comment body */}
         {!isEditing && <div className="comment-text">{comment.body}</div>}
+
+        {/* Editing comment */}
         {isEditing && (
           <CommentForm
             submitLabel="Update"
@@ -106,7 +107,6 @@ const Comment = ({
           <CommentForm
             submitLabel="Reply"
             handleSubmit={(text) =>
-              // console.log("replyId", replyId)
               addComment(text, replyId)
             }
           />

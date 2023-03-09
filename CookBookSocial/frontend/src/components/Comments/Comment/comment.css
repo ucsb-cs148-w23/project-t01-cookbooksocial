@@ -1,9 +1,8 @@
 .comment {
   display: flex;
   margin-bottom: 1%;
-  border-top: 1px solid #FF8C00;
+  border-top: 1px solid #ff8c00;
   /* border-bottom: 1px solid #FF8C00; */
-
 }
 
 .comment-image-container {
@@ -20,16 +19,18 @@
 
 .comment-content {
   display: flex;
+  margin-bottom: 1%;
 }
 
 .comment-author {
   margin-right: 8px;
   font-size: 20px;
-  color: rgb(59, 130, 246);
+  color: rgb(203, 70, 49);
 }
 
 .comment-text {
   font-size: 18px;
+  text-align: left;
 }
 
 .comment-actions {

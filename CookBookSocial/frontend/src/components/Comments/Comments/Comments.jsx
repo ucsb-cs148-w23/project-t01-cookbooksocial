@@ -105,6 +105,8 @@ const Comments = ({ currentUserId, recipeId, comments }) => {
     }
   };
 
+
+  // Fetch the comments when the app mounts
   useEffect(() => {
     axios
       .get("/api/comments/all", {
