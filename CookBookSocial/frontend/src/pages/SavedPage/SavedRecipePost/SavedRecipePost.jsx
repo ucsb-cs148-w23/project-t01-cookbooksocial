@@ -2,24 +2,28 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { renderIngredients } from "./functions/RecipePostFunctions";
-import { useAuth } from "../../../contexts/AuthContext";
-import DeleteButton from "../../../components/deleteModal/deleteModal";
+import { Button } from "react-bootstrap";
+import { useAuth } from "../../contexts/AuthContext";
+import DeleteButton from "../deleteModal/deleteModal";
 
-import { BsHeart, BsHeartFill } from "react-icons/bs";
+import { BsHeart, BsHeartFill,BsBookmark,BsFillBookmarkFill,BsBrush } from "react-icons/bs";
+
 import axios from "axios";
 
-import "./SavedRecipePost.css";
+import "./RecipePost.css";
 import { IconContext } from "react-icons/lib";
+
 /*
 What does calling useState do? It declares a “state variable”. Our variable is called response but we could call it anything else, like banana. This is a way to “preserve” some values between the function calls. Normally, variables “disappear” when the function exits but state variables are preserved by React.
 */
 
-function RecipePost({ deletePost,recipe }) {
+function RecipePost({ recipe }) {
     const [showFullRecipe, toggleShowFullRecipe] = useState(false);
     const [editPostPath, setEditPostPath] = useState(`/edit-recipe/${recipe.id}`);
 
     const [isLiked, setIsLiked] = useState(false);
     const [numLikes, updateNumLikes] = useState(0);
+    const [isSaved, setIsSaved] = useState(false);
 
     const [isLikedAnimation, setIsLikedAnimation] = useState(false);
 
@@ -42,7 +46,20 @@ function RecipePost({ deletePost,recipe }) {
             }
         }
         setIsLiked(false);
+        
+
     }, []);
+    useEffect(() => {
+            //get isSaved 
+            const URL_CHECK_SAVED_POST = `/api/recipe/checkSavedPost/${recipe.id}/${currentUser.uid}`
+            fetch(URL_CHECK_SAVED_POST)
+            .then((response) => response.json())
+            .then((data) => {
+                setIsSaved(data)
+            })
+            .catch((error) => console.log(error)); 
+    }, []);
+
 
     async function toggleLiked() {
         setIsLikedAnimation(!isLikedAnimation);
@@ -65,6 +82,29 @@ function RecipePost({ deletePost,recipe }) {
         const newBody = { likesByUid: newLikesByUid };
         const response = await axios.put(Recipe_URL, newBody);
         setIsLiked(!isLiked);
+    }
+
+    //save function
+    function SaveRecipe () {
+
+        const URL_ADD_SAVED_POST = `/api/recipe/savedPost/${recipe.id}/${currentUser.uid}`;
+        fetch(URL_ADD_SAVED_POST, {
+            method: 'PUT',
+            headers: {
+            }
+        });
+        setIsSaved(true);
+    }
+
+    function unSaveRecipe () {
+
+        const URL_ADD_SAVED_POST = `/api/recipe/savedPost/${recipe.id}/${currentUser.uid}`;
+        fetch(URL_ADD_SAVED_POST, {
+            method: 'DELETE',
+            headers: {
+            }
+        });
+        setIsSaved(false);
     }
 
     //set num likes after like/unlike button pressed
@@ -117,21 +157,7 @@ function RecipePost({ deletePost,recipe }) {
                 className="bg-white overflow-hidden pb-10 mb-10 border-b border-neutral-300 text-left"
               //  onClick={toggleShowFull}
             >
-                <button 
-                    className = "text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg  dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-lg px-5 py-2.5 text-center mr-2 mb-2 "
-                    onClick={deletePost}
-                >
-                    unsave               
-                </button>
-                {currentUser.uid === recipe.uid && (
-                    <a
-                        type="button"
-                        className="text-white bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-lg px-5 py-2.5 text-center mr-2 mb-2 mt-4"
-                        href={editPostPath}
-                    >
-                        Edit
-                    </a>
-                )}
+                
                 <header className="header mb-2">
                     <h2 className="font-extrabold text-left text-4xl">
                         {displayRecipeTitle(recipe)}
@@ -154,23 +180,51 @@ function RecipePost({ deletePost,recipe }) {
                     </Link>
                 </div>
 
-                <div className="likes-element">
-                    {isLiked ? (
-                        <IconContext.Provider value={{ color: "red" }}>
-                            <div>
-                                <BsHeartFill className="icon" onClick={toggleLiked} size="2em" />
-                                {" " + numLikes + " likes"}
-                            </div>
-                        </IconContext.Provider>
-                    ) : (
-                        <IconContext.Provider value={{ color: "black" }}>
-                            <div>
-                                <BsHeart className="icon" onClick={toggleLiked} size="2em" />
-                                {" " + numLikes + " likes"}
-                            </div>
-                        </IconContext.Provider>
-                    )}
+                <div className="display: flex">
+                    <div className="likes-element">
+                        {isLiked ? (
+                            <IconContext.Provider value={{ color: "red" }}>
+                                <div>
+                                    <BsHeartFill className="likeIcon" onClick={toggleLiked} size="2em" />
+                                    {" " + numLikes + " likes"}
+                                </div>
+                            </IconContext.Provider>
+                        ) : (
+                            <IconContext.Provider value={{ color: "black" }}>
+                                <div>
+                                    <BsHeart className="likeIcon" onClick={toggleLiked} size="2em" />
+                                    {" " + numLikes + " likes"}
+                                </div>
+                            </IconContext.Provider>
+                        )}
+                    </div>
+                    <div className="edit-element">                
+                        {currentUser.uid === recipe.uid && (
+                            <IconContext.Provider  value={{ color: "black" }}>
+                                <a href={editPostPath}>
+                                <BsBrush className="editIcon"  size="2em" />
+                                  Edit
+                                </a>
+                            </IconContext.Provider>
+                        )}
+                    </div>
+                    <div className="save-element">
+                        {isSaved ? (
+                                <IconContext.Provider value={{ color: "black" }}>
+                                    <div>
+                                        <BsFillBookmarkFill className="saveIcon" onClick={unSaveRecipe} size="2em" />
+                                    </div>
+                                </IconContext.Provider>
+                            ) : (
+                                <IconContext.Provider value={{ color: "black" }}>
+                                    <div>
+                                        <BsBookmark className="saveIcon" onClick={SaveRecipe} size="2em" />
+                                    </div>
+                                </IconContext.Provider>
+                            )}
+                    </div>
                 </div>
+                
 
                 {showFullRecipe && (
                     <footer>

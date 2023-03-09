@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Navbars from "../../components/navbars/Navbars";
-import SavedRecipePost from "./SavedRecipePost/SavedRecipePost";
+import RecipePost from "../../components/recipe_posts/RecipePost"
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useAuth } from "../../contexts/AuthContext";
 import { FaSpinner } from "react-icons/fa";
@@ -60,15 +60,15 @@ export default function SavedPage () {
 
 
   //get saved data
-  // useEffect(() => {
-  //   const URL_GET_SAVED_RECIPE_POSTS_DATA = `/api/recipe/savedPost/${currentUser.uid}`;
-  //   const access_db = () => {
-  //     fetch(URL_GET_SAVED_RECIPE_POSTS_DATA)
-  //       .then((response) => response.json())
-  //       .then((data) => updateRecipePostsList(data));
-  //   };
-  //   access_db();
-  //   }, []);
+  useEffect(() => {
+    const URL_GET_SAVED_RECIPE_POSTS_DATA = `/api/recipe/savedPost/${currentUser.uid}`;
+    const access_db = () => {
+      fetch(URL_GET_SAVED_RECIPE_POSTS_DATA)
+        .then((response) => response.json())
+        .then((data) => updateRecipePostsList(data));
+    };
+    access_db();
+    }, []);
 
   const onDragEnd = (result) => {
     // no drag
@@ -126,8 +126,8 @@ export default function SavedPage () {
                               {...provided.dragHandleProps}
                             >
                               <div>
-                              <SavedRecipePost 
-                                deletePost = {() => {
+                              <RecipePost 
+                                deleteinSavedPage = {() => {
                                     const newRecipePostsList = [...recipePostsList];
                                     newRecipePostsList.splice(index, 1);
                                     updateRecipePostsList(newRecipePostsList);
@@ -137,10 +137,10 @@ export default function SavedPage () {
                                       method: 'DELETE',
                                       headers: {
                                       }
-                                  });
+                                    });
+                                    }
                                   }
-                                  }
-                                key={index} 
+                                  isSavedPage = {true} 
                                 recipe={savedRecipe} />
                               </div>
                             </div>

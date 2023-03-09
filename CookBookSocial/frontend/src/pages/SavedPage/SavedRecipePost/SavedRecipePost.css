@@ -3,8 +3,39 @@
 .likes-element {
     margin-top: 20px;
 }
+.edit-element {
+    margin-top: 20px;
+    margin-left:20px;
+}
+.save-element {
+    margin-top: 20px;
+    margin-left:auto;
+}
 
-.icon {
+.likeIcon {
     display: inline;
     cursor: pointer;
+}
+
+.editIcon {
+    display: inline;
+    cursor: pointer;
+    margin-right: 8px;
+    color: black;
+}
+.editIcon:hover {
+    color: tomato;
+}
+
+.saveIcon {
+    display: inline;
+    cursor: pointer;
+}
+
+.swingAnimation{
+    animation-name: swing;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
 }

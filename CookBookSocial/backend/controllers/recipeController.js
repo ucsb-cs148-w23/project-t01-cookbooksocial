@@ -167,7 +167,7 @@ const addSavedPost = async (req, res, next) => {
                 savedPosts = docSnapData['savedPosts']
             }
             if (!( savedPosts.includes(id))){
-                savedPosts = [...savedPosts,id];
+                savedPosts = [id,...savedPosts];
             }
             
             docSnapData['savedPosts'] = savedPosts
