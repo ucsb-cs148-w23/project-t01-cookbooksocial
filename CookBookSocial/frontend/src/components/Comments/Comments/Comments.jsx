@@ -31,6 +31,8 @@ const Comments = ({ currentUserId, recipeId, comments }) => {
           new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       );
 
+
+  // adding a reply comment
   const addComment = (text, parentId) => {
 
     // Non root comments have as parent, the id of another comment
@@ -45,11 +47,14 @@ const Comments = ({ currentUserId, recipeId, comments }) => {
       })
       .then((comment) => {
 
+        // We update the backendComments array to also include the new comment
         setBackendComments([comment.data, ...backendComments]);
         setActiveComment(null);
       });
   };
 
+
+  // Add a root comment
   const addRootComment = (text) => {
 
     // We have a function to distinguish between a root and a non root comment because root comments have as parent a null
@@ -66,6 +71,7 @@ const Comments = ({ currentUserId, recipeId, comments }) => {
       })
       .then((comment) => {
 
+        // We update the backendComments array to also include the new comment
         setBackendComments([comment.data, ...backendComments]);
         setActiveComment(null);
       });
@@ -77,12 +83,15 @@ const Comments = ({ currentUserId, recipeId, comments }) => {
       body: text,
       commentId: commentId
     }).then(() => {
+      // We find the comment in our local cache, then update its body with the new text
       const updatedBackendComments = backendComments.map((backendComment) => {
         if (backendComment.id === commentId) {
           return { ...backendComment, body: text };
         }
         return backendComment;
       });
+
+      // We set the backendComments to be the updated version
       setBackendComments(updatedBackendComments);
       setActiveComment(null);
     });
@@ -97,6 +106,7 @@ const Comments = ({ currentUserId, recipeId, comments }) => {
           recipeId: recipeId,
         }
       }).then(() => {
+        // We remove the comment from our local cache
         const updatedBackendComments = backendComments.filter(
           (backendComment) => backendComment.id !== commentId
         );

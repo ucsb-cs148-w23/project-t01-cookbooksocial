@@ -31,6 +31,8 @@ const CommentForm = ({
         <button className="comment-form-button" disabled={isTextAreaDisabled}>
           {submitLabel}
         </button>
+        
+        {/* If the form has a cancel button, we also render it */}
         {hasCancelButton && (
           <button
             type="button"

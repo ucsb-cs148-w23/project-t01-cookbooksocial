@@ -73,7 +73,11 @@ const Comment = ({
           />
         )}
 
+
+        {/* We split the comment actions into reply, edit, and delete */}
         <div className="comment-actions">
+
+          {/* Reply action */}
           {canReply && (
             <div
               className="comment-action"
@@ -84,6 +88,8 @@ const Comment = ({
               Reply
             </div>
           )}
+
+          {/* Edit action */}
           {canEdit && (
             <div
               className="comment-action"
@@ -94,6 +100,8 @@ const Comment = ({
               Edit
             </div>
           )}
+
+          {/* Delete action */}
           {canDelete && (
             <div
               className="comment-action"
@@ -103,6 +111,8 @@ const Comment = ({
             </div>
           )}
         </div>
+
+        {/* Render replying form when trying to reply */}
         {isReplying && (
           <CommentForm
             submitLabel="Reply"
@@ -111,6 +121,10 @@ const Comment = ({
             }
           />
         )}
+
+
+        {/* When a comment has replies, we also render those */}
+
         {replies.length > 0 && (
           <div className="replies">
             {replies.map((reply) => (
