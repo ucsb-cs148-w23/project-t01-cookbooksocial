@@ -160,7 +160,7 @@ function RecipePage() {
         <div className={styles.recipeImageWrapper}>
           <img className={styles.recipeImage} src={recipe.image} alt={recipe.title} />
         </div>
-        <div className="display: flex">
+        <div className= {styles.iconList}>
           <div className={styles.likesElement}>
             {isLiked ? <IconContext.Provider value={{ color: 'red' }}><div><BsHeartFill className={styles.icon} onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>
               : <IconContext.Provider value={{ color: 'black' }}><div><BsHeart className={styles.icon} onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>}
