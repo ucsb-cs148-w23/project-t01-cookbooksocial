@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { renderIngredients } from "./functions/RecipePostFunctions";
@@ -10,6 +10,11 @@ import addCommentIcon from "../../images/sendComment.png"
 
 import likeIcon from "../../images/likeIcon.png"
 
+import { BsHeart, BsHeartFill } from "react-icons/bs";
+import axios from "axios";
+
+import "./RecipePost.css";
+import { IconContext } from "react-icons/lib";
 /*
 What does calling useState do? It declares a “state variable”. Our variable is called response but we could call it anything else, like banana. This is a way to “preserve” some values between the function calls. Normally, variables “disappear” when the function exits but state variables are preserved by React.
 */
@@ -18,12 +23,65 @@ function RecipePost({ recipe }) {
     const [showFullRecipe, toggleShowFullRecipe] = useState(false);
     const [editPostPath, setEditPostPath] = useState(`/edit-recipe/${recipe.id}`);
 
+    const [isLiked, setIsLiked] = useState(false);
+    const [numLikes, updateNumLikes] = useState(0);
+
+    const [isLikedAnimation, setIsLikedAnimation] = useState(false);
+
     const { currentUser } = useAuth();
+
+    const Recipe_URL = `/api/recipe/${recipe.id}`;
+
+    /*
+    useEffect(() => {
+        updateNumLikes(recipe.likesByUid.length);
+    }, [])
+    */
+
+    useEffect(() => {
+        for (let i = 0; i < recipe.likesByUid.length; i++) {
+            if (currentUser.uid === recipe.likesByUid[i]) {
+                setIsLiked(true);
+                setIsLikedAnimation(true);
+                return;
+            }
+        }
+        setIsLiked(false);
+    }, []);
+
+    async function toggleLiked() {
+        setIsLikedAnimation(!isLikedAnimation);
+        let newLikesByUid = [...recipe.likesByUid];
+        if (isLiked) {
+            //remove current user.id from recipe list of users who liked the post
+            for (let i = 0; i < newLikesByUid.length; i++) {
+                if (currentUser.uid === newLikesByUid[i]) {
+                    //UPDATE the array of uid's of the recipe post
+                    newLikesByUid.splice(i, 1);
+                }
+            }
+        } else {
+            //add current user.id to recipe list of users who liked the post
+            //UPDATE the array of uid's of the recipe post
+            if (!recipe.likesByUid.includes(currentUser.uid)) {
+                newLikesByUid.push(currentUser.uid);
+            }
+        }
+        const newBody = { likesByUid: newLikesByUid };
+        const response = await axios.put(Recipe_URL, newBody);
+        setIsLiked(!isLiked);
+    }
+
+    //set num likes after like/unlike button pressed
+    useEffect(() => {
+        fetch(Recipe_URL)
+            .then((response) => response.json())
+            .then((data) => updateNumLikes(data.likesByUid.length));
+    }, [isLiked]);
 
     function toggleShowFull() {
         toggleShowFullRecipe(!showFullRecipe);
     }
-
 
     function renderInstructions() {
         const arrComponents = [];
@@ -40,15 +98,14 @@ function RecipePost({ recipe }) {
     }
 
     function displayName(recipe) {
-        console.log(recipe, recipe['user']);
+        // There is no 'user' in the recipe.
 
-        // There is no 'user' in the recipe.  
-        if ('profile' in recipe.user) {
-            if ('displayName' in recipe.user.profile) {
+        if ("user" in recipe && "profile" in recipe.user) {
+            if ("displayName" in recipe.user.profile) {
                 return recipe.user.profile.displayName;
             }
         }
-        if ('email' in recipe) {
+        if ("email" in recipe) {
             return recipe.email;
         } else {
             return "No author found!";
@@ -68,7 +125,7 @@ function RecipePost({ recipe }) {
                 <h2 className="font-extrabold text-orange-400 text-4xl pt-2">{displayRecipeTitle(recipe)}</h2>
                 <p className="text-orange-400 pl-5 pt-2 text-left">
                     Author:
-                    <a className="pl-2" href={"profile/" + recipe.uid}>{displayName(recipe)}</a>
+                    <Link className="pl-2" to={"profile/" + recipe.uid}>{displayName(recipe)}</Link>
                     {/* We concatenate the user ID to the profile route, so it redirects us to the user page on click */}
                 </p>
                 <p className="pl-5 pt-2 text-orange-400 text-left">Date:
@@ -87,6 +144,24 @@ function RecipePost({ recipe }) {
                     </Link>
                 </div>
 
+                <div className="likes-element">
+                    {isLiked ? (
+                        <IconContext.Provider value={{ color: "red" }}>
+                            <div>
+                                <BsHeartFill className="icon" onClick={toggleLiked} size="2em" />
+                                {" " + numLikes + " likes"}
+                            </div>
+                        </IconContext.Provider>
+                    ) : (
+                        <IconContext.Provider value={{ color: "black" }}>
+                            <div>
+                                <BsHeart className="icon" onClick={toggleLiked} size="2em" />
+                                {" " + numLikes + " likes"}
+                            </div>
+                        </IconContext.Provider>
+                    )}
+                </div>
+
                 {showFullRecipe && (
                     <footer>
                         <div className="ingredients">
@@ -97,7 +172,6 @@ function RecipePost({ recipe }) {
                             <h2 className="instructions-header">Instructions</h2>
                             <ol className="post-list">{renderInstructions()}</ol>
                         </div>
-
                     </footer>
                 )}
             </div>

@@ -38,37 +38,38 @@ async function putToFirebase(id, stringURL, fullRecipeInfo) {
 }
 
 export function firebaseUpload(image, fullRecipeInfo){
-    const storageRef = ref(storage, `images/${uuidv4()}`);
-
-    const uploadTask = uploadBytesResumable(storageRef, image);
-
-    uploadTask.on(
+    return new Promise((resolve, reject) => {
+      const storageRef = ref(storage, `images/${uuidv4()}`);
+  
+      const uploadTask = uploadBytesResumable(storageRef, image);
+  
+      uploadTask.on(
         "state_changed",
         (snapshot) => {
-            const progress = Math.round(
-                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-            );
-            console.log(progress);
+          const progress = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          console.log(progress);
         },
         (error) => {
-            console.log("ERROR IN UPLOAD TASK");
-            alert(error);
+          console.log("ERROR IN UPLOAD TASK");
+          reject(error);
         },
         () => {
-            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-
-                let response = postToFirebase(downloadURL, fullRecipeInfo);
-
-                // console.log("This is the response: ", response);
-                response.then(() => {
-                    console.log("Upload Completed:\n");
-                });
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+  
+            let response = postToFirebase(downloadURL, fullRecipeInfo);
+  
+            response.then(() => {
+              console.log("Upload Completed:\n");
+              resolve();
             });
+          });
         }
-    );
-
-    return uploadTask;
-}
+      );
+    });
+  }
+  
 
 export function firebaseUpdateWithImage(id, image, fullRecipeInfo, oldImgURL){
     const storageRef = ref(storage, `images/${uuidv4()}`);
