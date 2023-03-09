@@ -145,7 +145,7 @@ function RecipePost({ recipe }) {
                 </div>
 
                 <div className="likes-element">
-                    {isLiked ? (
+                    {isLikedAnimation ? (
                         <IconContext.Provider value={{ color: "red" }}>
                             <div>
                                 <BsHeartFill className="icon" onClick={toggleLiked} size="2em" />
@@ -162,32 +162,9 @@ function RecipePost({ recipe }) {
                     )}
                 </div>
 
-                {showFullRecipe && (
-                    <footer>
-                        <div className="ingredients">
-                            <h2 className="ingredients-header">Ingredients</h2>
-                            <ul className="post-list">{renderIngredients(recipe.ingredients)}</ul>
-                        </div>
-                        <div className="instructions">
-                            <h2 className="instructions-header">Instructions</h2>
-                            <ol className="post-list">{renderInstructions()}</ol>
-                        </div>
-                    </footer>
-                )}
+
             </div>
-            {
-                showFullRecipe && currentUser.uid === recipe.uid && (
-                    <div>
-                        <a type="button" className="text-white bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-lg px-5 py-2.5 text-center mr-5 mb-5"
-                            href={editPostPath}
-                        >Edit</a>
-                        <DeleteButton
-                            recipeId={recipe.id}
-                        ></DeleteButton>
-                        <hr></hr>
-                    </div>
-                )
-            }
+
 
 
         </div >
