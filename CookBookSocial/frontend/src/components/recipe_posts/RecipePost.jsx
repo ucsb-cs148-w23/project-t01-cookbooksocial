@@ -7,11 +7,12 @@ import { useAuth } from "../../contexts/AuthContext";
 import DeleteButton from "../deleteModal/deleteModal";
 import SaveButton from "./functions/saveButton";
 
-import { BsHeart, BsHeartFill } from "react-icons/bs";
+import { BsHeart, BsHeartFill,BiEditAlt } from "react-icons/bs";
 import axios from "axios";
 
 import "./RecipePost.css";
 import { IconContext } from "react-icons/lib";
+
 /*
 What does calling useState do? It declares a “state variable”. Our variable is called response but we could call it anything else, like banana. This is a way to “preserve” some values between the function calls. Normally, variables “disappear” when the function exits but state variables are preserved by React.
 */
@@ -151,7 +152,7 @@ function RecipePost({ recipe }) {
                     </Link>
                 </div>
 
-                <div className="">
+                <div className="display: flex">
                     <div className="likes-element">
                         {isLiked ? (
                             <IconContext.Provider value={{ color: "red" }}>
@@ -169,7 +170,7 @@ function RecipePost({ recipe }) {
                             </IconContext.Provider>
                         )}
                     </div>
-                    <div className="padding: 0 0 0 auto;">
+                    <div className="margin-left: auto">
                         <SaveButton RecipeId ={recipe.id}></SaveButton>
                     </div>
                 </div>
