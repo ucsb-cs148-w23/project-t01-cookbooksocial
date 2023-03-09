@@ -141,7 +141,7 @@ const deleteComment = async (req, res, next) => {
 
     const commentRef = doc(db, "comments", object.commentId);
 
-    await deleteDoc(commentRef);
+    // await deleteDoc(commentRef);
 
     const recipeRef = doc(db, "recipes", object.recipeId);
 
@@ -157,13 +157,15 @@ const deleteComment = async (req, res, next) => {
 
     let commentIndex = commentsArray.indexOf(object.commentId);
 
-    commentsArray = commentsArray.splice(commentIndex, 1);
+    commentsArray.splice(commentIndex, 1);
 
     recipe["comments"] = commentsArray;
 
+    console.log("This is the index: ", commentIndex);
+
     console.log("updated comments array:", commentsArray);
 
-    await updateDoc(recipeRef, recipe);
+    // await updateDoc(recipeRef, recipe);
 
     res.status(200).send("Comment deleted");
   } catch (e) {
