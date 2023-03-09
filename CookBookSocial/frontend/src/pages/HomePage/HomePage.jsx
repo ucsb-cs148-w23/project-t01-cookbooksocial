@@ -29,6 +29,10 @@ function HomePage() {
         const scrollPosition = sessionStorage.getItem("scrollPosition");
         if (scrollPosition !== null) {
             window.scrollTo(0, parseInt(scrollPosition));
+            // if the user scrolled past 5 posts, set the initial number of posts to render to the next multiple of 5
+            let initialNumPosts = Math.ceil(parseInt(scrollPosition) / (670* POSTS_AT_A_TIME)) * POSTS_AT_A_TIME;
+            if(initialNumPosts<5){initialNumPosts=5;}
+            setNumPosts(initialNumPosts);
         }
 
         fetch(URL_GET_RECIPE_POSTS_DATA)
