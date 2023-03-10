@@ -224,7 +224,7 @@ function RecipePage() {
         <div className={styles.recipeDetails}>
           <p className={styles.recipeDescription}>{recipe.description}</p>
           <div className={styles.recipeMetadata}>
-            <p className={styles.recipeMetadataItem}>Posted by:  <Link  to={"profile/" + recipe.uid}>{displayName(recipe)}</Link></p>
+            <p className={styles.recipeMetadataItem}>Posted by:  <Link  to={"/profile/" + recipe.uid}>{displayName(recipe)}</Link></p>
             <p className={styles.recipeMetadataItem}>
               Posted on {timeStamptoDate(recipe.createdAt)}
             </p>
