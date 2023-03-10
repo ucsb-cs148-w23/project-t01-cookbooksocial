@@ -130,7 +130,7 @@ export default function DeleteButton({ recipeId ,isRecipePage}) {
                 >
                 Delete
             </span>}
-            <DeleteModal recipeId={recipeId} show={showModal} setShow={setShowModal} />
+            <DeleteModal recipeId={recipeId} show={showModal} onClick={() => setShowModal(true)} setShow={setShowModal} />
         </span>
     );
 }
