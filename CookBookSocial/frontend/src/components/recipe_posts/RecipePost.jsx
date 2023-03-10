@@ -2,11 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { renderIngredients } from "./functions/RecipePostFunctions";
-import { Button } from "react-bootstrap";
 import { useAuth } from "../../contexts/AuthContext";
 import DeleteButton from "../deleteModal/deleteModal";
+import commentIcon from "../../images/commentIcon.png";
 
-import { BsHeart, BsHeartFill,BsBookmark,BsFillBookmarkFill,BsBrush } from "react-icons/bs";
+import addCommentIcon from "../../images/sendComment.png"
+
+import likeIcon from "../../images/likeIcon.png"
+
+import { BsHeart, BsHeartFill, BsBookmark, BsFillBookmarkFill, BsBrush } from "react-icons/bs";
 
 import axios from "axios";
 
@@ -17,7 +21,7 @@ import { IconContext } from "react-icons/lib";
 What does calling useState do? It declares a “state variable”. Our variable is called response but we could call it anything else, like banana. This is a way to “preserve” some values between the function calls. Normally, variables “disappear” when the function exits but state variables are preserved by React.
 */
 
-function RecipePost({ recipe, isSavedPage,  deleteinSavedPage}) {
+function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
     const [showFullRecipe, toggleShowFullRecipe] = useState(false);
     const [editPostPath, setEditPostPath] = useState(`/edit-recipe/${recipe.id}`);
 
@@ -46,18 +50,18 @@ function RecipePost({ recipe, isSavedPage,  deleteinSavedPage}) {
             }
         }
         setIsLiked(false);
-        
+
 
     }, []);
     useEffect(() => {
-            //get isSaved 
-            const URL_CHECK_SAVED_POST = `/api/recipe/checkSavedPost/${recipe.id}/${currentUser.uid}`
-            fetch(URL_CHECK_SAVED_POST)
+        //get isSaved 
+        const URL_CHECK_SAVED_POST = `/api/recipe/checkSavedPost/${recipe.id}/${currentUser.uid}`
+        fetch(URL_CHECK_SAVED_POST)
             .then((response) => response.json())
             .then((data) => {
                 setIsSaved(data)
             })
-            .catch((error) => console.log(error)); 
+            .catch((error) => console.log(error));
     }, []);
 
 
@@ -85,7 +89,7 @@ function RecipePost({ recipe, isSavedPage,  deleteinSavedPage}) {
     }
 
     //save function
-    function SaveRecipe () {
+    function SaveRecipe() {
 
         const URL_ADD_SAVED_POST = `/api/recipe/savedPost/${recipe.id}/${currentUser.uid}`;
         fetch(URL_ADD_SAVED_POST, {
@@ -96,11 +100,11 @@ function RecipePost({ recipe, isSavedPage,  deleteinSavedPage}) {
         setIsSaved(true);
     }
 
-    function unSaveRecipe () {
-        if(isSavedPage){
+    function unSaveRecipe() {
+        if (isSavedPage) {
             deleteinSavedPage()
         }
-        else{
+        else {
             const URL_ADD_SAVED_POST = `/api/recipe/savedPost/${recipe.id}/${currentUser.uid}`;
             fetch(URL_ADD_SAVED_POST, {
                 method: 'DELETE',
@@ -155,25 +159,33 @@ function RecipePost({ recipe, isSavedPage,  deleteinSavedPage}) {
         return recipe.title;
     }
 
+    function displayNumberComments() {
+        if ("comments" in recipe) {
+            return recipe.comments.length;
+        }
+        else {
+            return 0;
+        }
+    }
+
     return (
-        <div>
+        <div className="border-2 rounded-md border-orange-400 mb-10">
             <div
-                className="bg-white overflow-hidden pb-10 mb-10 border-b border-neutral-300 text-left"
-              //  onClick={toggleShowFull}
+                className="bg-white overflow-hidden divide-y"
+                onClick={toggleShowFull}
             >
-                
-                <header className="header mb-2">
-                    <h2 className="font-extrabold text-left text-4xl">
-                        {displayRecipeTitle(recipe)}
-                    </h2>
-                </header>
-                <p className="text-gray-700 mb-0">
-                    By: <Link to={"/profile/" + recipe.uid}>{displayName(recipe)}</Link>
+                <h2 className="font-extrabold text-orange-400 text-4xl pt-2">{displayRecipeTitle(recipe)}</h2>
+                <p className="text-orange-400 pl-5 pt-2 text-left">
+                    Author:
+                    <Link className="pl-2" to={"/profile/" + recipe.uid}>{displayName(recipe)}</Link>
                     {/* We concatenate the user ID to the profile route, so it redirects us to the user page on click */}
                 </p>
-                <p className="text-gray-500">{timeStamptoDate(recipe.createdAt)}</p>
-
-                <p>{recipe.description}</p>
+                <p className="pl-5 pt-2 text-orange-400 text-left">Date:
+                    <p className="text-gray-500 pl-2 inline">{timeStamptoDate(recipe.createdAt)}</p>
+                </p>
+                <p className="text-orange-400 text-left pl-5 pt-2"> Description:
+                    <p className="inline text-gray-500 pl-2">{recipe.description}</p>
+                </p>
                 <div className="pb-2/3">
                     <Link to={`/recipe/${recipe.id}`}>
                         <img
@@ -184,7 +196,7 @@ function RecipePost({ recipe, isSavedPage,  deleteinSavedPage}) {
                     </Link>
                 </div>
 
-                <div className="display: flex">
+                <div className="bottomContainer">
                     <div className="likes-element">
                         {isLiked ? (
                             <IconContext.Provider value={{ color: "red" }}>
@@ -202,61 +214,44 @@ function RecipePost({ recipe, isSavedPage,  deleteinSavedPage}) {
                             </IconContext.Provider>
                         )}
                     </div>
-                    <div className="edit-element">                
+                    <div className="comment-element">  <img className="imgContainer" src={commentIcon} />  {displayNumberComments()} Comments</div>
+
+                    <div className="edit-element">
                         {currentUser.uid === recipe.uid && (
-                            <IconContext.Provider  value={{ color: "black" }}>
+                            <IconContext.Provider value={{ color: "black" }}>
                                 <a href={editPostPath}>
-                                <BsBrush className="editIcon"  size="2em" />
-                                  Edit
+                                    <BsBrush className="editIcon" size="2em" />
+                                    Edit
                                 </a>
                             </IconContext.Provider>
                         )}
                     </div>
                     <div className="save-element">
                         {isSaved ? (
-                                <IconContext.Provider value={{ color: "black" }}>
-                                    <div>
-                                        <BsFillBookmarkFill className="saveIcon" onClick={unSaveRecipe} size="2em" />
-                                    </div>
-                                </IconContext.Provider>
-                            ) : (
-                                <IconContext.Provider value={{ color: "black" }}>
-                                    <div>
-                                        <BsBookmark className="saveIcon" onClick={SaveRecipe} size="2em" />
-                                    </div>
-                                </IconContext.Provider>
-                            )}
+                            <IconContext.Provider value={{ color: "black" }}>
+                                <div>
+                                    <BsFillBookmarkFill className="saveIcon" onClick={unSaveRecipe} size="2em" />
+                                </div>
+                            </IconContext.Provider>
+                        ) : (
+                            <IconContext.Provider value={{ color: "black" }}>
+                                <div>
+                                    <BsBookmark className="saveIcon" onClick={SaveRecipe} size="2em" />
+                                </div>
+                            </IconContext.Provider>
+                        )}
                     </div>
                 </div>
-                
 
-                {showFullRecipe && (
-                    <footer>
-                        <div className="ingredients">
-                            <h2 className="ingredients-header">Ingredients</h2>
-                            <ul className="post-list">{renderIngredients(recipe.ingredients)}</ul>
-                        </div>
-                        <div className="instructions">
-                            <h2 className="instructions-header">Instructions</h2>
-                            <ol className="post-list">{renderInstructions()}</ol>
-                        </div>
-                    </footer>
-                )}
+
             </div>
-            {showFullRecipe && currentUser.uid === recipe.uid && (
-                <div>
-                    <a
-                        type="button"
-                        className="text-white bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-lg px-5 py-2.5 text-center mr-5 mb-5"
-                        href={editPostPath}
-                    >
-                        Edit
-                    </a>
-                    <DeleteButton recipeId={recipe.id}></DeleteButton>
-                    <hr></hr>
-                </div>
-            )}
-        </div>
+
+
+
+        </div >
+
+
+
     );
 }
 

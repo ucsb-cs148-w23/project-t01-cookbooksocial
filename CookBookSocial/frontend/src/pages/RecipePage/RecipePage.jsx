@@ -3,10 +3,13 @@ import { useParams, Link } from 'react-router-dom';
 import { collection, doc, getDoc, getFirestore } from 'firebase/firestore';
 import styles from './RecipePage.module.css';
 import Navbars from "../../components/navbars/Navbars";
-import { useAuth } from '../../contexts/AuthContext';
-import DeleteButton from '../../components/deleteModal/deleteModal';
+import { useAuth } from "../../contexts/AuthContext";
+import DeleteButton from "../../components/deleteModal/deleteModal";
+import Comments from "../../components/Comments/Comments/Comments";
 
-import {   BsHeart, BsHeartFill,BsBookmark,BsFillBookmarkFill,BsBrush} from 'react-icons/bs';
+import commentIcon from "../../images/commentIcon.png"
+
+import { BsHeart, BsHeartFill, BsBookmark, BsFillBookmarkFill, BsBrush } from 'react-icons/bs';
 import { IconContext } from "react-icons/lib";
 import axios from 'axios';
 
@@ -14,8 +17,8 @@ function RecipePage() {
   const { id } = useParams();
   const [recipe, setRecipe] = useState(null);
   const [editPostPath, setEditPostPath] = useState(``);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [recipeId, setRecipId] = useState();
+  const [commentsArr, setCommentsArr] = useState([]);
   const [isLiked, setIsLiked] = useState(false);
   const [numLikes, updateNumLikes] = useState(0);
   const [isLikedAnimation, setIsLikedAnimation] = useState(false);
@@ -29,13 +32,16 @@ function RecipePage() {
 
     setRecipId(id);
     const db = getFirestore();
-    const recipeRef = doc(collection(db, 'recipes'), id);
+    const recipeRef = doc(collection(db, "recipes"), id);
     getDoc(recipeRef)
-      .then(doc => {
+      .then((doc) => {
         if (doc.exists()) {
           const data = doc.data();
           setRecipe(data);
-          setEditPostPath(`/edit-recipe/${id}`)
+          setEditPostPath(`/edit-recipe/${id}`);
+          if (data["comments"]) {
+            setCommentsArr(data["comments"]);
+          }
         } else {
           console.log('Recipe not found!');
           window.location.href = '/Invalid';
@@ -67,9 +73,9 @@ function RecipePage() {
 
   useEffect(() => {
     if (recipeId) {
-    fetch(Recipe_URL)
-      .then((response) => response.json())
-      .then((data) => updateNumLikes(data.likesByUid.length));
+      fetch(Recipe_URL)
+        .then((response) => response.json())
+        .then((data) => updateNumLikes(data.likesByUid.length));
     }
   }, [isLiked])
 
@@ -78,12 +84,12 @@ function RecipePage() {
     //get isSaved 
     const URL_CHECK_SAVED_POST = `/api/recipe/checkSavedPost/${id}/${currentUser.uid}`
     fetch(URL_CHECK_SAVED_POST)
-    .then((response) => response.json())
-    .then((data) => {
+      .then((response) => response.json())
+      .then((data) => {
         setIsSaved(data)
-    })
-    .catch((error) => console.log(error)); 
-}, []);
+      })
+      .catch((error) => console.log(error));
+  }, []);
 
 
   async function toggleLiked() {
@@ -110,26 +116,30 @@ function RecipePage() {
 
   }
 
-  //save function
-  function SaveRecipe () {
-      const URL_ADD_SAVED_POST = `/api/recipe/savedPost/${id}/${currentUser.uid}`;
-      fetch(URL_ADD_SAVED_POST, {
-          method: 'PUT',
-          headers: {
-          }
-      });
-      setIsSaved(true);
+  function displayNumberComments() {
+    return commentsArr.length;
   }
 
-  function unSaveRecipe () {
+  //save function
+  function SaveRecipe() {
+    const URL_ADD_SAVED_POST = `/api/recipe/savedPost/${id}/${currentUser.uid}`;
+    fetch(URL_ADD_SAVED_POST, {
+      method: 'PUT',
+      headers: {
+      }
+    });
+    setIsSaved(true);
+  }
 
-      const URL_ADD_SAVED_POST = `/api/recipe/savedPost/${id}/${currentUser.uid}`;
-      fetch(URL_ADD_SAVED_POST, {
-          method: 'DELETE',
-          headers: {
-          }
-      });
-      setIsSaved(false);
+  function unSaveRecipe() {
+
+    const URL_ADD_SAVED_POST = `/api/recipe/savedPost/${id}/${currentUser.uid}`;
+    fetch(URL_ADD_SAVED_POST, {
+      method: 'DELETE',
+      headers: {
+      }
+    });
+    setIsSaved(false);
   }
 
 
@@ -141,7 +151,7 @@ function RecipePage() {
     banner.className = styles.copyBanner;
     document.body.appendChild(banner);
     setTimeout(() => {
-      banner.style.opacity = '0';
+      banner.style.opacity = "0";
       setTimeout(() => {
         document.body.removeChild(banner);
       }, 2000);
@@ -162,16 +172,20 @@ function RecipePage() {
         <div className={styles.recipeImageWrapper}>
           <img className={styles.recipeImage} src={recipe.image} alt={recipe.title} />
         </div>
-        <div className= {styles.iconList}>
+        <div className={styles.iconList}>
           <div className={styles.likesElement}>
             {isLiked ? <IconContext.Provider value={{ color: 'red' }}><div><BsHeartFill className={styles.icon} onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>
               : <IconContext.Provider value={{ color: 'black' }}><div><BsHeart className={styles.icon} onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>}
           </div>
-          <div className={styles.editElement}>                
-              {currentUser.uid === recipe.uid && (<IconContext.Provider  value={{ color: "black" }}><a href={editPostPath}><BsBrush className="editIcon"  size="2em" />Edit</a></IconContext.Provider>)}
+          <div className={styles.commentElement}>  <img className={styles.commentIcon} src={commentIcon} />  {displayNumberComments()} Comments</div>
+
+          <div className={styles.editElement}>
+            {currentUser.uid === recipe.uid && (<IconContext.Provider value={{ color: "black" }}><a href={editPostPath}><BsBrush className="editIcon" size="2em" />Edit</a></IconContext.Provider>)}
           </div>
+
+
           <div className={styles.saveElement}>
-              {isSaved ? (<IconContext.Provider value={{ color: "black" }}><div><BsFillBookmarkFill className="saveIcon" onClick={unSaveRecipe} size="2em" /> </div></IconContext.Provider>)
+            {isSaved ? (<IconContext.Provider value={{ color: "black" }}><div><BsFillBookmarkFill className="saveIcon" onClick={unSaveRecipe} size="2em" /> </div></IconContext.Provider>)
               : (<IconContext.Provider value={{ color: "black" }}><div><BsBookmark className="saveIcon" onClick={SaveRecipe} size="2em" /></div></IconContext.Provider>)}
           </div>
 
@@ -196,20 +210,16 @@ function RecipePage() {
                 </li>
               ))}
             </ul>
-            {/* <div className={styles.likesElement}>
-              {isLikedAnimation ? <IconContext.Provider value={{ color: 'red' }}><div><BsHeartFill className={styles.icon} onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>
-                : <IconContext.Provider value={{ color: 'black' }}><div><BsHeart className={styles.icon} onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>}
-            </div> */}
-            <div className={styles.recipeInstructions}>
-              <h2 className={styles.recipeSubheading}>Instructions</h2>
-              <ol className={styles.recipeInstructionsList}>
-                {recipe.instructions.map((instruction, index) => (
-                  <li key={index} className={styles.recipeInstruction}>
-                    {instruction}
-                  </li>
-                ))}
-              </ol>
-            </div>
+          </div>
+          <div className={styles.recipeInstructions}>
+            <h2 className={styles.recipeSubheading}>Instructions</h2>
+            <ol className={styles.recipeInstructionsList}>
+              {recipe.instructions.map((instruction, index) => (
+                <li key={index} className={styles.recipeInstruction}>
+                  {instruction}
+                </li>
+              ))}
+            </ol>
           </div>
         </div>
         {currentUser.uid === recipe.uid && (
@@ -220,10 +230,25 @@ function RecipePage() {
           </div>
         )}
       </div>
+      <Comments
+        currentUserId={currentUser.uid}
+        recipeId={recipeId}
+        comments={commentsArr}
+      />
+      {currentUser.uid === recipe.uid && (
+        <div>
+          <a
+            type="button"
+            className="text-white bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-lg px-5 py-2.5 text-center mr-2 mb-2 mt-4"
+            href={editPostPath}
+          >
+            Edit
+          </a>
+          <DeleteButton recipeId={recipeId}></DeleteButton>
+        </div>
+      )}
     </>
   );
-
-
 }
 
 export default RecipePage;
