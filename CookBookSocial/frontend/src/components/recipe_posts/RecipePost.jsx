@@ -116,6 +116,15 @@ function RecipePost({ recipe }) {
         return recipe.title;
     }
 
+    function displayNumberComments() {
+        if ("comments" in recipe) {
+            return recipe.comments.length;
+        }
+        else {
+            return 0;
+        }
+    }
+
     return (
         <div className="border-2 rounded-md border-orange-400 mb-10">
             <div
@@ -144,30 +153,37 @@ function RecipePost({ recipe }) {
                     </Link>
                 </div>
 
-                <div className="likes-element">
+                <div className="bottom-container">
                     {isLikedAnimation ? (
                         <IconContext.Provider value={{ color: "red" }}>
-                            <div>
+                            <div className="likesContainer">
                                 <BsHeartFill className="icon" onClick={toggleLiked} size="2em" />
-                                {" " + numLikes + " likes"}
+                                <div className="numberLikes">
+                                    {" " + numLikes + " likes"}
+                                </div>
                             </div>
                         </IconContext.Provider>
                     ) : (
                         <IconContext.Provider value={{ color: "black" }}>
-                            <div>
+                            <div className="likesContainer">
                                 <BsHeart className="icon" onClick={toggleLiked} size="2em" />
-                                {" " + numLikes + " likes"}
+                                <div className="numberLikes">
+                                    {" " + numLikes + " likes"}
+                                </div>
                             </div>
                         </IconContext.Provider>
                     )}
+                    <div className="number-comments"> <div> <img className="imgContainer" src={commentIcon} /> <div className="commentsCon"> {displayNumberComments()} Comments</div> </div></div>
                 </div>
-
 
             </div>
 
 
 
-        </div >
+        </div>
+
+
+
     );
 }
 

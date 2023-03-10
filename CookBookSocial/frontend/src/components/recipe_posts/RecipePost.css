@@ -1,10 +1,36 @@
-
-
-.likes-element {
-    margin-top: 20px;
+.bottom-container {
+  display: flex;
+  padding-left: 3%;
+  padding-top: 2%;
+  padding-bottom: 2%;
 }
 
 .icon {
-    display: inline;
-    cursor: pointer;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.number-comments {
+  float: left;
+  margin-left: 5%;
+}
+
+.imgContainer {
+  width: 5%;
+  float: left;
+}
+
+.likesContainer {
+  display: flex;
+  width: 15%;
+}
+
+.commentsCon {
+  margin-left: 1%;
+  float: left;
+}
+
+.numberLikes {
+  display: inline-block;
+  margin-left: 4%;
 }

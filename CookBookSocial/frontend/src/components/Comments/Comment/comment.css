@@ -2,7 +2,6 @@
   display: flex;
   margin-bottom: 1%;
   border-top: 1px solid #ff8c00;
-  /* border-bottom: 1px solid #FF8C00; */
 }
 
 .comment-image-container {
@@ -20,12 +19,17 @@
 .comment-content {
   display: flex;
   margin-bottom: 1%;
+  border-bottom: 1px solid #ff8c0078;
 }
 
 .comment-author {
   margin-right: 8px;
   font-size: 20px;
   color: rgb(203, 70, 49);
+}
+
+.comment-date {
+  padding-top: 0.5%;
 }
 
 .comment-text {
