@@ -35,8 +35,7 @@ function RecipePage() {
     fetch(Recipe_URL)
       .then((response) => response.json())
       .then((data) => {
-        setRecipe(data)
-      console.log(data)});
+        setRecipe(data)});
     
   }, [])
   useEffect(() => {
