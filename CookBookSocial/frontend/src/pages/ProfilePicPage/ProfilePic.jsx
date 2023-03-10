@@ -18,6 +18,7 @@ export default function ProfilePic() {
     const [bio, setBio]=useState();
     const [loading, setLoading] = useState(false);
     const [profileInfo, updateProfileInfo] = useState([]);
+    const [charCount, setCharCount] = useState(0);
 
 
     const { currentUser, updateUserProfile, setError } = useAuth();
@@ -169,18 +170,24 @@ export default function ProfilePic() {
                         />
                     </div>
                     <div className={styles.bioField}>
-                        <textarea
-                            id="bio"
-                            rows="4"
-                            name="bio"
-                            autoComplete="bio"
-                            required
-                            className="block  w-full px-3 py-2 border border-gray-300 "
-                            placeholder="Enter a Bio"
-                                defaultValue={ bio != "" ? bio: "No bio yet"}
-                            onChange={(e) => setBio(e.target.value)}
-                        />
-                    </div>
+    <textarea
+        id="bio"
+        rows="4"
+        name="bio"
+        autoComplete="bio"
+        required
+        className="block  w-full px-3 py-2 border border-gray-300 "
+        placeholder="Enter a Bio"
+        defaultValue={bio != "" ? bio: "No bio yet"}
+        maxLength="150"
+        onChange={(e) => {
+            setBio(e.target.value);
+            setCharCount(e.target.value.length);
+        }}
+    />
+    <div className="text-gray-500 text-right">{charCount}/150</div> 
+</div>
+
 
                     <div>
                         <button
