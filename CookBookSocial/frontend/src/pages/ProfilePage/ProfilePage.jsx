@@ -4,18 +4,17 @@ import Navbars from "../../components/navbars/Navbars";
 import PostModal from "../../components/postModal/postModal";
 import "./ProfilePage.css";
 import { useAuth } from "../../contexts/AuthContext";
+import { db } from "../../config/firebase";
+import { doc,getDoc } from "firebase/firestore";
 import FriendRequestsDisplay from "../../components/friendRequestsDisplay/FriendRequestsDisplay";
 import FriendsListModal from '../../components/FriendsList/FriendsListModal';
 
-// import { useParams } from "react-router-dom";
-
-// import renderRecipePostComponents from "./pages/HomePage/HomePage";
-//FIXME: ProfilePage is very similar to HomePage code so probably a way to re-use
 
 function ProfilePage() {
     const [profileRecipePostsList, updateProfileRecipePostsList] = useState([]);
     const { currentUser } = useAuth();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [profileInfo, updateProfileInfo] = useState([]);
     const POSTS_AT_A_TIME=5;
     const [numPosts, setNumPosts] = useState(POSTS_AT_A_TIME);
   
@@ -50,6 +49,30 @@ function ProfilePage() {
             .then((response) => response.json())
             .then((data) => updateProfileRecipePostsList(data));
     }, []);
+    //get profile info
+    useEffect(() => {
+        getProfileInfo();
+    }, []);
+    useEffect(() => {}, [profileInfo]);
+
+    //get user's data from firestore doc identified with their userID
+    function getProfileInfo() {
+        const userInfoRef = doc(db, "users", currentUser.uid);
+
+        getDoc(userInfoRef)
+            .then((snapshot) => {
+                if (!snapshot.exists()) {
+                    console.log("invalid user");
+                    window.location.href = "/Invalid";
+                }
+                const profileInfData = {
+                    data: snapshot.data(),
+                    id: snapshot.id,
+                };
+                updateProfileInfo(profileInfData);
+            })
+            .catch((error) => console.log(error.message));
+    }
 
     function renderProfileRecipePostComponents() {
         const arrComponents = [];
@@ -97,6 +120,9 @@ function ProfilePage() {
                     {username ? username : "No username"}
                 </div>
                 <div className="text-xl text-gray-600 text-left ">{currentUser.email}</div>
+                <div className="text-m text-gray-600 text-left whitespace-pre-line mb-2">
+                        {profileInfo.data?.profile ? (profileInfo.data?.profile?.biography ? profileInfo.data?.profile?.biography : "No Bio") : "No Bio"}
+                    </div>
                 <button 
   onClick={handleOpenModal}
   style={{
