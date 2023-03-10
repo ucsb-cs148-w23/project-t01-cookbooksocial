@@ -51,6 +51,15 @@ export default function Signup() {
 
   return (
     <div className={styles.container}>
+
+      <div class={styles.slider}>
+        <div class={styles.slide}></div>
+        <div class={styles.slide}></div>
+        <div class={styles.slide}></div>
+        <div class={styles.slide}></div>
+        <div class={styles.slide}></div>
+      </div>
+
       <div className={styles.rectangle}>
         <div className={styles.topText}>
           <h2>Create Account </h2>

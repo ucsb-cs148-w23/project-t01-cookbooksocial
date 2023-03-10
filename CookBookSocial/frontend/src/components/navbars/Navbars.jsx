@@ -28,7 +28,7 @@ export default function Navbars() {
     }
 
     return (
-        <nav className="relative bg-chef-orange border-gray-200 px-2 sm:px-4 md:py-4 py-2">
+        <nav className="sticky top-0 z-50 bg-chef-orange border-gray-200 px-2 sm:px-4 md:py-4 py-2">
             <div className="container flex flex-wrap items-center justify-between mx-auto max-w-7xl">
                 <div className="flex items-center justify-between">
                     <a href="/" className="flex mr-6">
