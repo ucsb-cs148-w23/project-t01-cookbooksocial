@@ -188,8 +188,6 @@
     margin: 0;
   }
   .deleteElement {
-    line-height: 50px;
-    font-size: 20px;
     position: absolute;
     margin-top: auto;
     right: 0; 

@@ -7,6 +7,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import DeleteButton from "../../components/deleteModal/deleteModal";
 import Comments from "../../components/Comments/Comments/Comments";
 
+
 import {   BsHeart, BsHeartFill,BsBookmark,BsFillBookmarkFill,BsBrush} from 'react-icons/bs';
 import { MdDeleteForever} from 'react-icons/md';
 import { IconContext } from "react-icons/lib";
@@ -27,6 +28,17 @@ function RecipePage() {
 
   const { currentUser } = useAuth();
 
+
+
+  const Recipe_URL = `/api/recipe/${id}`;
+  useEffect(() => {
+    fetch(Recipe_URL)
+      .then((response) => response.json())
+      .then((data) => {
+        setRecipe(data)
+      console.log(data)});
+    
+  }, [])
   useEffect(() => {
 
     setRecipId(id);
@@ -36,7 +48,7 @@ function RecipePage() {
       .then((doc) => {
         if (doc.exists()) {
           const data = doc.data();
-          setRecipe(data);
+          //setRecipe(data)
           setEditPostPath(`/edit-recipe/${id}`);
           if (data["comments"]) {
             setCommentsArr(data["comments"]);
@@ -54,7 +66,6 @@ function RecipePage() {
 
   }, [id]);
 
-  const Recipe_URL = `/api/recipe/${id}`;
 
   useEffect(() => {
     if (initialRender) {
@@ -88,7 +99,24 @@ function RecipePage() {
         setIsSaved(data)
     })
     .catch((error) => console.log(error)); 
-}, []);
+  }, []);
+
+
+
+  function displayName(recipe) {
+    // There is no 'user' in the recipe.
+
+    if ("user" in recipe && "profile" in recipe.user) {
+        if ("displayName" in recipe.user.profile) {
+            return recipe.user.profile.displayName;
+        }
+    }
+    if ("email" in recipe) {
+        return recipe.email;
+    } else {
+        return "No author found!";
+    }
+  }
 
 
   async function toggleLiked() {
@@ -152,7 +180,12 @@ function RecipePage() {
       }, 2000);
     }, 1000);
   };
-
+  
+  function timeStamptoDate(createdAt) {
+    const date = new Date(createdAt.seconds * 1000 + createdAt.nanoseconds / 1000000);
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return date.toLocaleDateString("en-US", options);
+}
 
 
   if (!recipe) {
@@ -168,7 +201,7 @@ function RecipePage() {
           <h1 className={styles.recipeTitle}>{recipe.title}</h1>
         </div>
         <div className={styles.deleteElement}>
-          {currentUser.uid === recipe.uid &&(<DeleteButton recipeId={recipeId} isRecipePage ={true}></DeleteButton>)}
+          {currentUser.uid === recipe.uid &&(<DeleteButton recipeId={recipeId} ></DeleteButton>)}
         </div>
       </div>
         <div className={styles.recipeImageWrapper}>
@@ -191,9 +224,9 @@ function RecipePage() {
         <div className={styles.recipeDetails}>
           <p className={styles.recipeDescription}>{recipe.description}</p>
           <div className={styles.recipeMetadata}>
-            <p className={styles.recipeMetadataItem}>Posted by: <Link to={`/profile/` + recipe.uid}>{recipe.email}</Link></p>
+            <p className={styles.recipeMetadataItem}>Posted by:  <Link  to={"profile/" + recipe.uid}>{displayName(recipe)}</Link></p>
             <p className={styles.recipeMetadataItem}>
-              Posted on {recipe.createdAt.toDate().toLocaleDateString()}
+              Posted on {timeStamptoDate(recipe.createdAt)}
             </p>
             <button className={styles.shareButton} onClick={handleShareClick}>
               Share

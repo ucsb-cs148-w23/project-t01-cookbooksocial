@@ -121,8 +121,13 @@ const getRecipe = async (req, res, next) => {
 
         const docRef = doc(db, "recipes", id);
         const docSnap = await getDoc(docRef);
+        let recipe = docSnap.data()
+        if (Object.hasOwn(docSnap.data(), "uid")) {
+            const user = await getUser(docSnap.data().uid);
+            recipe["user"] = user;
+        }
         if (docSnap.exists()) {
-            res.status(200).send(docSnap.data());
+            res.status(200).send(recipe);
         } else {
             // doc.data() will be undefined in this case
             res.status(400).send("Document not found");

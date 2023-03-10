@@ -34,7 +34,6 @@ function RecipePost({ recipe, isSavedPage,  deleteinSavedPage}) {
     const { currentUser } = useAuth();
 
     const Recipe_URL = `/api/recipe/${recipe.id}`;
-
     /*
     useEffect(() => {
         updateNumLikes(recipe.likesByUid.length);
