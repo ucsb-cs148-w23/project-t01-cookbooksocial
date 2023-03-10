@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import CommentForm from "../CommentForm/CommentForm";
 
 
@@ -53,8 +54,8 @@ const Comment = ({
       {/* Right side of the comment */}
       <div className="comment-right-part">
         <div className="comment-content">
-          <div className="comment-author">{comment.username}</div>
-          <div>{createdAt}</div>
+          <div className="comment-author"><Link to={'/profile/' + comment.userId}> {comment.username}</Link></div>
+          <div className="comment-date">{createdAt}</div>
         </div>
 
         {/* Comment body */}
