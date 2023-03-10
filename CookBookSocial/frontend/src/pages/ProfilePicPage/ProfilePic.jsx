@@ -7,7 +7,7 @@ import { generateAvatar } from "../../utils/GenerateAvatar";
 import styles from "./ProfilePic.module.css";
 
 import { db } from "../../config/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { doc,getDoc, setDoc } from "firebase/firestore";
 
 export default function ProfilePic() {
     const navigate = useNavigate();
@@ -15,7 +15,10 @@ export default function ProfilePic() {
     const [avatars, setAvatars] = useState([]);
     const [selectedAvatar, setSelectedAvatar] = useState();
     const [username, setUsername] = useState("");
+    const [bio, setBio]=useState();
     const [loading, setLoading] = useState(false);
+    const [profileInfo, updateProfileInfo] = useState([]);
+
 
     const { currentUser, updateUserProfile, setError } = useAuth();
 
@@ -35,6 +38,38 @@ export default function ProfilePic() {
     const picClicked = (index) => {
         setSelectedAvatar(index);
     };
+
+    //get profile info
+    useEffect(() => {
+        getProfileInfo();
+    }, []);
+    useEffect(() => {}, [profileInfo]);
+
+    //get user's data from firestore doc identified with their userID
+    function getProfileInfo() {
+        const userInfoRef = doc(db, "users", currentUser.uid);
+
+        getDoc(userInfoRef)
+            .then((snapshot) => {
+                if (!snapshot.exists()) {
+                    console.log("invalid user");
+                    window.location.href = "/Invalid";
+                }
+                const profileInfData = {
+                    data: snapshot.data(),
+                    id: snapshot.id,
+                };
+                if (profileInfData.data?.profile){
+                    if(profileInfData.data?.profile.biography){
+                        
+                    setBio
+                    (profileInfData.data.profile.biography)
+                    }
+                }
+                updateProfileInfo(profileInfData);
+            })
+            .catch((error) => console.log(error.message));
+    }
 
     // Function to generate a random tailwind backgroun color
     // Memoized function to generate a random tailwind background color
@@ -73,9 +108,11 @@ export default function ProfilePic() {
             const profile = {
                 displayName: username ? username : currentUser.displayName,
                 photoURL: avatars[selectedAvatar],
+                biography: bio
             };
             await updateUserProfile(user, profile);
-            //update user's firestore doc with new profile photo and display name
+            
+            //update user's firestore doc with new profile photo, display name, and bio
             const userRef = doc(db, "users", currentUser.uid);
             setDoc(userRef, { profile: profile }, { merge: true });
             navigate("/home");
@@ -129,6 +166,19 @@ export default function ProfilePic() {
                             placeholder="Enter a Display Name"
                             defaultValue={currentUser.displayName && currentUser.displayName}
                             onChange={(e) => setUsername(e.target.value)}
+                        />
+                    </div>
+                    <div className={styles.bioField}>
+                        <textarea
+                            id="bio"
+                            rows="4"
+                            name="bio"
+                            autoComplete="bio"
+                            required
+                            className="block  w-full px-3 py-2 border border-gray-300 "
+                            placeholder="Enter a Bio"
+                                defaultValue={ bio != "" ? bio: "No bio yet"}
+                            onChange={(e) => setBio(e.target.value)}
                         />
                     </div>
 
