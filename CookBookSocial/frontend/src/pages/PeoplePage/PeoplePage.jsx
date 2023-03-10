@@ -65,7 +65,7 @@ function PeoplePage() {
         let profilePostCount=0; //count number of profile posts rendered, and keep under numPosts
         for (let i = 0; i < profileRecipePostsList.length && profilePostCount < numPosts; i++) {
             if (profileRecipePostsList[i].uid === userId) {
-                arrComponents.unshift(<RecipePost key={i} recipe={profileRecipePostsList[i]} />);
+                arrComponents.push(<RecipePost key={i} recipe={profileRecipePostsList[i]} />);
                 profilePostCount+=1;
             }
         }
