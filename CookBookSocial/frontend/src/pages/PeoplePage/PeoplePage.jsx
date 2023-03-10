@@ -8,8 +8,6 @@ import { useParams } from "react-router-dom";
 import { db } from "../../config/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import AddFriendButton from "../../components/addFriendButton/AddFriendButton";
-// import renderRecipePostComponents from "./pages/HomePage/HomePage";
-//FIXME: ProfilePage is very similar to HomePage code so probably a way to re-use
 
 function PeoplePage() {
     const [profileRecipePostsList, updateProfileRecipePostsList] = useState([]);
@@ -67,7 +65,7 @@ function PeoplePage() {
         let profilePostCount=0; //count number of profile posts rendered, and keep under numPosts
         for (let i = 0; i < profileRecipePostsList.length && profilePostCount < numPosts; i++) {
             if (profileRecipePostsList[i].uid === userId) {
-                arrComponents.unshift(<RecipePost key={i} recipe={profileRecipePostsList[i]} />);
+                arrComponents.push(<RecipePost key={i} recipe={profileRecipePostsList[i]} />);
                 profilePostCount+=1;
             }
         }
@@ -97,19 +95,22 @@ function PeoplePage() {
     return (
         <div>
             <Navbars />
-            <div className="container">
-                <img
-                    src={profileInfo.data?.profile ? profileInfo.data?.profile.photoURL : null}
-                    className={"bioProfilePic"}
-                    alt="No-Pic"
-                />
-
-                <ul>
-                    <li className="bioProfileName" key={profileInfo.id}>
-                        {profileInfo.data?.profile
+            <div className="max-w-2xl mx-auto mt-8">
+                <div className="bg-gray-100 h-32 w-32 rounded">
+                    <img src={profileInfo.data?.profile ? profileInfo.data?.profile.photoURL : null}
+                    className=""
+                    alt="No-Pic" />
+                </div>
+                <div className="mt-2 text-xl text-left font-bold">
+                {profileInfo.data?.profile
                             ? profileInfo.data?.profile.displayName
                             : "No username"}
-                    </li>
+                </div>
+                <div className="text-xl text-gray-600 text-left ">{profileInfo.data?.email}</div>
+                <ul>
+                    <div className="text-m text-gray-600 text-left whitespace-pre-line">
+                        {profileInfo.data?.profile ? (profileInfo.data?.profile?.biography ? profileInfo.data?.profile?.biography : "No Bio") : "No Bio"}
+                    </div>
                     <li className="friend-button">
                         <AddFriendButton
                             currentUserId={currentUser.uid}
