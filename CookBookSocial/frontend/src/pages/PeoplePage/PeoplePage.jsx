@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import { db } from "../../config/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import AddFriendButton from "../../components/addFriendButton/AddFriendButton";
+import { Redirect } from 'react-router-dom'
 
 function PeoplePage() {
     const [profileRecipePostsList, updateProfileRecipePostsList] = useState([]);
@@ -16,7 +17,7 @@ function PeoplePage() {
     const { userId } = useParams();
 
     const { currentUser } = useAuth();
-    const POSTS_AT_A_TIME=5;
+    const POSTS_AT_A_TIME = 5;
     const [numPosts, setNumPosts] = useState(POSTS_AT_A_TIME);
 
     //useAuth has information from Firebase about user, we will get email from here
@@ -39,7 +40,13 @@ function PeoplePage() {
     useEffect(() => {
         getProfileInfo();
     }, []);
-    useEffect(() => {}, [profileInfo]);
+    useEffect(() => { }, [profileInfo]);
+
+    useEffect(() => {
+        if (userId === currentUser.uid) {
+            window.location.href = "/profile"
+        }
+    })
 
     //get user's data from firestore doc identified with their userID
     function getProfileInfo() {
@@ -62,11 +69,11 @@ function PeoplePage() {
 
     function renderProfileRecipePostComponents() {
         const arrComponents = [];
-        let profilePostCount=0; //count number of profile posts rendered, and keep under numPosts
+        let profilePostCount = 0; //count number of profile posts rendered, and keep under numPosts
         for (let i = 0; i < profileRecipePostsList.length && profilePostCount < numPosts; i++) {
             if (profileRecipePostsList[i].uid === userId) {
                 arrComponents.push(<RecipePost key={i} recipe={profileRecipePostsList[i]} />);
-                profilePostCount+=1;
+                profilePostCount += 1;
             }
         }
         if (arrComponents.size === 0) {
@@ -81,30 +88,30 @@ function PeoplePage() {
         const scrollTop = document.documentElement.scrollTop; //amount scrolled from the top
         const scrollHeight = document.documentElement.scrollHeight; //total height of rendered
         const clientHeight = document.documentElement.clientHeight //height of the window we see
-      
-        if((scrollTop +clientHeight >= (scrollHeight)) && (numPosts <= profileRecipePostsList.length)){
-          //if we are at bottom, and there are more recipes, update number of recipes to show
-          setNumPosts(numPosts+POSTS_AT_A_TIME);
+
+        if ((scrollTop + clientHeight >= (scrollHeight)) && (numPosts <= profileRecipePostsList.length)) {
+            //if we are at bottom, and there are more recipes, update number of recipes to show
+            setNumPosts(numPosts + POSTS_AT_A_TIME);
         }
-      }
-      useEffect (() => {
+    }
+    useEffect(() => {
         //when scrolling, call function to check if need to update number of posts
         document.addEventListener('scroll', scrollCheck)
-        return () => document.removeEventListener('scroll',scrollCheck)
-      })
+        return () => document.removeEventListener('scroll', scrollCheck)
+    })
     return (
         <div>
             <Navbars />
             <div className="max-w-2xl mx-auto mt-8">
                 <div className="bg-gray-100 h-32 w-32 rounded">
                     <img src={profileInfo.data?.profile ? profileInfo.data?.profile.photoURL : null}
-                    className=""
-                    alt="No-Pic" />
+                        className=""
+                        alt="No-Pic" />
                 </div>
                 <div className="mt-2 text-xl text-left font-bold">
-                {profileInfo.data?.profile
-                            ? profileInfo.data?.profile.displayName
-                            : "No username"}
+                    {profileInfo.data?.profile
+                        ? profileInfo.data?.profile.displayName
+                        : "No username"}
                 </div>
                 <div className="text-xl text-gray-600 text-left ">{profileInfo.data?.email}</div>
                 <ul>
