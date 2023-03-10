@@ -12,6 +12,12 @@
     margin-left:auto;
 }
 
+.iconList{
+    display: flex;
+    padding: 10px;
+    padding-top: 0;
+}
+
 .likeIcon {
     display: inline;
     cursor: pointer;
@@ -22,9 +28,6 @@
     cursor: pointer;
     margin-right: 8px;
     color: black;
-}
-.editIcon:hover {
-    color: tomato;
 }
 
 .saveIcon {

@@ -179,9 +179,29 @@
     align-items: right;
   }
 
+  .headeritem {
+    display: flex;
+    justify-content: center;
+    position: relative;   
+  }
+  .titleElement {  
+    margin: 0;
+  }
+  .deleteElement {
+    line-height: 50px;
+    font-size: 20px;
+    position: absolute;
+    margin-top: auto;
+    right: 0; 
+    bottom: 10px; 
+  }
+  
+
+
   .icon {
     display: inline;
     cursor: pointer;
+    margin-right: 5px;
   }
   
   

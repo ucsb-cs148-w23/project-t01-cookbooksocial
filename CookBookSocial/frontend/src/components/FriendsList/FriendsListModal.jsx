@@ -52,7 +52,7 @@ function FriendsListModal({ isOpen, onRequestClose }) {
           const userData = friendSnap.data();
           const profileData = userData?.profile;
           const displayName = typeof profileData === 'object' 
-  ? profileData.displayName.length > 15 
+  ? profileData.displayName.length > 25 
     ? profileData.displayName.slice(0, 25) + "..." 
     : profileData.displayName 
   : "NoName";
