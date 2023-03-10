@@ -10,21 +10,24 @@ import addCommentIcon from "../../images/sendComment.png"
 
 import likeIcon from "../../images/likeIcon.png"
 
-import { BsHeart, BsHeartFill } from "react-icons/bs";
+import { BsHeart, BsHeartFill, BsBookmark, BsFillBookmarkFill, BsBrush } from "react-icons/bs";
+
 import axios from "axios";
 
 import "./RecipePost.css";
 import { IconContext } from "react-icons/lib";
+
 /*
 What does calling useState do? It declares a “state variable”. Our variable is called response but we could call it anything else, like banana. This is a way to “preserve” some values between the function calls. Normally, variables “disappear” when the function exits but state variables are preserved by React.
 */
 
-function RecipePost({ recipe }) {
+function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
     const [showFullRecipe, toggleShowFullRecipe] = useState(false);
     const [editPostPath, setEditPostPath] = useState(`/edit-recipe/${recipe.id}`);
 
     const [isLiked, setIsLiked] = useState(false);
     const [numLikes, updateNumLikes] = useState(0);
+    const [isSaved, setIsSaved] = useState(false);
 
     const [isLikedAnimation, setIsLikedAnimation] = useState(false);
 
@@ -47,7 +50,20 @@ function RecipePost({ recipe }) {
             }
         }
         setIsLiked(false);
+
+
     }, []);
+    useEffect(() => {
+        //get isSaved 
+        const URL_CHECK_SAVED_POST = `/api/recipe/checkSavedPost/${recipe.id}/${currentUser.uid}`
+        fetch(URL_CHECK_SAVED_POST)
+            .then((response) => response.json())
+            .then((data) => {
+                setIsSaved(data)
+            })
+            .catch((error) => console.log(error));
+    }, []);
+
 
     async function toggleLiked() {
         setIsLikedAnimation(!isLikedAnimation);
@@ -70,6 +86,33 @@ function RecipePost({ recipe }) {
         const newBody = { likesByUid: newLikesByUid };
         const response = await axios.put(Recipe_URL, newBody);
         setIsLiked(!isLiked);
+    }
+
+    //save function
+    function SaveRecipe() {
+
+        const URL_ADD_SAVED_POST = `/api/recipe/savedPost/${recipe.id}/${currentUser.uid}`;
+        fetch(URL_ADD_SAVED_POST, {
+            method: 'PUT',
+            headers: {
+            }
+        });
+        setIsSaved(true);
+    }
+
+    function unSaveRecipe() {
+        if (isSavedPage) {
+            deleteinSavedPage()
+        }
+        else {
+            const URL_ADD_SAVED_POST = `/api/recipe/savedPost/${recipe.id}/${currentUser.uid}`;
+            fetch(URL_ADD_SAVED_POST, {
+                method: 'DELETE',
+                headers: {
+                }
+            });
+            setIsSaved(false);
+        }
     }
 
     //set num likes after like/unlike button pressed
@@ -153,34 +196,59 @@ function RecipePost({ recipe }) {
                     </Link>
                 </div>
 
-                <div className="bottom-container">
-                    {isLikedAnimation ? (
-                        <IconContext.Provider value={{ color: "red" }}>
-                            <div className="likesContainer">
-                                <BsHeartFill className="icon" onClick={toggleLiked} size="2em" />
-                                <div className="numberLikes">
+                <div className="bottomContainer">
+                    <div className="likes-element">
+                        {isLiked ? (
+                            <IconContext.Provider value={{ color: "red" }}>
+                                <div>
+                                    <BsHeartFill className="likeIcon" onClick={toggleLiked} size="2em" />
                                     {" " + numLikes + " likes"}
                                 </div>
-                            </div>
-                        </IconContext.Provider>
-                    ) : (
-                        <IconContext.Provider value={{ color: "black" }}>
-                            <div className="likesContainer">
-                                <BsHeart className="icon" onClick={toggleLiked} size="2em" />
-                                <div className="numberLikes">
+                            </IconContext.Provider>
+                        ) : (
+                            <IconContext.Provider value={{ color: "black" }}>
+                                <div>
+                                    <BsHeart className="likeIcon" onClick={toggleLiked} size="2em" />
                                     {" " + numLikes + " likes"}
                                 </div>
-                            </div>
-                        </IconContext.Provider>
-                    )}
-                    <div className="number-comments"> <div> <img className="imgContainer" src={commentIcon} /> <div className="commentsCon"> {displayNumberComments()} Comments</div> </div></div>
+                            </IconContext.Provider>
+                        )}
+                    </div>
+                    <div className="comment-element">  <img className="imgContainer" src={commentIcon} />  {displayNumberComments()} Comments</div>
+
+                    <div className="edit-element">
+                        {currentUser.uid === recipe.uid && (
+                            <IconContext.Provider value={{ color: "black" }}>
+                                <a href={editPostPath}>
+                                    <BsBrush className="editIcon" size="2em" />
+                                    Edit
+                                </a>
+                            </IconContext.Provider>
+                        )}
+                    </div>
+                    <div className="save-element">
+                        {isSaved ? (
+                            <IconContext.Provider value={{ color: "black" }}>
+                                <div>
+                                    <BsFillBookmarkFill className="saveIcon" onClick={unSaveRecipe} size="2em" />
+                                </div>
+                            </IconContext.Provider>
+                        ) : (
+                            <IconContext.Provider value={{ color: "black" }}>
+                                <div>
+                                    <BsBookmark className="saveIcon" onClick={SaveRecipe} size="2em" />
+                                </div>
+                            </IconContext.Provider>
+                        )}
+                    </div>
                 </div>
+
 
             </div>
 
 
 
-        </div>
+        </div >
 
 
 

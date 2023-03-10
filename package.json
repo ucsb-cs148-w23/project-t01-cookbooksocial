@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "firebase": "^9.16.0"
+    "firebase": "^9.17.1",
+    "react-router-dom": "^6.8.2",
+    "source-map-loader": "^4.0.1"
   }
 }

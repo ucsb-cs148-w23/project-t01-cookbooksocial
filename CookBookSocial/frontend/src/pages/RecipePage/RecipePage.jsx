@@ -7,7 +7,9 @@ import { useAuth } from "../../contexts/AuthContext";
 import DeleteButton from "../../components/deleteModal/deleteModal";
 import Comments from "../../components/Comments/Comments/Comments";
 
-import { BsHeart, BsHeartFill } from 'react-icons/bs';
+import commentIcon from "../../images/commentIcon.png"
+
+import { BsHeart, BsHeartFill, BsBookmark, BsFillBookmarkFill, BsBrush } from 'react-icons/bs';
 import { IconContext } from "react-icons/lib";
 import axios from 'axios';
 
@@ -20,6 +22,7 @@ function RecipePage() {
   const [isLiked, setIsLiked] = useState(false);
   const [numLikes, updateNumLikes] = useState(0);
   const [isLikedAnimation, setIsLikedAnimation] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
 
   const [initialRender, setInitialRender] = useState(true);
 
@@ -52,7 +55,7 @@ function RecipePage() {
 
   }, [id]);
 
-  const Recipe_URL = `/api/recipe/${recipeId}`;
+  const Recipe_URL = `/api/recipe/${id}`;
 
   useEffect(() => {
     if (initialRender) {
@@ -70,11 +73,23 @@ function RecipePage() {
 
   useEffect(() => {
     if (recipeId) {
-    fetch(Recipe_URL)
-      .then((response) => response.json())
-      .then((data) => updateNumLikes(data.likesByUid.length));
+      fetch(Recipe_URL)
+        .then((response) => response.json())
+        .then((data) => updateNumLikes(data.likesByUid.length));
     }
   }, [isLiked])
+
+
+  useEffect(() => {
+    //get isSaved 
+    const URL_CHECK_SAVED_POST = `/api/recipe/checkSavedPost/${id}/${currentUser.uid}`
+    fetch(URL_CHECK_SAVED_POST)
+      .then((response) => response.json())
+      .then((data) => {
+        setIsSaved(data)
+      })
+      .catch((error) => console.log(error));
+  }, []);
 
 
   async function toggleLiked() {
@@ -99,6 +114,32 @@ function RecipePage() {
     const response = await axios.put(Recipe_URL, newBody);
     setIsLiked(!isLiked);
 
+  }
+
+  function displayNumberComments() {
+    return commentsArr.length;
+  }
+
+  //save function
+  function SaveRecipe() {
+    const URL_ADD_SAVED_POST = `/api/recipe/savedPost/${id}/${currentUser.uid}`;
+    fetch(URL_ADD_SAVED_POST, {
+      method: 'PUT',
+      headers: {
+      }
+    });
+    setIsSaved(true);
+  }
+
+  function unSaveRecipe() {
+
+    const URL_ADD_SAVED_POST = `/api/recipe/savedPost/${id}/${currentUser.uid}`;
+    fetch(URL_ADD_SAVED_POST, {
+      method: 'DELETE',
+      headers: {
+      }
+    });
+    setIsSaved(false);
   }
 
 
@@ -131,9 +172,23 @@ function RecipePage() {
         <div className={styles.recipeImageWrapper}>
           <img className={styles.recipeImage} src={recipe.image} alt={recipe.title} />
         </div>
-        <div className={styles.likesElement}>
-          {isLikedAnimation ? <IconContext.Provider value={{ color: 'red' }}><div><BsHeartFill className={styles.icon} onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>
-            : <IconContext.Provider value={{ color: 'black' }}><div><BsHeart className={styles.icon} onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>}
+        <div className={styles.iconList}>
+          <div className={styles.likesElement}>
+            {isLiked ? <IconContext.Provider value={{ color: 'red' }}><div><BsHeartFill className={styles.icon} onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>
+              : <IconContext.Provider value={{ color: 'black' }}><div><BsHeart className={styles.icon} onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>}
+          </div>
+          <div className={styles.commentElement}>  <img className={styles.commentIcon} src={commentIcon} />  {displayNumberComments()} Comments</div>
+
+          <div className={styles.editElement}>
+            {currentUser.uid === recipe.uid && (<IconContext.Provider value={{ color: "black" }}><a href={editPostPath}><BsBrush className="editIcon" size="2em" />Edit</a></IconContext.Provider>)}
+          </div>
+
+
+          <div className={styles.saveElement}>
+            {isSaved ? (<IconContext.Provider value={{ color: "black" }}><div><BsFillBookmarkFill className="saveIcon" onClick={unSaveRecipe} size="2em" /> </div></IconContext.Provider>)
+              : (<IconContext.Provider value={{ color: "black" }}><div><BsBookmark className="saveIcon" onClick={SaveRecipe} size="2em" /></div></IconContext.Provider>)}
+          </div>
+
         </div>
         <div className={styles.recipeDetails}>
           <p className={styles.recipeDescription}>{recipe.description}</p>
@@ -167,6 +222,13 @@ function RecipePage() {
             </ol>
           </div>
         </div>
+        {currentUser.uid === recipe.uid && (
+          <div>
+            <DeleteButton
+              recipeId={recipeId}
+            ></DeleteButton>
+          </div>
+        )}
       </div>
       <Comments
         currentUserId={currentUser.uid}
