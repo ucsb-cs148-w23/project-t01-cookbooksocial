@@ -76,3 +76,12 @@
   padding-left: 2%;
   padding-right: 2%;
 }
+
+.num-likes {
+  display: inline;
+  cursor: pointer;
+}
+
+.num-likes:hover {
+  text-decoration: underline;
+}

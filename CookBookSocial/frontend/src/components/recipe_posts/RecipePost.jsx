@@ -201,15 +201,15 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
                         {isLiked ? (
                             <IconContext.Provider value={{ color: "red" }}>
                                 <div>
-                                    <BsHeartFill className="likeIcon" onClick={toggleLiked} size="2em" />
-                                    {" " + numLikes + " likes"}
+                                    <BsHeartFill className="likeIcon" onClick={toggleLiked} size="1.5em" />
+                                    {" "}<div className="num-likes">{numLikes + " likes"}</div>
                                 </div>
                             </IconContext.Provider>
                         ) : (
                             <IconContext.Provider value={{ color: "black" }}>
                                 <div>
-                                    <BsHeart className="likeIcon" onClick={toggleLiked} size="2em" />
-                                    {" " + numLikes + " likes"}
+                                    <BsHeart className="likeIcon" onClick={toggleLiked} size="1.5em" />
+                                    {" "}<div className="num-likes">{numLikes + " likes"}</div>
                                 </div>
                             </IconContext.Provider>
                         )}
