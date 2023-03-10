@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SearchBar from "../../components/Search/Search";
+import SearchBar from "../Search/Search";
 
 import { useAuth } from "../../contexts/AuthContext";
 
-export default function Navbars() {
+export default function Navbar() {
     const { currentUser, setError, logout } = useAuth();
 
     const navigate = useNavigate();

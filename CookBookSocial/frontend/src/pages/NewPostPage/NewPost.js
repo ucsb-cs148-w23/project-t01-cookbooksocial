@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Navbars from "../../components/navbars/Navbars";
+import Navbar from "../../components/Navbar/Navbar";
 import { useNavigate } from "react-router-dom";
 import { firebaseUpload } from "../../utils/Api";
 import { FaSpinner } from "react-icons/fa";
@@ -269,7 +269,7 @@ function NewPost({ show, setShow }) {
 
     return (
         <>
-            <Navbars />
+            <Navbar />
             <div id="">
                 {isError && <div id="postModal-error-log">{errorOutput}</div>}
 

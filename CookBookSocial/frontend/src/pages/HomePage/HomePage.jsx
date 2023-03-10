@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import RecipePost from "../../components/recipe_posts/RecipePost";
-import Navbars from "../../components/navbars/Navbars";
+import RecipePost from "../../components/RecipePost/RecipePost";
+import Navbar from "../../components/Navbar/Navbar";
 import { FaSpinner } from "react-icons/fa";
 
 import "./HomePage.css";
@@ -8,15 +8,13 @@ import "./HomePage.css";
 function HomePage() {
     const [recipePostsList, updateRecipePostsList] = useState([]);
 
-    
     const URL_GET_RECIPE_POSTS_DATA = "/api/recipe/all";
     const [searchState, setSearchState] = useState({});
     const [isLoading, setIsLoading] = useState(true);
 
     //number of posts to render at once
-    const POSTS_AT_A_TIME=5;
+    const POSTS_AT_A_TIME = 5;
     const [numPosts, setNumPosts] = useState(POSTS_AT_A_TIME);
-
 
     useEffect(() => {
         const handleBeforeUnload = () => {
@@ -53,23 +51,23 @@ function HomePage() {
     }, [recipePostsList]);
 
     const scrollCheck = () => {
-      const scrollTop = document.documentElement.scrollTop; //amount scrolled from the top
-      const scrollHeight = document.documentElement.scrollHeight; //total height of rendered
-      const clientHeight = document.documentElement.clientHeight //height of the window we see
-    
-      if((scrollTop +clientHeight >= (scrollHeight)) && (numPosts <= recipePostsList.length)){
-        //if we are at bottom, and there are more recipes, update number of recipes to show
-        setNumPosts(numPosts+POSTS_AT_A_TIME);
-      }
-    }
-    useEffect (() => {
-      //when scrolling, call function to check if need to update number of posts
-      document.addEventListener('scroll', scrollCheck)
-      return () => document.removeEventListener('scroll',scrollCheck)
-    })
+        const scrollTop = document.documentElement.scrollTop; //amount scrolled from the top
+        const scrollHeight = document.documentElement.scrollHeight; //total height of rendered
+        const clientHeight = document.documentElement.clientHeight; //height of the window we see
+
+        if (scrollTop + clientHeight >= scrollHeight && numPosts <= recipePostsList.length) {
+            //if we are at bottom, and there are more recipes, update number of recipes to show
+            setNumPosts(numPosts + POSTS_AT_A_TIME);
+        }
+    };
+    useEffect(() => {
+        //when scrolling, call function to check if need to update number of posts
+        document.addEventListener("scroll", scrollCheck);
+        return () => document.removeEventListener("scroll", scrollCheck);
+    });
     return (
         <div>
-            <Navbars />
+            <Navbar />
             <div className="mt-8"></div>
             <div className="max-w-2xl mx-auto my-2">
                 {isLoading ? (

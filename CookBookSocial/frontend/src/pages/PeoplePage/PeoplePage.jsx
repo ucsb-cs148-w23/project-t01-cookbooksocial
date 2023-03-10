@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
-import RecipePost from "../../components/recipe_posts/RecipePost";
-import Navbars from "../../components/navbars/Navbars";
-import PostModal from "../../components/postModal/postModal";
+import RecipePost from "../../components/RecipePost/RecipePost";
+import Navbar from "../../components/Navbar/Navbar";
 import "./PeoplePage.css";
 import { useAuth } from "../../contexts/AuthContext";
 import { useParams } from "react-router-dom";
 import { db } from "../../config/firebase";
 import { doc, getDoc } from "firebase/firestore";
-import AddFriendButton from "../../components/addFriendButton/AddFriendButton";
+import AddFriendButton from "../../components/Friends/AddFriendButton/AddFriendButton";
 // import renderRecipePostComponents from "./pages/HomePage/HomePage";
 //FIXME: ProfilePage is very similar to HomePage code so probably a way to re-use
 
@@ -18,7 +17,7 @@ function PeoplePage() {
     const { userId } = useParams();
 
     const { currentUser } = useAuth();
-    const POSTS_AT_A_TIME=5;
+    const POSTS_AT_A_TIME = 5;
     const [numPosts, setNumPosts] = useState(POSTS_AT_A_TIME);
 
     //useAuth has information from Firebase about user, we will get email from here
@@ -64,11 +63,11 @@ function PeoplePage() {
 
     function renderProfileRecipePostComponents() {
         const arrComponents = [];
-        let profilePostCount=0; //count number of profile posts rendered, and keep under numPosts
+        let profilePostCount = 0; //count number of profile posts rendered, and keep under numPosts
         for (let i = 0; i < profileRecipePostsList.length && profilePostCount < numPosts; i++) {
             if (profileRecipePostsList[i].uid === userId) {
                 arrComponents.unshift(<RecipePost key={i} recipe={profileRecipePostsList[i]} />);
-                profilePostCount+=1;
+                profilePostCount += 1;
             }
         }
         if (arrComponents.size === 0) {
@@ -82,21 +81,21 @@ function PeoplePage() {
     const scrollCheck = () => {
         const scrollTop = document.documentElement.scrollTop; //amount scrolled from the top
         const scrollHeight = document.documentElement.scrollHeight; //total height of rendered
-        const clientHeight = document.documentElement.clientHeight //height of the window we see
-      
-        if((scrollTop +clientHeight >= (scrollHeight)) && (numPosts <= profileRecipePostsList.length)){
-          //if we are at bottom, and there are more recipes, update number of recipes to show
-          setNumPosts(numPosts+POSTS_AT_A_TIME);
+        const clientHeight = document.documentElement.clientHeight; //height of the window we see
+
+        if (scrollTop + clientHeight >= scrollHeight && numPosts <= profileRecipePostsList.length) {
+            //if we are at bottom, and there are more recipes, update number of recipes to show
+            setNumPosts(numPosts + POSTS_AT_A_TIME);
         }
-      }
-      useEffect (() => {
+    };
+    useEffect(() => {
         //when scrolling, call function to check if need to update number of posts
-        document.addEventListener('scroll', scrollCheck)
-        return () => document.removeEventListener('scroll',scrollCheck)
-      })
+        document.addEventListener("scroll", scrollCheck);
+        return () => document.removeEventListener("scroll", scrollCheck);
+    });
     return (
         <div>
-            <Navbars />
+            <Navbar />
             <div className="container">
                 <img
                     src={profileInfo.data?.profile ? profileInfo.data?.profile.photoURL : null}

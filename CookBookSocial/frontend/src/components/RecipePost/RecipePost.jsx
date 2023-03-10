@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 import { renderIngredients } from "./functions/RecipePostFunctions";
 import { Button } from "react-bootstrap";
 import { useAuth } from "../../contexts/AuthContext";
-import DeleteButton from "../deleteModal/deleteModal";
+import DeleteButton from "../DeleteModal/deleteModal";
 
-import { BsHeart, BsHeartFill,BsBookmark,BsFillBookmarkFill,BsBrush } from "react-icons/bs";
+import { BsHeart, BsHeartFill, BsBookmark, BsFillBookmarkFill, BsBrush } from "react-icons/bs";
 
 import axios from "axios";
 
@@ -17,7 +17,7 @@ import { IconContext } from "react-icons/lib";
 What does calling useState do? It declares a “state variable”. Our variable is called response but we could call it anything else, like banana. This is a way to “preserve” some values between the function calls. Normally, variables “disappear” when the function exits but state variables are preserved by React.
 */
 
-function RecipePost({ recipe, isSavedPage,  deleteinSavedPage}) {
+function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
     const [showFullRecipe, toggleShowFullRecipe] = useState(false);
     const [editPostPath, setEditPostPath] = useState(`/edit-recipe/${recipe.id}`);
 
@@ -46,20 +46,17 @@ function RecipePost({ recipe, isSavedPage,  deleteinSavedPage}) {
             }
         }
         setIsLiked(false);
-        
-
     }, []);
     useEffect(() => {
-            //get isSaved 
-            const URL_CHECK_SAVED_POST = `/api/recipe/checkSavedPost/${recipe.id}/${currentUser.uid}`
-            fetch(URL_CHECK_SAVED_POST)
+        //get isSaved
+        const URL_CHECK_SAVED_POST = `/api/recipe/checkSavedPost/${recipe.id}/${currentUser.uid}`;
+        fetch(URL_CHECK_SAVED_POST)
             .then((response) => response.json())
             .then((data) => {
-                setIsSaved(data)
+                setIsSaved(data);
             })
-            .catch((error) => console.log(error)); 
+            .catch((error) => console.log(error));
     }, []);
-
 
     async function toggleLiked() {
         setIsLikedAnimation(!isLikedAnimation);
@@ -85,27 +82,23 @@ function RecipePost({ recipe, isSavedPage,  deleteinSavedPage}) {
     }
 
     //save function
-    function SaveRecipe () {
-
+    function SaveRecipe() {
         const URL_ADD_SAVED_POST = `/api/recipe/savedPost/${recipe.id}/${currentUser.uid}`;
         fetch(URL_ADD_SAVED_POST, {
-            method: 'PUT',
-            headers: {
-            }
+            method: "PUT",
+            headers: {},
         });
         setIsSaved(true);
     }
 
-    function unSaveRecipe () {
-        if(isSavedPage){
-            deleteinSavedPage()
-        }
-        else{
+    function unSaveRecipe() {
+        if (isSavedPage) {
+            deleteinSavedPage();
+        } else {
             const URL_ADD_SAVED_POST = `/api/recipe/savedPost/${recipe.id}/${currentUser.uid}`;
             fetch(URL_ADD_SAVED_POST, {
-                method: 'DELETE',
-                headers: {
-                }
+                method: "DELETE",
+                headers: {},
             });
             setIsSaved(false);
         }
@@ -159,9 +152,8 @@ function RecipePost({ recipe, isSavedPage,  deleteinSavedPage}) {
         <div>
             <div
                 className="bg-white overflow-hidden pb-10 mb-10 border-b border-neutral-300 text-left"
-              //  onClick={toggleShowFull}
+                //  onClick={toggleShowFull}
             >
-                
                 <header className="header mb-2">
                     <h2 className="font-extrabold text-left text-4xl">
                         {displayRecipeTitle(recipe)}
@@ -189,46 +181,61 @@ function RecipePost({ recipe, isSavedPage,  deleteinSavedPage}) {
                         {isLiked ? (
                             <IconContext.Provider value={{ color: "red" }}>
                                 <div>
-                                    <BsHeartFill className="likeIcon" onClick={toggleLiked} size="2em" />
+                                    <BsHeartFill
+                                        className="likeIcon"
+                                        onClick={toggleLiked}
+                                        size="2em"
+                                    />
                                     {" " + numLikes + " likes"}
                                 </div>
                             </IconContext.Provider>
                         ) : (
                             <IconContext.Provider value={{ color: "black" }}>
                                 <div>
-                                    <BsHeart className="likeIcon" onClick={toggleLiked} size="2em" />
+                                    <BsHeart
+                                        className="likeIcon"
+                                        onClick={toggleLiked}
+                                        size="2em"
+                                    />
                                     {" " + numLikes + " likes"}
                                 </div>
                             </IconContext.Provider>
                         )}
                     </div>
-                    <div className="edit-element">                
+                    <div className="edit-element">
                         {currentUser.uid === recipe.uid && (
-                            <IconContext.Provider  value={{ color: "black" }}>
+                            <IconContext.Provider value={{ color: "black" }}>
                                 <a href={editPostPath}>
-                                <BsBrush className="editIcon"  size="2em" />
-                                  Edit
+                                    <BsBrush className="editIcon" size="2em" />
+                                    Edit
                                 </a>
                             </IconContext.Provider>
                         )}
                     </div>
                     <div className="save-element">
                         {isSaved ? (
-                                <IconContext.Provider value={{ color: "black" }}>
-                                    <div>
-                                        <BsFillBookmarkFill className="saveIcon" onClick={unSaveRecipe} size="2em" />
-                                    </div>
-                                </IconContext.Provider>
-                            ) : (
-                                <IconContext.Provider value={{ color: "black" }}>
-                                    <div>
-                                        <BsBookmark className="saveIcon" onClick={SaveRecipe} size="2em" />
-                                    </div>
-                                </IconContext.Provider>
-                            )}
+                            <IconContext.Provider value={{ color: "black" }}>
+                                <div>
+                                    <BsFillBookmarkFill
+                                        className="saveIcon"
+                                        onClick={unSaveRecipe}
+                                        size="2em"
+                                    />
+                                </div>
+                            </IconContext.Provider>
+                        ) : (
+                            <IconContext.Provider value={{ color: "black" }}>
+                                <div>
+                                    <BsBookmark
+                                        className="saveIcon"
+                                        onClick={SaveRecipe}
+                                        size="2em"
+                                    />
+                                </div>
+                            </IconContext.Provider>
+                        )}
                     </div>
                 </div>
-                
 
                 {showFullRecipe && (
                     <footer>
