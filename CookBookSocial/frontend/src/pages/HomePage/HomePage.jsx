@@ -15,7 +15,11 @@ function HomePage() {
 
     //number of posts to render at once
     const POSTS_AT_A_TIME=5;
-    const [numPosts, setNumPosts] = useState(POSTS_AT_A_TIME);
+    console.log("session says:", parseInt(sessionStorage.getItem("numPosts")) )
+    const [numPosts, setNumPosts] = useState(
+      parseInt(sessionStorage.getItem("numPosts")) || POSTS_AT_A_TIME
+    );
+    console.log("but numposts=",numPosts)
 
 
     useEffect(() => {
@@ -59,7 +63,11 @@ function HomePage() {
     
       if((scrollTop +clientHeight >= (scrollHeight)) && (numPosts <= recipePostsList.length)){
         //if we are at bottom, and there are more recipes, update number of recipes to show
-        setNumPosts(numPosts+POSTS_AT_A_TIME);
+        setNumPosts(prevNumPosts => {
+            const newNumPosts = prevNumPosts + POSTS_AT_A_TIME;
+            sessionStorage.setItem("numPosts", newNumPosts);
+            return newNumPosts;
+          });
       }
     }
     useEffect (() => {
