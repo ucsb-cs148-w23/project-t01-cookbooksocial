@@ -160,8 +160,21 @@
     animation: fadeOut 4s forwards;
   }
 
+  .iconList{
+    display: flex;
+    margin-bottom: 10px;
+  }
   .likesElement {
-    margin-top: 20px;
+    display: flex;
+    align-items: right;
+  }
+  .editElement {
+    margin-left: 20px;
+    display: flex;
+    align-items: right;
+  }
+  .saveElement {
+    margin-left: auto;
     display: flex;
     align-items: right;
   }

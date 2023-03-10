@@ -65,6 +65,14 @@ export default function Navbars() {
                                     New Post
                                 </a>
                             </li>
+                            <li>
+                                <a
+                                    href="/saved-post"
+                                    className="block py-2 pl-3 pr-4 font-semibold text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:p-0 "
+                                >
+                                    Saved Posts
+                                </a>
+                            </li>
                         </ul>
                     </div>
                     <div className="border-l pl-4 border-gray-800 hidden md:block">

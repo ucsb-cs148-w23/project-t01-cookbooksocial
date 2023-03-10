@@ -12,6 +12,7 @@ import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 import ProfilePic from "./pages/ProfilePicPage/ProfilePic";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import WithPrivateRoute from "./utils/WithPrivateRoute";
+import SavedPage from "./pages/SavedPage/SavedPage";
 import PasswordReset from "./pages/PasswordReset/PasswordReset";
 import PeoplePage from "./pages/PeoplePage/PeoplePage";
 import RecipePage from "./pages/RecipePage/RecipePage";
@@ -69,6 +70,16 @@ function App() {
                         }
                     />
 
+
+                    <Route
+                      exact path ="/saved-post"
+                      element={
+                        <WithPrivateRoute>
+                          <SavedPage/>
+                        </WithPrivateRoute>
+                      }
+                    />
+          
                     <Route exact path="/edit-recipe/:id" element={<EditPost />} />
                     {/* Add the dynamic recipe page route */}
                     <Route path="/recipe/:id" element={<RecipePage />} />
