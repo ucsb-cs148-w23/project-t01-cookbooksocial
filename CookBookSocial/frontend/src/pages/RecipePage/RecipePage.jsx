@@ -9,7 +9,7 @@ import Comments from "../../components/Comments/Comments/Comments";
 
 
 import {   BsHeart, BsHeartFill,BsBookmark,BsFillBookmarkFill,BsBrush} from 'react-icons/bs';
-import { MdDeleteForever} from 'react-icons/md';
+import commentIcon from "../../images/commentIcon.png";
 import { IconContext } from "react-icons/lib";
 import axios from 'axios';
 
