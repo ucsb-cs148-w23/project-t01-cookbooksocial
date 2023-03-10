@@ -15,17 +15,17 @@ function HomePage() {
 
     //number of posts to render at once
     const POSTS_AT_A_TIME=5;
-    console.log("session says:", parseInt(sessionStorage.getItem("numPosts")) )
+    //console.log("session says:", parseInt(sessionStorage.getItem("numPosts")) )
     const [numPosts, setNumPosts] = useState(
       parseInt(sessionStorage.getItem("numPosts")) || POSTS_AT_A_TIME
     );
-    console.log("but numposts=",numPosts)
+   // console.log("but numposts=",numPosts)
 
 
     useEffect(() => {
         const handleBeforeUnload = () => {
             sessionStorage.setItem("scrollPosition", window.scrollY);
-            console.log("pos=", window.scrollY);
+            //.log("pos=", window.scrollY);
         };
 
         window.addEventListener("beforeunload", handleBeforeUnload);
