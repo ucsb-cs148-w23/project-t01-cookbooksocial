@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./deleteModal.css";
 
-function DeleteModal({ recipeId, show, setShow }) {
+export function DeleteModal({ recipeId, show, setShow }) {
     const [isLoading, setIsLoading] = useState(false);
     const [hasErrorDelete, setHasErrorDelete] = useState(false);
 
@@ -113,16 +113,17 @@ function DeleteModal({ recipeId, show, setShow }) {
     return null;
 }
 
-export default function DeleteButton({ recipeId }) {
+export default function DeleteButton({ recipeId ,isRecipePage}) {
     const [showModal, setShowModal] = useState(false);
 
+    
     return (
         <span>
             <span
                 type="button"
                 className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-lg px-5 py-2.5 text-center mr-2 mb-2 "
                 onClick={() => setShowModal(true)}
-            >
+                >
                 Delete
             </span>
             <DeleteModal recipeId={recipeId} show={showModal} setShow={setShowModal} />

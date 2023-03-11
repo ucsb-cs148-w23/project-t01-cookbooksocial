@@ -157,6 +157,39 @@
   animation: fadeOut 4s forwards;
 }
 
+  .headeritem {
+    display: flex;
+    justify-content: center;
+    position: relative;   
+  }
+  .titleElement {  
+    margin: 0;
+  }
+  .deleteElement {
+    position: absolute;
+    margin-top: auto;
+    right: 0; 
+    bottom: 10px; 
+  }
+  
+
+
+  .icon {
+    display: inline;
+    cursor: pointer;
+    margin-right: 5px;
+  }
+  
+  
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+  
 .iconList {
   display: flex;
   margin-bottom: 10px;

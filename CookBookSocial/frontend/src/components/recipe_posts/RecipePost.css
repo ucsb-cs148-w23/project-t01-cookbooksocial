@@ -7,6 +7,12 @@
   margin-left: auto;
 }
 
+.iconList{
+    display: flex;
+    padding: 10px;
+    padding-top: 0;
+}
+
 .comment-element {
   max-width: 20%;
   margin-top: 22px;
@@ -48,9 +54,6 @@
   cursor: pointer;
   margin-right: 8px;
   color: black;
-}
-.editIcon:hover {
-  color: tomato;
 }
 
 .saveIcon {
