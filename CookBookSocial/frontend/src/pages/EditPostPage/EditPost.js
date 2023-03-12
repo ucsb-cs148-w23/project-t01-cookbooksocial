@@ -165,7 +165,7 @@ export default function EditPost() {
     });
 
     const { id } = useParams();
-    console.log(id);
+    // console.log(id);
 
     const URL_GET_RECIPE_BY_ID = `/api/recipe/${id}`;
 

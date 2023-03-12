@@ -18,78 +18,81 @@ import PeoplePage from "./pages/PeoplePage/PeoplePage";
 import RecipePage from "./pages/RecipePage/RecipePage";
 import InvalidURL from "./pages/Invalid URL/InvalidURL";
 import NewPost from "./pages/NewPostPage/NewPost";
+import RecipeListPage from "./pages/RecipeListPage/RecipeListPage";
 function App() {
-    return (
-        <AuthProvider>
-            <div className="App">
-                <ErrorMessage />
-                <Routes>
-                    <Route exact path="/login" element={<Login />} />
+  return (
+    <AuthProvider>
+      <div className="App">
+        <ErrorMessage />
+        <Routes>
+          <Route exact path="/login" element={<Login />} />
 
-                    <Route
-                        exact
-                        path="/home"
-                        element={
-                            <WithPrivateRoute>
-                                <HomePage />
-                            </WithPrivateRoute>
-                        }
-                    />
+          <Route
+            exact
+            path="/home"
+            element={
+              <WithPrivateRoute>
+                <HomePage />
+              </WithPrivateRoute>
+            }
+          />
 
-                    <Route exact path="/register" element={<Signup />} />
-                    <Route exact path="/Invalid" element={<InvalidURL />} />
-                    <Route exact path="/password-reset" element={<PasswordReset />} />
-                    <Route
-                        exact
-                        path="/profile"
-                        element={
-                            // This adds private routing
-                            <WithPrivateRoute>
-                                <ProfilePage />
-                            </WithPrivateRoute>
-                        }
-                    />
-                    <Route exact path="/new-post" element={<NewPost />} />
-                    <Route
-                        exact
-                        path="/profile/:userId"
-                        element={
-                            // This adds private routing
-                            <WithPrivateRoute>
-                                <PeoplePage />
-                            </WithPrivateRoute>
-                        }
-                    />
-                    <Route
-                        exact
-                        path="/edit-profile"
-                        element={
-                            <WithPrivateRoute>
-                                <ProfilePic />
-                            </WithPrivateRoute>
-                        }
-                    />
+          <Route exact path="/register" element={<Signup />} />
+          <Route exact path="/Invalid" element={<InvalidURL />} />
+          <Route exact path="/password-reset" element={<PasswordReset />} />
+          <Route
+            exact
+            path="/profile"
+            element={
+              // This adds private routing
+              <WithPrivateRoute>
+                <ProfilePage />
+              </WithPrivateRoute>
+            }
+          />
+          <Route exact path="/new-post" element={<NewPost />} />
+          <Route
+            exact
+            path="/profile/:userId"
+            element={
+              // This adds private routing
+              <WithPrivateRoute>
+                <PeoplePage />
+              </WithPrivateRoute>
+            }
+          />
+          <Route
+            exact
+            path="/edit-profile"
+            element={
+              <WithPrivateRoute>
+                <ProfilePic />
+              </WithPrivateRoute>
+            }
+          />
 
+          <Route
+            exact
+            path="/saved-post"
+            element={
+              <WithPrivateRoute>
+                <SavedPage />
+              </WithPrivateRoute>
+            }
+          />
 
-                    <Route
-                      exact path ="/saved-post"
-                      element={
-                        <WithPrivateRoute>
-                          <SavedPage/>
-                        </WithPrivateRoute>
-                      }
-                    />
-          
-                    <Route exact path="/edit-recipe/:id" element={<EditPost />} />
-                    {/* Add the dynamic recipe page route */}
-                    <Route path="/recipe/:id" element={<RecipePage />} />
+          <Route exact path="/edit-recipe/:id" element={<EditPost />} />
+          {/* Add the dynamic recipe page route */}
+          <Route path="/recipe/:id" element={<RecipePage />} />
 
-                    {/* This route is a "wilcard", if someone tries to access a non defined route, they will be redirected to home route */}
-                    <Route path="*" element={<Navigate to="/home" replace />} />
-                </Routes>
-            </div>
-        </AuthProvider>
-    );
+          <Route path="/recipeList/:id" element={<RecipeListPage />} />
+
+          {/* This route is a "wilcard", if someone tries to access a non defined route, they will be redirected to home route */}
+          <Route path="*" element={<Navigate to="/home" replace />} />
+        </Routes>
+      </div>
+    </AuthProvider>
+  );
 }
 
 export default App;
