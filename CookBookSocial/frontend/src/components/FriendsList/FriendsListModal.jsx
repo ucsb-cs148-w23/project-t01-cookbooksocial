@@ -12,6 +12,8 @@ function FriendsListModal({ isOpen, onRequestClose }) {
   const [selectedFriend, setSelectedFriend] = useState(null);
   const [friendName, setFriendName] = useState(null);
   const [isFriendConfirmed, setIsFriendConfirmed] = useState(false); 
+  const [searchQuery, setSearchQuery] = useState('');
+
   const auth = getAuth();
   const userID = auth.currentUser.uid;
 
@@ -84,76 +86,78 @@ function FriendsListModal({ isOpen, onRequestClose }) {
 
  
 
-
-
   return (
     <Modal
-  isOpen={isOpen}
-  ariaHideApp={false}
-  onRequestClose={onRequestClose}
-  contentLabel="Friends List"
-  style={{
-    content: {
-      width: '400px',
-      height: '400px',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      backgroundColor: 'white',
-      borderRadius: '8px',
-      boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-      padding: '16px',
-    },
-  }}
->
-  <h2 style={{ textAlign: 'center', marginBottom: '16px' }}>Friends List</h2>
-  {isLoading ? (
-    <p>Loading friends...</p>
-  ) : (
-    <>
-      {friends.length > 0 ? (
-        <ul style={{ maxHeight: '300px', overflowY: 'auto' }}>
-          {friends.map(({ displayName, photoURL, id }) => (
-            <li
-              key={id}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                padding: '8px 0',
-                borderBottom: '1px solid #f2f2f2',
-              }}
-            >
-              <Link to={`/profile/${id}`} style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                <img
-                  src={photoURL}
-                  alt={`${displayName}'s profile picture`}
-                  style={{ width: '40px', height: '40px' }}
-                />
-                <span>{displayName}</span>
-              </Link>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <button onClick={() => openModal({ id, displayName })} style={{ backgroundColor: 'lightgrey', borderRadius: '8px', color: 'black', padding: '12px 16px' }}>Unfriend</button>
-                {selectedFriend && (
-                  <ConfirmationModal
-                    currID={userID}
-                    friendID={selectedFriend.id}
-                    friendName={selectedFriend.displayName}
-                    isOpen={modalIsOpen}
-                    onRequestClose={closeModal}
-                    onConfirm={(currID, friendID) => handleConfirm(currID, friendID)}
-                  />
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
+      isOpen={isOpen}
+      ariaHideApp={false}
+      onRequestClose={onRequestClose}
+      contentLabel="Friends List"
+      style={{
+        content: {
+          width: '400px',
+          height: '400px',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          backgroundColor: 'white',
+          borderRadius: '8px',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+          padding: '0px 16px 10px 16px', // add padding to top and bottom
+        },
+      }}
+    >
+      <h2 style={{ textAlign: 'center', marginBottom: '16px' }}>Friends List</h2>
+      <input type="text" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} style={{ marginBottom: '2px', width: '100%' }} />
+  
+      {isLoading ? (
+        <p>Loading friends...</p>
       ) : (
-        <p>No friends found.</p>
+        <>
+          {friends.length > 0 ? (
+            <ul style={{ maxHeight: '300px', overflowY: 'auto', margin: '0' }}>
+              {friends
+                .filter(({ displayName }) => displayName.toLowerCase().includes(searchQuery.toLowerCase()))
+                .map(({ displayName, photoURL, id }) => (
+                  <li
+                    key={id}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      padding: '8px 0',
+                      borderBottom: '1px solid #f2f2f2',
+                    }}
+                  >
+                    <Link to={`/profile/${id}`} style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                      <img
+                        src={photoURL}
+                        alt={`${displayName}'s profile picture`}
+                        style={{ width: '40px', height: '40px' }}
+                      />
+                      <span>{displayName}</span>
+                    </Link>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <button onClick={() => openModal({ id, displayName })} style={{ backgroundColor: 'lightgrey', borderRadius: '8px', color: 'black', padding: '12px 16px' }}>Unfriend</button>
+                      {selectedFriend && (
+                        <ConfirmationModal
+                          currID={userID}
+                          friendID={selectedFriend.id}
+                          friendName={selectedFriend.displayName}
+                          isOpen={modalIsOpen}
+                          onRequestClose={closeModal}
+                          onConfirm={(currID, friendID) => handleConfirm(currID, friendID)}
+                        />
+                      )}
+                    </div>
+                  </li>
+                ))}
+            </ul>
+          ) : (
+            <p>No friends found.</p>
+          )}
+        </>
       )}
-    </>
-  )}
-</Modal>
- );
-}
+    </Modal>
+  );
+  }
 
 export default FriendsListModal;
