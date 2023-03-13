@@ -9,7 +9,6 @@ import "./HomePage.css";
 
 function HomePage() {
   const [recipePostsList, updateRecipePostsList] = useState([]);
-  const [allRecipePostsList, updateAllRecipePostsList] = useState([]);
   const [searchState, setSearchState] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [friendsList, setFriendsList] = useState({});
@@ -43,7 +42,6 @@ function HomePage() {
       .then((response) => response.json())
       .then((data) => {
         updateRecipePostsList(data);
-        updateAllRecipePostsList(data)
         setIsLoading(false);
       })
       .catch((error) => console.log(error));
