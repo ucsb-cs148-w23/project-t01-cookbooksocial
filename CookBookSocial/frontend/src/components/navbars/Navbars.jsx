@@ -51,7 +51,7 @@ export default function Navbars() {
                             <li>
                                 <a
                                     href="/"
-                                    className="block py-2 pl-3 pr-4 font-semibold md:text-gray-900 rounded md:bg-transparent md:p-0"
+                                    className="block py-2 pl-3 pr-4 font-semibold md:text-gray-900 rounded md:bg-transparent md:p-0 hover:text-white hover:scale-125 transition ease-in-out delay-50 duration-200"
                                     aria-current="page"
                                 >
                                     Home
@@ -60,7 +60,7 @@ export default function Navbars() {
                             <li>
                                 <a
                                     href="/new-post"
-                                    className="block py-2 pl-3 pr-4 font-semibold text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:p-0 "
+                                    className="block py-2 pl-3 pr-4 font-semibold text-gray-900 rounded md:p-0 hover:text-white hover:scale-125 transition ease-in-out delay-50 duration-200"
                                 >
                                     New Post
                                 </a>
@@ -68,7 +68,7 @@ export default function Navbars() {
                             <li>
                                 <a
                                     href="/saved-post"
-                                    className="block py-2 pl-3 pr-4 font-semibold text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:p-0 "
+                                    className="block py-2 pl-3 pr-4 font-semibold text-gray-900 rounded md:p-0 hover:text-white hover:scale-125 transition ease-in-out delay-50 duration-200"
                                 >
                                     Saved Posts
                                 </a>
