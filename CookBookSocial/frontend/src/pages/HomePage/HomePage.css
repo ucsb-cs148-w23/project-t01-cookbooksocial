@@ -31,32 +31,38 @@
     animation: spin 1s linear infinite;
   }
 
-  .filterbox{
+ 
+
+  .hr-line{
+    width: 100%;
+    border-top: 2px solid orange;
+    border-bottom: 2px solid #ebebeb;
+    margin-bottom: 5px;
+  }
+
+  .filterBox{
     display: flex;
     justify-content: center;
-    margin-bottom: 10px;
   }
-  a.filter-btn {
-    display: block;
-    text-align: center;
-    line-height: 30px;
-    width: 70px;
-    margin-left: 10px; 
-    margin-right: 10px; 
-    text-decoration: none; 
-    font-size: 0.8rem;
-    background: -webkit-linear-gradient(top, #ffffff 0%, #ebedee 100%);
-    background: linear-gradient(to bottom, #ffffff 0%, #ebedee 100%);
-    color: #000000;
-    border-radius: 10px;
-    -webkit-box-shadow: 0 3px 3px rgba(255, 255, 255, 0.197);
-    box-shadow: 0 2px 3px rgba(0, 0, 0, .2);
+  .filterBox label{
+      display: block;
+      width: 150px;
+      background: rgb(255, 220, 156);
+      color: #000;
+      padding: 10px;
+      margin: 10px;
+      box-sizing: border-box;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 30px;
+      cursor: pointer;
   }
-  
-  
-  a.filter-btn:hover {
-    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .3);
-    box-shadow: 0 2px 7px rgba(0, 0, 0, .3);
+  .filterBox input:checked+label{
+      background: orange;
+      color: #FFF;
+  }
+  .filterBox input{
+      display: none;
   }
   
   

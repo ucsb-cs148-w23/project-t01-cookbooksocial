@@ -11,6 +11,7 @@ function HomePage() {
   const [recipePostsList, updateRecipePostsList] = useState([]);
   const [searchState, setSearchState] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [stopLoad, setStopLoad] = useState(false);
   const [friendsList, setFriendsList] = useState({});
   const { currentUser } = useAuth();
 
@@ -103,20 +104,21 @@ function HomePage() {
     <div>
       <Navbars />
       <div className="mt-8"></div>
-      <div className="max-w-2xl mx-auto my-2">
+      <div className="max-w-2xl mx-auto my-2"> 
+      <div>
+          <div class="filterBox">
+            <input type="radio" id="1" onClick={filterByAll} name="filter" defaultChecked /><label for="1">All</label>
+            <input type="radio" id="2" onClick={filterByFriends} name="filter"/><label for="2">Friends</label>
+            <input type="radio" id="3" onClick={filterBylikes} name="filter"/><label for="3">Popular</label>
+          </div>
+          <hr align="center" className="hr-line"></hr>
+        </div>
         {isLoading ? (
           <div className="loading-container">
             <FaSpinner className="loading-spinner" />
           </div>
         ) : (
           <>
-          <div>
-            <div className="filterbox">
-              <a  onClick={filterByAll} class="filter-btn"><span>All</span></a>
-              <a  onClick={filterByFriends} class="filter-btn"><span>Friends</span></a>
-              <a  onClick={filterBylikes} class="filter-btn"><span>Popular</span></a>
-            </div>
-          </div>
             <InfiniteScroll
               dataLength={numPosts}
               next={fetchMoreData}
