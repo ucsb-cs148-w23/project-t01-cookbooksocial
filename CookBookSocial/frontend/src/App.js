@@ -64,9 +64,7 @@ function App() {
                         exact
                         path="/edit-profile"
                         element={
-                            <WithPrivateRoute>
                                 <ProfilePic />
-                            </WithPrivateRoute>
                         }
                     />
 

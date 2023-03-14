@@ -28,7 +28,7 @@ export default function Navbars() {
     }
 
     return (
-        <nav className="relative bg-chef-orange border-gray-200 px-2 sm:px-4 md:py-4 py-2">
+        <nav className="sticky top-0 z-50 bg-chef-orange border-gray-200 px-2 sm:px-4 md:py-4 py-2">
             <div className="container flex flex-wrap items-center justify-between mx-auto max-w-7xl">
                 <div className="flex items-center justify-between">
                     <a href="/" className="flex mr-6">
@@ -51,7 +51,7 @@ export default function Navbars() {
                             <li>
                                 <a
                                     href="/"
-                                    className="block py-2 pl-3 pr-4 font-semibold md:text-gray-900 rounded md:bg-transparent md:p-0"
+                                    className="block py-2 pl-3 pr-4 font-semibold md:text-gray-900 rounded md:bg-transparent md:p-0 hover:text-white hover:scale-125 transition ease-in-out delay-50 duration-200"
                                     aria-current="page"
                                 >
                                     Home
@@ -60,7 +60,7 @@ export default function Navbars() {
                             <li>
                                 <a
                                     href="/new-post"
-                                    className="block py-2 pl-3 pr-4 font-semibold text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:p-0 "
+                                    className="block py-2 pl-3 pr-4 font-semibold text-gray-900 rounded md:p-0 hover:text-white hover:scale-125 transition ease-in-out delay-50 duration-200"
                                 >
                                     New Post
                                 </a>
@@ -68,7 +68,7 @@ export default function Navbars() {
                             <li>
                                 <a
                                     href="/saved-post"
-                                    className="block py-2 pl-3 pr-4 font-semibold text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:p-0 "
+                                    className="block py-2 pl-3 pr-4 font-semibold text-gray-900 rounded md:p-0 hover:text-white hover:scale-125 transition ease-in-out delay-50 duration-200"
                                 >
                                     Saved Posts
                                 </a>

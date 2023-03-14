@@ -2,7 +2,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useState, useEffect } from "react";
 
-import styles from "./Signup.module.css"
+import { getAuth, signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
+
+import styles from "./Signup.module.css";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -13,9 +15,12 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const auth = getAuth();
+  const provider = new GoogleAuthProvider();
+
   useEffect(() => {
     if (currentUser) {
-      navigate("/home");
+      navigate("/edit-profile");
     }
   }, [currentUser, navigate]);
 
@@ -32,15 +37,13 @@ export default function Signup() {
       await register(email, password);
       navigate("/edit-profile");
     } catch (e) {
-      let errorMessage = e.code
+      let errorMessage = e.code;
       if (errorMessage === "auth/weak-password") {
         setError("The password is too weak.");
-      }
-      else if (errorMessage === "auth/email-already-in-use") {
+      } else if (errorMessage === "auth/email-already-in-use") {
         setError("You already are registered with this email. Please sign in.");
-      }
-      else {
-        console.log("This happened")
+      } else {
+        console.log("This happened");
         setError(errorMessage); // Replace the alert with this
       }
       navigate("/register");
@@ -49,8 +52,18 @@ export default function Signup() {
     setLoading(false);
   }
 
+  const GoogleRedirect = () => signInWithRedirect(auth, provider);
+
   return (
     <div className={styles.container}>
+      <div className={styles.slider}>
+        <div className={styles.slide}></div>
+        <div className={styles.slide}></div>
+        <div className={styles.slide}></div>
+        <div className={styles.slide}></div>
+        <div className={styles.slide}></div>
+      </div>
+
       <div className={styles.rectangle}>
         <div className={styles.topText}>
           <h2>Create Account </h2>
@@ -95,25 +108,35 @@ export default function Signup() {
             </div>
           </div>
           <div className={styles.inputFields}>
-            <button
-              type="submit"
-              disabled={loading}
-              className="py-2 px-4 border border-transparent "
-            >
-              Register
-            </button>
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="text-sm">
-              <Link
-                to="/login"
-                className="text-blue-600"
-              >
-                Already have an account? Login
-              </Link>
-            </div>
-          </div>
+                        <button type="submit" disabled={loading} className={styles.submit_button}>
+                            Register
+                        </button>
+                    </div>
         </form>
+
+        <div className={styles.inputFields}>
+          <br />
+          <div className={styles.orText}>Or sign up with:</div>
+          <button
+            onClick={GoogleRedirect}
+            disabled={loading}
+            className={styles.googleButton}
+          >
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+              alt="Google logo"
+              className={styles.googleIcon}
+            />
+          </button>
+        </div>
+
+        <div className="flex items-center justify-center">
+          <div className="text-sm">
+            <Link to="/login" className="text-blue-600">
+              Sign in instead
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

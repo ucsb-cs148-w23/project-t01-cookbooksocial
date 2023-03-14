@@ -12,6 +12,7 @@ function FriendsListModal({ isOpen, onRequestClose }) {
   const [selectedFriend, setSelectedFriend] = useState(null);
   const [friendName, setFriendName] = useState(null);
   const [isFriendConfirmed, setIsFriendConfirmed] = useState(false); 
+  const [searchQuery, setSearchQuery] = useState('');
   const auth = getAuth();
   const userID = auth.currentUser.uid;
 
@@ -102,18 +103,20 @@ function FriendsListModal({ isOpen, onRequestClose }) {
       backgroundColor: 'white',
       borderRadius: '8px',
       boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-      padding: '16px',
+      padding: '0px 16px 10px 16px',
     },
   }}
 >
   <h2 style={{ textAlign: 'center', marginBottom: '16px' }}>Friends List</h2>
+  <input type="text" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} style={{ marginBottom: '2px', width: '100%' }} />
   {isLoading ? (
     <p>Loading friends...</p>
   ) : (
     <>
       {friends.length > 0 ? (
         <ul style={{ maxHeight: '300px', overflowY: 'auto' }}>
-          {friends.map(({ displayName, photoURL, id }) => (
+          {friends.filter(({ displayName }) => displayName.toLowerCase().includes(searchQuery.toLowerCase()))
+          .map(({ displayName, photoURL, id }) =>(
             <li
               key={id}
               style={{

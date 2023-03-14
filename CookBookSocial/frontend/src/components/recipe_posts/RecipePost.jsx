@@ -176,7 +176,7 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
                 <h2 className="font-extrabold text-orange-400 text-4xl pt-2">{displayRecipeTitle(recipe)}</h2>
                 <p className="text-orange-400 pl-5 pt-2 text-left">
                     Author:
-                    <Link className="pl-2" to={"/profile/" + recipe.uid}>{displayName(recipe)}</Link>
+                    <Link className="pl-2" to={currentUser.uid === recipe.uid ? "/profile" : "/profile/" + recipe.uid}>{displayName(recipe)}</Link>
                     {/* We concatenate the user ID to the profile route, so it redirects us to the user page on click */}
                 </p>
                 <p className="pl-5 pt-2 text-orange-400 text-left">Date:
