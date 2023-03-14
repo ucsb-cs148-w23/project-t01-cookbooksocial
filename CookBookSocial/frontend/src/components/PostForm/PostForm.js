@@ -235,7 +235,7 @@ function PostForm({ initialValues, onSumbit, heading }) {
             <div id="">
                 {isError && <div id="postModal-error-log">{errorOutput}</div>}
 
-                <div className="max-w-lg mx-auto mt-8 mb-32 text-left md:px-0 px-4">
+                <div className="max-w-lg mx-auto mt-8 mb-16 text-left md:px-0 px-4">
                     <div className="flex justify-between items-end border-b-2 border-chef-orange pb-2 mb-6">
                         <h1 className="text-gray-900 text-2xl font-bold">{heading}</h1>
                         <div className="text-center">
@@ -245,7 +245,7 @@ function PostForm({ initialValues, onSumbit, heading }) {
                                 </div>
                             ) : (
                                 <button
-                                    className="bg-red-400 hover:bg-red-500 p-2 font-semibold rounded-xl text-white"
+                                    className="bg-chef-orange hover:bg-red-500 p-2 font-semibold rounded-xl text-white"
                                     onClick={() => postRecipe()}
                                 >
                                     Post recipe

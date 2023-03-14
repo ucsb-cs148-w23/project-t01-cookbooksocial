@@ -4,7 +4,7 @@ import { collection, doc, getDoc, getFirestore } from "firebase/firestore";
 import styles from "./RecipePage.module.css";
 import Navbar from "../../components/Navbar/Navbar";
 import { useAuth } from "../../contexts/AuthContext";
-import DeleteButton from "../../components/DeleteModal/deleteModal";
+import DeleteButton from "../../components/DeleteModal/DeleteModal";
 import Comments from "../../components/Comments/Comments/Comments";
 
 import { BsHeart, BsHeartFill, BsBookmark, BsFillBookmarkFill, BsBrush } from "react-icons/bs";
