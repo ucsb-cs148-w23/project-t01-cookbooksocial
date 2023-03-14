@@ -1,29 +1,27 @@
 import React, { useEffect, useState } from "react";
-import RecipePost from "../../components/recipe_posts/RecipePost";
-import Navbars from "../../components/navbars/Navbars";
-import PostModal from "../../components/postModal/postModal";
+import RecipePost from "../../components/RecipePosts/RecipePost";
+import Navbar from "../../components/Navbar/Navbar";
 import "./ProfilePage.css";
 import { useAuth } from "../../contexts/AuthContext";
 import { db } from "../../config/firebase";
-import { doc,getDoc } from "firebase/firestore";
-import FriendRequestsDisplay from "../../components/friendRequestsDisplay/FriendRequestsDisplay";
-import FriendsListModal from '../../components/FriendsList/FriendsListModal';
-
+import { doc, getDoc } from "firebase/firestore";
+import FriendRequestsDisplay from "../../components/Friends/friendRequestsDisplay/FriendRequestsDisplay";
+import FriendsListModal from "../../components/Friends/FriendsList/FriendsListModal";
 
 function ProfilePage() {
     const [profileRecipePostsList, updateProfileRecipePostsList] = useState([]);
     const { currentUser } = useAuth();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [profileInfo, updateProfileInfo] = useState([]);
-    const POSTS_AT_A_TIME=5;
+    const POSTS_AT_A_TIME = 5;
     const [numPosts, setNumPosts] = useState(POSTS_AT_A_TIME);
-  
+
     function handleOpenModal() {
-      setIsModalOpen(true);
+        setIsModalOpen(true);
     }
-  
+
     function handleCloseModal() {
-      setIsModalOpen(false);
+        setIsModalOpen(false);
     }
 
     let username = "No Username Found";
@@ -76,11 +74,11 @@ function ProfilePage() {
 
     function renderProfileRecipePostComponents() {
         const arrComponents = [];
-        let profilePostCount=0; //count number of profile posts rendered, and keep less than numPosts
-        for (let i = 0; i< profileRecipePostsList.length && profilePostCount < numPosts; i++) {
+        let profilePostCount = 0; //count number of profile posts rendered, and keep less than numPosts
+        for (let i = 0; i < profileRecipePostsList.length && profilePostCount < numPosts; i++) {
             if (profileRecipePostsList[i].uid === currentUser.uid) {
                 arrComponents.push(<RecipePost key={i} recipe={profileRecipePostsList[i]} />);
-                profilePostCount+=1;
+                profilePostCount += 1;
             }
         }
         if (arrComponents.size === 0) {
@@ -94,23 +92,23 @@ function ProfilePage() {
     const scrollCheck = () => {
         const scrollTop = document.documentElement.scrollTop; //amount scrolled from the top
         const scrollHeight = document.documentElement.scrollHeight; //total height of rendered
-        const clientHeight = document.documentElement.clientHeight //height of the window we see
-      
-        if((scrollTop +clientHeight >= (scrollHeight)) && (numPosts <= profileRecipePostsList.length)){
-          //if we are at bottom, and there are more recipes, update number of recipes to show
-          setNumPosts(numPosts+POSTS_AT_A_TIME);
+        const clientHeight = document.documentElement.clientHeight; //height of the window we see
+
+        if (scrollTop + clientHeight >= scrollHeight && numPosts <= profileRecipePostsList.length) {
+            //if we are at bottom, and there are more recipes, update number of recipes to show
+            setNumPosts(numPosts + POSTS_AT_A_TIME);
         }
-      }
-      useEffect (() => {
+    };
+    useEffect(() => {
         //when scrolling, call function to check if need to update number of posts
-        document.addEventListener('scroll', scrollCheck)
-        return () => document.removeEventListener('scroll',scrollCheck)
-      })
+        document.addEventListener("scroll", scrollCheck);
+        return () => document.removeEventListener("scroll", scrollCheck);
+    });
 
     //have user info at top
     return (
         <div>
-            <Navbars />
+            <Navbar />
             <div className="max-w-2xl mx-auto mt-8">
                 <div className="bg-gray-100 h-32 w-32 rounded">
                     <img src={currentUser?.photoURL} className="" alt="No-Pic" />
@@ -121,28 +119,30 @@ function ProfilePage() {
                 </div>
                 <div className="text-xl text-gray-600 text-left ">{currentUser.email}</div>
                 <div className="text-m text-gray-600 text-left whitespace-pre-line mb-2">
-                        {profileInfo.data?.profile ? (profileInfo.data?.profile?.biography ? profileInfo.data?.profile?.biography : "No Bio") : "No Bio"}
-                    </div>
-                <button 
-  onClick={handleOpenModal}
-  style={{
-    backgroundColor: '#007bff',
-    color: '#fff',
-    padding: '0.5rem 1rem',
-    border: 'none',
-    borderRadius: '0.25rem',
-    cursor: 'pointer',
-  }}
->
-  View Friends List
-</button>
+                    {profileInfo.data?.profile
+                        ? profileInfo.data?.profile?.biography
+                            ? profileInfo.data?.profile?.biography
+                            : "No Bio"
+                        : "No Bio"}
+                </div>
+                <button
+                    onClick={handleOpenModal}
+                    style={{
+                        backgroundColor: "#007bff",
+                        color: "#fff",
+                        padding: "0.5rem 1rem",
+                        border: "none",
+                        borderRadius: "0.25rem",
+                        cursor: "pointer",
+                    }}
+                >
+                    View Friends List
+                </button>
 
-
-      <FriendsListModal isOpen={isModalOpen} onRequestClose={handleCloseModal} />
+                <FriendsListModal isOpen={isModalOpen} onRequestClose={handleCloseModal} />
                 <FriendRequestsDisplay currentUserId={currentUser.uid} />
                 <h2 className="mt-4 text-left text-xl font-bold">Recent posts</h2>
                 <div className="profile-page">
-                    <PostModal></PostModal>
                     <ul>{renderProfileRecipePostComponents()}</ul>
                 </div>
             </div>
