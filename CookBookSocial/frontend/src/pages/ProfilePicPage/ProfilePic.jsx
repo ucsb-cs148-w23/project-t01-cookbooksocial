@@ -54,7 +54,7 @@ export default function ProfilePic() {
             .then((snapshot) => {
                 if (!snapshot.exists()) {
                     console.log("invalid user");
-                    window.location.href = "/Invalid";
+                    // window.location.href = "/Invalid";
                 }
                 const profileInfData = {
                     data: snapshot.data(),

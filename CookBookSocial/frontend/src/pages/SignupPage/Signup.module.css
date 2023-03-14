@@ -1,3 +1,22 @@
+.submit_button,
+.googleButton {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+.submit_button {
+  background-color: #333333;
+  border: none;
+}
+
+.submit_button:hover {
+  background-color: #444444;
+}
 .topText {
     /* padding: 40px; */
     margin-top: 5%;
@@ -28,6 +47,35 @@
     border: 2px solid #FF8C00;
     position: absolute;
   }
+
+  .googleButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px 20px;
+    color: #333;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.googleIcon {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+.orText {
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333333;
+    text-align: center;
+}
   
 
 

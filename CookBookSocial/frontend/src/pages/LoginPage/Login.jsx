@@ -36,12 +36,12 @@ export default function Login() {
     return (
         <div className={styles.container}>
 
-            <div class={styles.slider}>
-                <div class={styles.slide}></div>
-                <div class={styles.slide}></div>
-                <div class={styles.slide}></div>
-                <div class={styles.slide}></div>
-                <div class={styles.slide}></div>
+            <div className={styles.slider}>
+                <div className={styles.slide}></div>
+                <div className={styles.slide}></div>
+                <div className={styles.slide}></div>
+                <div className={styles.slide}></div>
+                <div className={styles.slide}></div>
             </div>
 
             <div className={styles.rectangle}>
