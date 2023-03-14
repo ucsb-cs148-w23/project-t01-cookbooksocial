@@ -3,12 +3,11 @@ import { Link } from "react-router-dom";
 
 import { renderIngredients } from "./functions/RecipePostFunctions";
 import { useAuth } from "../../contexts/AuthContext";
-import DeleteButton from "../deleteModal/deleteModal";
 import commentIcon from "../../images/commentIcon.png";
 
-import addCommentIcon from "../../images/sendComment.png"
+import addCommentIcon from "../../images/sendComment.png";
 
-import likeIcon from "../../images/likeIcon.png"
+import likeIcon from "../../images/likeIcon.png";
 
 import { BsHeart, BsHeartFill, BsBookmark, BsFillBookmarkFill, BsBrush } from "react-icons/bs";
 
@@ -49,20 +48,17 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
             }
         }
         setIsLiked(false);
-
-
     }, []);
     useEffect(() => {
-        //get isSaved 
-        const URL_CHECK_SAVED_POST = `/api/recipe/checkSavedPost/${recipe.id}/${currentUser.uid}`
+        //get isSaved
+        const URL_CHECK_SAVED_POST = `/api/recipe/checkSavedPost/${recipe.id}/${currentUser.uid}`;
         fetch(URL_CHECK_SAVED_POST)
             .then((response) => response.json())
             .then((data) => {
-                setIsSaved(data)
+                setIsSaved(data);
             })
             .catch((error) => console.log(error));
     }, []);
-
 
     async function toggleLiked() {
         setIsLikedAnimation(!isLikedAnimation);
@@ -89,26 +85,22 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
 
     //save function
     function SaveRecipe() {
-
         const URL_ADD_SAVED_POST = `/api/recipe/savedPost/${recipe.id}/${currentUser.uid}`;
         fetch(URL_ADD_SAVED_POST, {
-            method: 'PUT',
-            headers: {
-            }
+            method: "PUT",
+            headers: {},
         });
         setIsSaved(true);
     }
 
     function unSaveRecipe() {
         if (isSavedPage) {
-            deleteinSavedPage()
-        }
-        else {
+            deleteinSavedPage();
+        } else {
             const URL_ADD_SAVED_POST = `/api/recipe/savedPost/${recipe.id}/${currentUser.uid}`;
             fetch(URL_ADD_SAVED_POST, {
-                method: 'DELETE',
-                headers: {
-                }
+                method: "DELETE",
+                headers: {},
             });
             setIsSaved(false);
         }
@@ -161,28 +153,34 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
     function displayNumberComments() {
         if ("comments" in recipe) {
             return recipe.comments.length;
-        }
-        else {
+        } else {
             return 0;
         }
     }
 
     return (
         <div className="border-2 rounded-md border-orange-400 mb-10">
-            <div
-                className="bg-white overflow-hidden divide-y"
-                onClick={toggleShowFull}
-            >
-                <h2 className="font-extrabold text-orange-400 text-4xl pt-2">{displayRecipeTitle(recipe)}</h2>
+            <div className="bg-white overflow-hidden divide-y" onClick={toggleShowFull}>
+                <h2 className="font-extrabold text-orange-400 text-4xl pt-2">
+                    {displayRecipeTitle(recipe)}
+                </h2>
                 <p className="text-orange-400 pl-5 pt-2 text-left">
                     Author:
-                    <Link className="pl-2" to={currentUser.uid === recipe.uid ? "/profile" : "/profile/" + recipe.uid}>{displayName(recipe)}</Link>
+                    <Link
+                        className="pl-2"
+                        to={currentUser.uid === recipe.uid ? "/profile" : "/profile/" + recipe.uid}
+                    >
+                        {displayName(recipe)}
+                    </Link>
                     {/* We concatenate the user ID to the profile route, so it redirects us to the user page on click */}
                 </p>
-                <p className="pl-5 pt-2 text-orange-400 text-left">Date:
+                <p className="pl-5 pt-2 text-orange-400 text-left">
+                    Date:
                     <p className="text-gray-500 pl-2 inline">{timeStamptoDate(recipe.createdAt)}</p>
                 </p>
-                <p className="text-orange-400 text-left pl-5 pt-2"> Description:
+                <p className="text-orange-400 text-left pl-5 pt-2">
+                    {" "}
+                    Description:
                     <p className="inline text-gray-500 pl-2">{recipe.description}</p>
                 </p>
                 <div className="pb-2/3">
@@ -200,20 +198,34 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
                         {isLiked ? (
                             <IconContext.Provider value={{ color: "red" }}>
                                 <div>
-                                    <BsHeartFill className="likeIcon" onClick={toggleLiked} size="2em" />
+                                    <BsHeartFill
+                                        className="likeIcon"
+                                        onClick={toggleLiked}
+                                        size="2em"
+                                    />
                                     {" " + numLikes + " likes"}
                                 </div>
                             </IconContext.Provider>
                         ) : (
                             <IconContext.Provider value={{ color: "black" }}>
                                 <div>
-                                    <BsHeart className="likeIcon" onClick={toggleLiked} size="2em" />
+                                    <BsHeart
+                                        className="likeIcon"
+                                        onClick={toggleLiked}
+                                        size="2em"
+                                    />
                                     {" " + numLikes + " likes"}
                                 </div>
                             </IconContext.Provider>
                         )}
                     </div>
-                    <div className="comment-element">  <img className="imgContainer" src={commentIcon} />  {displayNumberComments()} Comments</div>
+                    <div className="comment-element">
+                        {" "}
+                        <img
+                            className="imgContainer"
+                            src={commentIcon}
+                        /> {displayNumberComments()} Comments
+                    </div>
 
                     <div className="edit-element">
                         {currentUser.uid === recipe.uid && (
@@ -229,28 +241,28 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
                         {isSaved ? (
                             <IconContext.Provider value={{ color: "black" }}>
                                 <div>
-                                    <BsFillBookmarkFill className="saveIcon" onClick={unSaveRecipe} size="2em" />
+                                    <BsFillBookmarkFill
+                                        className="saveIcon"
+                                        onClick={unSaveRecipe}
+                                        size="2em"
+                                    />
                                 </div>
                             </IconContext.Provider>
                         ) : (
                             <IconContext.Provider value={{ color: "black" }}>
                                 <div>
-                                    <BsBookmark className="saveIcon" onClick={SaveRecipe} size="2em" />
+                                    <BsBookmark
+                                        className="saveIcon"
+                                        onClick={SaveRecipe}
+                                        size="2em"
+                                    />
                                 </div>
                             </IconContext.Provider>
                         )}
                     </div>
                 </div>
-
-
             </div>
-
-
-
-        </div >
-
-
-
+        </div>
     );
 }
 

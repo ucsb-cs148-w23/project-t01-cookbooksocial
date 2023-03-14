@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
-import RecipePost from "../../components/recipe_posts/RecipePost";
+import RecipePost from "../../components/RecipePosts/RecipePost";
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { useAuth } from "../../contexts/AuthContext";
-import Navbars from "../../components/navbars/Navbars";
+import Navbar from "../../components/Navbar/Navbar";
 import { FaSpinner } from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";
 import "./HomePage.css";
-
-
-
 
 
 function HomePage() {
@@ -112,7 +109,7 @@ function HomePage() {
 
   return (
     <div>
-      <Navbars />
+      <Navbar />
       <div className="mt-8"></div>
       <div className="max-w-2xl mx-auto my-2"> 
       <div>

@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import "../../components/postModal/postModalStyles.css";
 import { firebaseUpdateWithImage, firebaseUpdateWithOutImage } from "../../utils/Api";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import Navbars from "../../components/navbars/Navbars";
+import Navbar from "../../components/Navbar/Navbar";
 import DeleteButton from "../../components/deleteModal/deleteModal";
 
 const IngreLists = (props) => {
@@ -265,7 +264,7 @@ export default function EditPost() {
 
     return (
         <body>
-            <Navbars />
+            <Navbar />
             {isError && <div id="postModal-error-log">{errorOutput}</div>}
             <div className="container container-column">
                 <div className="putLeft"></div>
