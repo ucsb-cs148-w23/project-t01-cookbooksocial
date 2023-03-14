@@ -5,7 +5,7 @@ import { FaSpinner } from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";
 import "./HomePage.css";
 
-function HomePage() {
+function HomePage() { //test
   const [recipePostsList, updateRecipePostsList] = useState([]);
   const [searchState, setSearchState] = useState({});
   const [isLoading, setIsLoading] = useState(true);
