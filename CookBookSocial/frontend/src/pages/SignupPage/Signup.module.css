@@ -1,3 +1,22 @@
+.submit_button,
+.googleButton {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+.submit_button {
+  background-color: #333333;
+  border: none;
+}
+
+.submit_button:hover {
+  background-color: #444444;
+}
 .topText {
     /* padding: 40px; */
     margin-top: 5%;

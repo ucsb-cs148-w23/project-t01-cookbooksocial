@@ -108,14 +108,10 @@ export default function Signup() {
             </div>
           </div>
           <div className={styles.inputFields}>
-            <button
-              type="submit"
-              disabled={loading}
-              className="py-2 px-4 border border-transparent "
-            >
-              Register
-            </button>
-          </div>
+                        <button type="submit" disabled={loading} className={styles.submit_button}>
+                            Register
+                        </button>
+                    </div>
         </form>
 
         <div className={styles.inputFields}>
@@ -134,10 +130,10 @@ export default function Signup() {
           </button>
         </div>
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-center">
           <div className="text-sm">
             <Link to="/login" className="text-blue-600">
-              Already have an account? Login
+              Sign in instead
             </Link>
           </div>
         </div>
