@@ -3,7 +3,7 @@ import { firebaseUpdateWithImage, firebaseUpdateWithOutImage } from "../../utils
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import Navbar from "../../components/Navbar/Navbar";
-import DeleteButton from "../../components/DeleteModal/deleteModal";
+import DeleteButton from "../../components/deleteModal/deleteModal";
 
 const IngreLists = (props) => {
     const [ingreText, setIngreText] = useState("");
