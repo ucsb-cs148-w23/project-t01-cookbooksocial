@@ -7,11 +7,16 @@ import { FaSpinner } from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";
 import "./HomePage.css";
 
+
+
+
+
 function HomePage() {
-  const [recipePostsList, updateRecipePostsList] = useState([]);
+  const [recipePostsList, setRecipePostsList] = useState([]);
+  const [filteredRecipePostList, setFilteredRecipePostList] = useState([]);
   const [searchState, setSearchState] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [filterDis, setfilterDis] = useState(false);
+  const [filterDis, setFilterDis] = useState(false);
   const [friendsList, setFriendsList] = useState({});
   const { currentUser } = useAuth();
 
@@ -31,25 +36,31 @@ function HomePage() {
     if (scrollPosition !== null) {
       window.scrollTo(0, parseInt(scrollPosition));
     }
+
     const URL_GET_FRIENDS_LIST = `/api/user/friendsList/${currentUser.uid}`;
     fetch(URL_GET_FRIENDS_LIST)
-    .then((response) => response.json())
-    .then((data) => {
-      var friendsID = Object.keys(data);
-      setFriendsList(friendsID )
-    })
+      .then((response) => response.json())
+      .then((data) => {
+        var friendsID = Object.keys(data);
+        setFriendsList(friendsID)
+      })
+      .catch((error) => console.log(error));
 
     fetch("/api/recipe/all")
       .then((response) => response.json())
       .then((data) => {
-        updateRecipePostsList(data);
+        //console.log("FETCHING")
+        setRecipePostsList(data);
+        setFilteredRecipePostList(data)
         setIsLoading(false);
+        setFilterDis(false);
+      //  console.log("done fetchin")
       })
       .catch((error) => console.log(error));
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
+      
+      return () => {
+        window.removeEventListener("beforeunload", handleBeforeUnload);
+      };
   }, []);
 
   useEffect(() => {
@@ -65,47 +76,39 @@ function HomePage() {
     sessionStorage.setItem("numPosts", numPosts + POSTS_AT_A_TIME);
   };
 
-  const filterByAll = () =>{
-    setfilterDis(true)
+  const filterByAll = async() => {
+    setFilterDis(true);
     setIsLoading(true);
-    fetch("/api/recipe/all")
-    .then((response) => response.json())
-    .then((data) => {
-      updateRecipePostsList(data);
-      setIsLoading(false);
-      setfilterDis(false)
-    })
-    .catch((error) => console.log(error));
+    await setFilteredRecipePostList(recipePostsList);
+    await new Promise(resolve => setTimeout(resolve, 400));
+    setIsLoading(false);
+    setFilterDis(false);
   }
 
-  const filterByFriends = async() =>{
-    setfilterDis(true)
-    setIsLoading(true)
-    fetch("/api/recipe/all")
-      .then((response) => response.json())
-      .then((data) => {
-        updateRecipePostsList(data.filter(recipePost=> {return friendsList.includes(recipePost.uid)}) )
-        setIsLoading(false);
-        setfilterDis(false)
-      })
-      .catch((error) => console.log(error));
-  }
-
-  const filterBylikes = () =>{
-    setfilterDis(true)
+  const filterByFriends = async() => {
+    setFilterDis(true);
     setIsLoading(true);
-    fetch("/api/recipe/all")
-    .then((response) => response.json())
-    .then((data) => {
-      // Sort the posts based on the number of likes in descending order and shws top 10
-      const top10Posts = data.sort((postA, postB) => postB.likesByUid.length - postA.likesByUid.length).slice(0, 10);
-      updateRecipePostsList(top10Posts);
-      setIsLoading(false);
-      setfilterDis(false)
+   await setFilteredRecipePostList(recipePostsList.filter(recipePost => friendsList.includes(recipePost.uid)));
 
-    })
-    .catch((error) => console.log(error));
+   await new Promise(resolve => setTimeout(resolve, 400));
+    setIsLoading(false);
+    setFilterDis(false);
   }
+  const filterByLikes = async () => {
+    setFilterDis(true);
+    setIsLoading(true);
+    const recipePostsCopy = recipePostsList.slice();
+    const top10Posts = recipePostsCopy.sort((postA, postB) => postB.likesByUid.length - postA.likesByUid.length).slice(0, 10);
+    await setFilteredRecipePostList(top10Posts)
+   /// console.log(top10Posts)
+    await new Promise(resolve => setTimeout(resolve, 400));
+    setIsLoading(false);
+    setFilterDis(false);
+  }
+  
+  
+ 
+
 
   return (
     <div>
@@ -116,7 +119,7 @@ function HomePage() {
           <div class="filterBox">
             <input type="radio" id="1" disabled = {filterDis} onClick={filterByAll} name="filter" defaultChecked /><label for="1">All</label>
             <input type="radio" id="2" disabled = {filterDis} onClick={filterByFriends} name="filter"/><label for="2">Friends</label>
-            <input type="radio" id="3" disabled = {filterDis} onClick={filterBylikes} name="filter"/><label for="3">Popular</label>
+            <input type="radio" id="3" disabled = {filterDis} onClick={filterByLikes} name="filter"/><label for="3">Popular</label>
           </div>
           <hr align="center" className="hr-line"></hr>
         </div>
@@ -129,14 +132,14 @@ function HomePage() {
             <InfiniteScroll
               dataLength={numPosts}
               next={fetchMoreData}
-              hasMore={numPosts < recipePostsList.length}
+              hasMore={numPosts < filteredRecipePostList.length}
               loader={
                 <div className="loading-container">
                   <FaSpinner className="loading-spinner" />
                 </div>
               }
             >
-              {recipePostsList.slice(0, numPosts).map((recipe, index) => (
+              {filteredRecipePostList.map((recipe, index) => (
                 <RecipePost key={index} recipe={recipe} />
               ))}
             </InfiniteScroll>
