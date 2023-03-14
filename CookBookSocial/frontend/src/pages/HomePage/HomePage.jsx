@@ -11,7 +11,7 @@ function HomePage() {
   const [recipePostsList, updateRecipePostsList] = useState([]);
   const [searchState, setSearchState] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [stopLoad, setStopLoad] = useState(false);
+  const [filterDis, setfilterDis] = useState(false);
   const [friendsList, setFriendsList] = useState({});
   const { currentUser } = useAuth();
 
@@ -65,30 +65,34 @@ function HomePage() {
     sessionStorage.setItem("numPosts", numPosts + POSTS_AT_A_TIME);
   };
 
-  const filterByFriends = async() =>{
-    setIsLoading(true)
-    
-    fetch("/api/recipe/all")
-      .then((response) => response.json())
-      .then((data) => {
-        updateRecipePostsList(data.filter(recipePost=> {return friendsList.includes(recipePost.uid)}) )
-        setIsLoading(false);
-      })
-      .catch((error) => console.log(error));
-  }
-
   const filterByAll = () =>{
+    setfilterDis(true)
     setIsLoading(true);
     fetch("/api/recipe/all")
     .then((response) => response.json())
     .then((data) => {
       updateRecipePostsList(data);
       setIsLoading(false);
+      setfilterDis(false)
     })
     .catch((error) => console.log(error));
   }
 
+  const filterByFriends = async() =>{
+    setfilterDis(true)
+    setIsLoading(true)
+    fetch("/api/recipe/all")
+      .then((response) => response.json())
+      .then((data) => {
+        updateRecipePostsList(data.filter(recipePost=> {return friendsList.includes(recipePost.uid)}) )
+        setIsLoading(false);
+        setfilterDis(false)
+      })
+      .catch((error) => console.log(error));
+  }
+
   const filterBylikes = () =>{
+    setfilterDis(true)
     setIsLoading(true);
     const LIKE_AT_LEAST = 3
     fetch("/api/recipe/all")
@@ -96,6 +100,7 @@ function HomePage() {
     .then((data) => {
       updateRecipePostsList(data.filter(recipePost=> {return recipePost.likesByUid.length >= LIKE_AT_LEAST}));
       setIsLoading(false);
+      setfilterDis(false)
     })
     .catch((error) => console.log(error));
   }
@@ -107,9 +112,9 @@ function HomePage() {
       <div className="max-w-2xl mx-auto my-2"> 
       <div>
           <div class="filterBox">
-            <input type="radio" id="1" onClick={filterByAll} name="filter" defaultChecked /><label for="1">All</label>
-            <input type="radio" id="2" onClick={filterByFriends} name="filter"/><label for="2">Friends</label>
-            <input type="radio" id="3" onClick={filterBylikes} name="filter"/><label for="3">Popular</label>
+            <input type="radio" id="1" disabled = {filterDis} onClick={filterByAll} name="filter" defaultChecked /><label for="1">All</label>
+            <input type="radio" id="2" disabled = {filterDis} onClick={filterByFriends} name="filter"/><label for="2">Friends</label>
+            <input type="radio" id="3" disabled = {filterDis} onClick={filterBylikes} name="filter"/><label for="3">Popular</label>
           </div>
           <hr align="center" className="hr-line"></hr>
         </div>
