@@ -3,8 +3,10 @@ import { firebaseUpdateWithImage, firebaseUpdateWithOutImage } from "../../utils
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import Navbar from "../../components/Navbar/Navbar";
+
 import PostForm from "../../components/PostForm/PostForm";
 import { DeleteModal } from "../../components/DeleteModal/DeleteModal";
+
 
 export default function EditPost() {
     const [initialValues, setInitialValues] = useState(null);
