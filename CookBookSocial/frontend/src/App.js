@@ -70,16 +70,16 @@ function App() {
                         }
                     />
 
-
                     <Route
-                      exact path ="/saved-post"
-                      element={
-                        <WithPrivateRoute>
-                          <SavedPage/>
-                        </WithPrivateRoute>
-                      }
+                        exact
+                        path="/saved-post"
+                        element={
+                            <WithPrivateRoute>
+                                <SavedPage />
+                            </WithPrivateRoute>
+                        }
                     />
-          
+
                     <Route exact path="/edit-recipe/:id" element={<EditPost />} />
                     {/* Add the dynamic recipe page route */}
                     <Route path="/recipe/:id" element={<RecipePage />} />
