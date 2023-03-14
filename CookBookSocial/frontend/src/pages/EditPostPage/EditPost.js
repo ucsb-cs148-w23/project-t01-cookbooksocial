@@ -5,7 +5,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import Navbar from "../../components/Navbar/Navbar";
 
 import PostForm from "../../components/PostForm/PostForm";
-import { DeleteModal } from "../../components/DeleteModal/DeleteModal";
+import { DeleteModal } from "../../components/deleteModal/deleteModal";
 
 
 export default function EditPost() {

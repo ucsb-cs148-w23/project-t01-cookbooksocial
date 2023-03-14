@@ -5,7 +5,7 @@ import styles from "./RecipePage.module.css";
 import Navbar from "../../components/Navbar/Navbar";
 import { useAuth } from "../../contexts/AuthContext";
 
-import DeleteButton from "../../components/DeleteModal/DeleteModal";
+import DeleteButton from "../../components/deleteModal/deleteModal";
 
 import Comments from "../../components/Comments/Comments/Comments";
 
