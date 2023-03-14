@@ -429,4 +429,24 @@ const unfriend = async (req, res, next) => {
     }
 }
 
-export { addUser, deleteUser, sendFriendRequest, acceptFriendRequest, getFriendRequests, rejectFriendRequest, unfriend };
+const getFriendsList = async (req, res, next) =>{
+    try {
+        const uid = req.params['uid'];
+        const docRef = await doc(db, "users", uid);
+        const docSnap = await getDoc(docRef);
+        let docSnapData = docSnap.data();        
+        if ( docSnapData != null) {
+            let friendsList =[]; //id array
+            if('friends' in docSnapData){
+                friendsList = docSnapData['friends']
+            }
+            res.status(200).send(friendsList);
+        } else {
+            res.status(400).send("Document not found");
+        }
+    }catch(e){
+        res.status(400).send(e);
+    }
+}
+
+export { addUser, deleteUser, sendFriendRequest, acceptFriendRequest, getFriendRequests, rejectFriendRequest, unfriend,getFriendsList };
