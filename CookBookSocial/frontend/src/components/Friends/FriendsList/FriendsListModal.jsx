@@ -31,8 +31,13 @@ function FriendsListModal({ isOpen, onRequestClose }) {
     setIsFriendConfirmed(true); 
   };
   useEffect(() => {
+    const prevBackgroundColor = document.body.style.backgroundColor;
     document.body.style.backgroundColor = isOpen ? 'rgba(0,0,0,0.5)' : 'transparent';
+    return () => {
+      document.body.style.backgroundColor = prevBackgroundColor;
+    };
   }, [isOpen]);
+  
   useEffect(() => {
     async function fetchFriends() {
       const db = getFirestore();
