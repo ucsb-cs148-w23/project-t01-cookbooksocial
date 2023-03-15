@@ -105,6 +105,8 @@ export default function Login() {
             </button>
           </div>
         </form>
+        {/* Note, this br tag adds space between the previous and next object */}
+        <br />
 
         <div className={styles.inputFields}>
           <div className={styles.orText}>Or sign in with:</div>
@@ -121,13 +123,13 @@ export default function Login() {
           </button>
         </div>
         <div className="flex items-center justify-between"></div>
-        <div className="text-sm">
+        <div className="text-sm mt-2">
           <Link to="/password-reset" className="text-blue-600">
             Forgot Password?
           </Link>
         </div>
 
-        <div className="text-sm">
+        <div className="text-sm mt-2">
           <Link to="/register" className="text-blue-600">
             Don't have an account? Register
           </Link>
