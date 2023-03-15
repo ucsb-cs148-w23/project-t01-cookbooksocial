@@ -202,14 +202,14 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
                             <IconContext.Provider value={{ color: "red" }}>
                                 <div>
                                     <BsHeartFill className="likeIcon" onClick={toggleLiked} size="1.5em" />
-                                    {" "}<div className="num-likes">{numLikes + " likes"}</div>
+                                    {" " + numLikes + " likes"}
                                 </div>
                             </IconContext.Provider>
                         ) : (
                             <IconContext.Provider value={{ color: "black" }}>
                                 <div>
                                     <BsHeart className="likeIcon" onClick={toggleLiked} size="1.5em" />
-                                    {" "}<div className="num-likes">{numLikes + " likes"}</div>
+                                    {" " + numLikes + " likes"}
                                 </div>
                             </IconContext.Provider>
                         )}

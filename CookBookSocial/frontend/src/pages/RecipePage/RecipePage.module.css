@@ -192,6 +192,17 @@
   cursor: pointer;
 }
 
+.numLikes {
+  display: inline;
+  cursor: pointer;
+}
+
+.numLikes:hover {
+  text-decoration: underline;
+}
+
+
+
 @keyframes fadeOut {
   from {
     opacity: 1;

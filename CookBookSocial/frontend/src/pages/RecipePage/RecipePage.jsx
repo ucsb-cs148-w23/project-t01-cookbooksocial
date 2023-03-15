@@ -6,6 +6,7 @@ import Navbars from "../../components/navbars/Navbars";
 import { useAuth } from "../../contexts/AuthContext";
 import DeleteButton from "../../components/deleteModal/deleteModal";
 import Comments from "../../components/Comments/Comments/Comments";
+import LikeListModal from '../../components/LikeList/LikeList';
 
 import commentIcon from "../../images/commentIcon.png"
 
@@ -23,10 +24,21 @@ function RecipePage() {
   const [numLikes, updateNumLikes] = useState(0);
   const [isLikedAnimation, setIsLikedAnimation] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [likesByUidArray, setLikesByUidArray] = useState([]);
 
   const [initialRender, setInitialRender] = useState(true);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const { currentUser } = useAuth();
+
+  function handleOpenModal() {
+    setIsModalOpen(true);
+  }
+
+  function handleCloseModal() {
+    setIsModalOpen(false);
+  }
 
   useEffect(() => {
 
@@ -71,6 +83,7 @@ function RecipePage() {
     }
   }, [recipe])
 
+  /*
   useEffect(() => {
     if (recipeId) {
       fetch(Recipe_URL)
@@ -78,7 +91,18 @@ function RecipePage() {
         .then((data) => updateNumLikes(data.likesByUid.length));
     }
   }, [isLiked])
+  */
 
+  useEffect(() => {
+    if (recipeId) {
+      fetch(Recipe_URL)
+        .then((response) => response.json())
+        .then((data) => {
+          updateNumLikes(data.likesByUid.length)
+          setLikesByUidArray(data.likesByUid)
+        });
+    }
+  }, [isLiked])
 
   useEffect(() => {
     //get isSaved 
@@ -166,6 +190,8 @@ function RecipePage() {
 
   return (
     <>
+
+      <LikeListModal RecipeId={recipeId} isOpen={isModalOpen} onRequestClose={handleCloseModal} />
       <Navbars />
       <div className={styles.recipePage}>
         <h1 className={styles.recipeTitle}>{recipe.title}</h1>
@@ -174,8 +200,21 @@ function RecipePage() {
         </div>
         <div className={styles.iconList}>
           <div className={styles.likesElement}>
-            {isLiked ? <IconContext.Provider value={{ color: 'red' }}><div><BsHeartFill className={styles.icon} onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>
-              : <IconContext.Provider value={{ color: 'black' }}><div><BsHeart className={styles.icon} onClick={toggleLiked} size="2em" />{" " + numLikes + " likes"}</div></IconContext.Provider>}
+            {isLiked ? ( 
+                      <IconContext.Provider value={{ color: 'red' }}>
+                          <div>
+                              <BsHeartFill className={styles.icon} onClick={toggleLiked} size="1.8em" />
+                              {" "}<div className={styles.numLikes} onClick={handleOpenModal}>{numLikes + " likes"}</div> 
+                          </div>
+                      </IconContext.Provider>
+                  ) : (
+                      <IconContext.Provider value={{ color: 'black' }}>
+                        <div>
+                          <BsHeart className={styles.icon} onClick={toggleLiked} size="1.8em" />
+                          {" "}<div className={styles.numLikes} onClick={handleOpenModal}>{numLikes + " likes"}</div> 
+                        </div>
+                      </IconContext.Provider>
+                  )}
           </div>
           <div className={styles.commentElement}>  <img className={styles.commentIcon} src={commentIcon} />  {displayNumberComments()} Comments</div>
 
