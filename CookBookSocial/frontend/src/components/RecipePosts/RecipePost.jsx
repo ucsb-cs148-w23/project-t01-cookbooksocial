@@ -40,6 +40,7 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
     */
 
 
+    
     useEffect(() => {
         //get isSaved
         const URL_CHECK_SAVED_POST = `/api/recipe/checkSavedPost/${recipe.id}/${currentUser.uid}`;
@@ -52,7 +53,7 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
     }, []);
 
     useEffect(() => {
-        //get isSaved
+        //get isLiked
         const URL_CHECK_LIKED_POST = `/api/recipe/checkLikedPost/${recipe.id}/${currentUser.uid}`;
         fetch(URL_CHECK_LIKED_POST)
             .then((response) => response.json())
