@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
 import SearchBar from "../Search/Search";
 
 import { useAuth } from "../../contexts/AuthContext";
