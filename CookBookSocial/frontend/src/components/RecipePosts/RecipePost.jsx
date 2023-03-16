@@ -239,13 +239,13 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
 
 
 
-                    <div className="comment-element">
-                        {" "}
-                        <img
-                            className="imgContainer"
-                            src={commentIcon}
-                        /> {displayNumberComments()} Comments
-                    </div>
+<div className="comment-element">
+    {" "}
+    <Link to={`/recipe/${recipe.id}#comments`} style={{ textDecoration: "none" }}>
+        <img className="imgContainer" src={commentIcon} /> <span style={{ textDecoration: "none" }} onMouseOver={(e) => e.target.style.textDecoration = "underline"} onMouseOut={(e) => e.target.style.textDecoration = "none"}>{displayNumberComments()} Comments</span>
+    </Link>
+</div>
+
 
                     <div className="edit-element">
                         {currentUser.uid === recipe.uid && (

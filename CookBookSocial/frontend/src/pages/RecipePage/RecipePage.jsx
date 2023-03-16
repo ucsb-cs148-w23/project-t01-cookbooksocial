@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect,useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { collection, doc, getDoc, getFirestore } from 'firebase/firestore';
 import styles from './RecipePage.module.css';
@@ -31,6 +31,7 @@ function RecipePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { currentUser } = useAuth();
+  
 
   function handleOpenModal() {
     setIsModalOpen(true);
@@ -39,6 +40,7 @@ function RecipePage() {
   function handleCloseModal() {
     setIsModalOpen(false);
   }
+
 
   useEffect(() => {
 
@@ -70,6 +72,7 @@ function RecipePage() {
   const Recipe_URL = `/api/recipe/${id}`;
 
   useEffect(() => {
+    
     if (initialRender) {
       setInitialRender(false);
     } else {
@@ -83,15 +86,7 @@ function RecipePage() {
     }
   }, [recipe])
 
-  /*
-  useEffect(() => {
-    if (recipeId) {
-      fetch(Recipe_URL)
-        .then((response) => response.json())
-        .then((data) => updateNumLikes(data.likesByUid.length));
-    }
-  }, [isLiked])
-  */
+
 
   useEffect(() => {
     if (recipeId) {
@@ -113,7 +108,9 @@ function RecipePage() {
         setIsSaved(data)
       })
       .catch((error) => console.log(error));
+
   }, []);
+
 
 
   async function toggleLiked() {
@@ -140,8 +137,25 @@ function RecipePage() {
 
   }
 
-  function displayNumberComments() {
+   function displayNumberComments() {
+
     return commentsArr.length;
+    
+  }
+  async function scroll()
+  { //buffer  for comments to load
+    await new Promise(resolve => setTimeout(resolve,200 ));
+    try {
+      if (window.location.hash === '#comments') {
+        window.scrollTo({
+          top: document.getElementsByName('comments')[0].offsetTop + window.innerHeight,
+          behavior: 'smooth'
+        });
+      }
+      return commentsArr.length;
+    } catch (error) {
+    }
+    
   }
 
   //save function
@@ -196,7 +210,13 @@ function RecipePage() {
       <div className={styles.recipePage}>
         <h1 className={styles.recipeTitle}>{recipe.title}</h1>
         <div className={styles.recipeImageWrapper}>
-          <img className={styles.recipeImage} src={recipe.image} alt={recipe.title} />
+        <img
+  className={styles.recipeImage}
+  src={recipe.image}
+  alt={recipe.title}
+  onLoad={scroll}
+/>
+
         </div>
         <div className={styles.iconList}>
           <div className={styles.likesElement}>
@@ -216,6 +236,8 @@ function RecipePage() {
                       </IconContext.Provider>
                   )}
           </div>
+          <a name="comments"></a>
+
           <div className={styles.commentElement}>  <img className={styles.commentIcon} src={commentIcon} />  {displayNumberComments()} Comments</div>
 
           <div className={styles.editElement}>
