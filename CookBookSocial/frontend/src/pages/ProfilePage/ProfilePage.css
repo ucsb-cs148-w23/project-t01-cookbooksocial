@@ -12,3 +12,7 @@
 .profilePosts{
     position:relative
 }
+
+.biography {
+    max-width: 300px;
+}

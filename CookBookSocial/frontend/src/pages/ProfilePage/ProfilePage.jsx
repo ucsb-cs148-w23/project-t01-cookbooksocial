@@ -118,7 +118,7 @@ function ProfilePage() {
                     {username ? username : "No username"}
                 </div>
                 <div className="text-xl text-gray-600 text-left ">{currentUser.email}</div>
-                <div className="text-m text-gray-600 text-left whitespace-pre-line mb-2">
+                <div className="break-words text-m text-gray-600 text-left whitespace-pre-line mb-2">
                     {profileInfo.data?.profile
                         ? profileInfo.data?.profile?.biography
                             ? profileInfo.data?.profile?.biography

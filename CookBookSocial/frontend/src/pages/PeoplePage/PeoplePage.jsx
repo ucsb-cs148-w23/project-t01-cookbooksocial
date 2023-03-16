@@ -116,7 +116,7 @@ function PeoplePage() {
                 </div>
                 <div className="text-xl text-gray-600 text-left ">{profileInfo.data?.email}</div>
                 <ul>
-                    <div className="text-m text-gray-600 text-left whitespace-pre-line">
+                    <div className="break-words text-m text-gray-600 text-left whitespace-pre-line">
                         {profileInfo.data?.profile
                             ? profileInfo.data?.profile?.biography
                                 ? profileInfo.data?.profile?.biography

@@ -199,7 +199,7 @@ function RecipePage() {
                 </div>
                 <div className={styles.iconList}>
                     <div className={styles.likesElement}>
-                        {isLiked ? (
+                        {isLikedAnimation ? (
                             <IconContext.Provider value={{ color: "red" }}>
                                 <div>
                                     <BsHeartFill
