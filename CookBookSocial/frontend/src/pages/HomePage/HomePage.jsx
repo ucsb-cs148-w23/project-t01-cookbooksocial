@@ -35,6 +35,17 @@ function HomePage() {
       window.scrollTo(0, parseInt(scrollPosition));
     }
 
+    const getCategories = (postsArray) => {
+      const cat = [];
+      for(let i = 0; i < postsArray.length; i++)
+      {
+        if (postsArray[i]["categories"]){
+
+          // Continue here
+        }
+      }
+    };
+
     const URL_GET_FRIENDS_LIST = `/api/user/friendsList/${currentUser.uid}`;
     fetch(URL_GET_FRIENDS_LIST)
       .then((response) => response.json())
@@ -47,8 +58,10 @@ function HomePage() {
     fetch("/api/recipe/all")
       .then((response) => response.json())
       .then((data) => {
-        //console.log("FETCHING")
+        console.log(data)
         setRecipePostsList(data);
+
+
         setFilteredRecipePostList(data)
         setIsLoading(false);
         setFilterDis(false);
