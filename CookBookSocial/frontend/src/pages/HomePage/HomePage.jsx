@@ -87,17 +87,19 @@ function HomePage() {
     .catch((error) => console.log(error));
   }
 
-  const filterBylikes = () =>{
-    setIsLoading(true);
-    const LIKE_AT_LEAST = 3
-    fetch("/api/recipe/all")
-    .then((response) => response.json())
-    .then((data) => {
-      updateRecipePostsList(data.filter(recipePost=> {return recipePost.likesByUid.length >= LIKE_AT_LEAST}));
-      setIsLoading(false);
-    })
-    .catch((error) => console.log(error));
-  }
+ const filterBylikes = () =>{
+  setIsLoading(true);
+  fetch("/api/recipe/all")
+  .then((response) => response.json())
+  .then((data) => {
+    // Sort the posts based on the number of likes in descending order and shws top 10
+    const top10Posts = data.sort((postA, postB) => postB.likesByUid.length - postA.likesByUid.length).slice(0, 10);
+    updateRecipePostsList(top10Posts);
+    setIsLoading(false);
+  })
+  .catch((error) => console.log(error));
+}
+
 
   return (
     <div>
