@@ -136,7 +136,7 @@ function HomePage() {
                 </div>
               }
             >
-              {filteredRecipePostList.map((recipe, index) => (
+              {filteredRecipePostList.slice(0,numPosts).map((recipe, index) => (
                 <RecipePost key={index} recipe={recipe} />
               ))}
             </InfiniteScroll>

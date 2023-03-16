@@ -3,9 +3,8 @@ import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { Link } from 'react-router-dom';
 import Modal from 'react-modal';
-import ConfirmationModal from "../ConfirmRemoveFriend/Confirmation";
 
-function FriendsListModal({ isOpen, onRequestClose }) {
+function LikeListModal({ RecipeId, isOpen, onRequestClose }) {
   const [friends, setFriends] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -39,19 +38,19 @@ function FriendsListModal({ isOpen, onRequestClose }) {
   }, [isOpen]);
   
   useEffect(() => {
+    
     async function fetchFriends() {
       const db = getFirestore();
-      const userDoc = doc(db, 'users', userID);
-      const userSnap = await getDoc(userDoc);
-      const userData = userSnap.data();
-      const userFriends = userData?.friends;
-      if (!userFriends) {
+      const userDoc1 = doc(db, 'recipes', RecipeId);
+      const userSnap1 = await getDoc(userDoc1);
+      const ffriendIDs = userSnap1.data().likesByUid;
+      const friends = [];
+      if (ffriendIDs.length==0) {
         setFriends([]);
         setIsLoading(false);
         return;
       }
-      const friendIDs = Object.keys(userFriends);
-      const friendDocs = friendIDs.map((friendID) => doc(db, 'users', friendID));
+      const friendDocs = ffriendIDs.map((friendID) => doc(db, 'users', friendID));
       const friendSnaps = await Promise.all(friendDocs.map(getDoc));
       const friendData = friendSnaps
         .map((friendSnap, index) => {
@@ -66,7 +65,7 @@ function FriendsListModal({ isOpen, onRequestClose }) {
           return {
             ...profileData,
             displayName,
-            id: friendIDs[index]
+            id: ffriendIDs[index]
           };
         })
         .filter(Boolean);
@@ -84,13 +83,6 @@ function FriendsListModal({ isOpen, onRequestClose }) {
       setIsFriendConfirmed(false); 
     }
   }, [isOpen, isFriendConfirmed]); 
-
-
-
-
- 
-
-
 
   return (
     <Modal
@@ -112,10 +104,10 @@ function FriendsListModal({ isOpen, onRequestClose }) {
     },
   }}
 >
-  <h2 style={{ textAlign: 'center', marginBottom: '16px' }}>Friends List</h2>
+  <h2 style={{ textAlign: 'center', marginBottom: '16px' }}>Liked By</h2>
   <input type="text" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} style={{ marginBottom: '2px', width: '100%' }} />
   {isLoading ? (
-    <p>Loading friends...</p>
+    <p>Loading Likes...</p>
   ) : (
     <>
       {friends.length > 0 ? (
@@ -139,24 +131,12 @@ function FriendsListModal({ isOpen, onRequestClose }) {
                 />
                 <span>{displayName}</span>
               </Link>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <button onClick={() => openModal({ id, displayName })} style={{ backgroundColor: 'lightgrey', borderRadius: '8px', color: 'black', padding: '12px 16px' }}>Unfriend</button>
-                {selectedFriend && (
-                  <ConfirmationModal
-                    currID={userID}
-                    friendID={selectedFriend.id}
-                    friendName={selectedFriend.displayName}
-                    isOpen={modalIsOpen}
-                    onRequestClose={closeModal}
-                    onConfirm={(currID, friendID) => handleConfirm(currID, friendID)}
-                  />
-                )}
-              </div>
+              
             </li>
           ))}
         </ul>
       ) : (
-        <p>No friends found.</p>
+        <p></p>
       )}
     </>
   )}
@@ -164,4 +144,4 @@ function FriendsListModal({ isOpen, onRequestClose }) {
  );
 }
 
-export default FriendsListModal;
+export default LikeListModal;
