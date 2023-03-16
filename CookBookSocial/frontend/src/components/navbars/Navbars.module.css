@@ -27,3 +27,11 @@
     color: white;
     font-size: 25px;
 }
+
+.navbarNotification{
+    color: white;
+    background-color: #db5642;
+    padding: 1px 6px;
+    border-radius: 2px;
+    margin: 10px;
+}

@@ -1,5 +1,5 @@
 import express from "express";
-import { addUser, sendFriendRequest, acceptFriendRequest, getFriendRequests, rejectFriendRequest, unfriend } from "../controllers/userController.js";
+import { addUser, sendFriendRequest, acceptFriendRequest, getFriendRequests, rejectFriendRequest, unfriend, resetNotifications, getNotifications } from "../controllers/userController.js";
 
 const userRouter = express.Router();
 
@@ -9,5 +9,9 @@ userRouter.put("/friend-request/:idSent/:idReceived", sendFriendRequest);
 userRouter.put("/friend-accept/:idReceived/:idSent", acceptFriendRequest);
 userRouter.put("/friend-reject/:idReceived/:idSent", rejectFriendRequest);
 userRouter.put("/unfriend/:idReceived/:idSent", unfriend);
+
+userRouter.delete("/notifications/:id", resetNotifications);
+userRouter.get("/notifications/:id", getNotifications);
+
 
 export default userRouter;

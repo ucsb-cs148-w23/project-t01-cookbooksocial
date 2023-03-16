@@ -14,7 +14,7 @@ function HomePage() {
     useEffect(() => {
         const handleBeforeUnload = () => {
             sessionStorage.setItem("scrollPosition", window.scrollY);
-            console.log("pos=", window.scrollY);
+            // console.log("pos=", window.scrollY);
         };
 
         window.addEventListener("beforeunload", handleBeforeUnload);
@@ -30,7 +30,7 @@ function HomePage() {
                 updateRecipePostsList(data);
                 setIsLoading(false);
             })
-            .catch((error) => console.log(error));
+            // .catch((error) => console.log(error));
 
         return () => {
             window.removeEventListener("beforeunload", handleBeforeUnload);
