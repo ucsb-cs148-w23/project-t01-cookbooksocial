@@ -10,6 +10,7 @@ import {
     showSavedPost,
     reorderSavedPost,
     checkSavedPost,
+    checkLikedPost
 } from "../controllers/recipeController.js";
 
 const recipeRouter = express.Router();
@@ -94,5 +95,7 @@ recipeRouter.delete("/savedPost/:id/:uid", deleteSavedPost);
 recipeRouter.get("/savedPost/:uid", showSavedPost);
 recipeRouter.put("/reorderSavedPost/:uid/:indexBefore/:indexAfter", reorderSavedPost);
 recipeRouter.get("/checkSavedPost/:id/:uid", checkSavedPost);
+recipeRouter.get("/checklikedPost/:id/:uid", checkLikedPost);
+
 
 export default recipeRouter;

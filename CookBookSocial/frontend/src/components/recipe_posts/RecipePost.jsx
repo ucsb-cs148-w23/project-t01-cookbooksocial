@@ -40,18 +40,18 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
     }, [])
     */
 
-    useEffect(() => {
-        for (let i = 0; i < recipe.likesByUid.length; i++) {
-            if (currentUser.uid === recipe.likesByUid[i]) {
-                setIsLiked(true);
-                setIsLikedAnimation(true);
-                return;
-            }
-        }
-        setIsLiked(false);
+    // useEffect(() => {
+    //     for (let i = 0; i < recipe.likesByUid.length; i++) {
+    //         if (currentUser.uid === recipe.likesByUid[i]) {
+    //             setIsLiked(true);
+    //             setIsLikedAnimation(true);
+    //             return;
+    //         }
+    //     }
+    //     setIsLiked(false);
 
 
-    }, []);
+    // }, []);
     useEffect(() => {
         //get isSaved 
         const URL_CHECK_SAVED_POST = `/api/recipe/checkSavedPost/${recipe.id}/${currentUser.uid}`
@@ -62,6 +62,19 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
             })
             .catch((error) => console.log(error));
     }, []);
+
+
+    useEffect(() => {
+        //get isSaved 
+        const URL_CHECK_LIKED_POST = `/api/recipe/checklikedPost/${recipe.id}/${currentUser.uid}`
+        fetch(URL_CHECK_LIKED_POST)
+            .then((response) => response.json())
+            .then((data) => {
+                setIsLiked(data)
+            })
+            .catch((error) => console.log(error));
+    }, []);
+
 
 
     async function toggleLiked() {

@@ -317,10 +317,35 @@ const checkSavedPost = async (req, res, next) => {
 }
 
 
+const checkLikedPost = async (req, res, next) => {
+
+    try {
+        const id = req.params['id'];
+        const uid = req.params['uid'];
+        const docRef = await doc(db, "recipes", id);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            let docSnapData = docSnap.data();
+            let likedUser =[];  
+            if('likesByUid' in docSnapData){
+                likedUser = docSnapData['likesByUid']
+            }
+
+            const result = (likedUser.includes(uid))
+            
+            res.status(200).send(result);
+        } else {
+
+            res.status(400).send("Document not found");
+        }
+    }catch(e){
+        res.status(400).send(e);
+    }
+}
 
 
 export
 { 
     addRecipe, updateRecipe, deleteRecipe, getRecipe, getAllRecipes, addFile, 
-    addSavedPost,deleteSavedPost,showSavedPost,reorderSavedPost,checkSavedPost,
+    addSavedPost,deleteSavedPost,showSavedPost,reorderSavedPost,checkSavedPost,checkLikedPost
 };
