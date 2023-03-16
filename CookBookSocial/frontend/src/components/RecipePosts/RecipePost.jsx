@@ -201,7 +201,7 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
                                     <BsHeartFill
                                         className="likeIcon"
                                         onClick={toggleLiked}
-                                        size="2em"
+                                        size="1.6em"
                                     />
                                     {" " + numLikes + " likes"}
                                 </div>
@@ -212,7 +212,7 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
                                     <BsHeart
                                         className="likeIcon"
                                         onClick={toggleLiked}
-                                        size="2em"
+                                        size="1.6em"
                                     />
                                     {" " + numLikes + " likes"}
                                 </div>
