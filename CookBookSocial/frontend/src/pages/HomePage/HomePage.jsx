@@ -16,6 +16,7 @@ function HomePage() {
   const [filterDis, setFilterDis] = useState(false);
   const [friendsList, setFriendsList] = useState({});
   const { currentUser } = useAuth();
+  const [categoriesList, setCategoriesList] = useState([]);
 
   const POSTS_AT_A_TIME = 5;
   const [numPosts, setNumPosts] = useState(
@@ -103,7 +104,16 @@ function HomePage() {
     setFilterDis(false);
   }
   
-  
+
+  const filterByCategory = async () => {
+    // setFilterDis(true);
+    // setIsLoading(true);
+  //  await setFilteredRecipePostList(recipePostsList.filter(recipePost => friendsList.includes(recipePost.uid)));
+
+   await new Promise(resolve => setTimeout(resolve, 400));
+    setIsLoading(false);
+    setFilterDis(false);
+  }
  
 
 
@@ -117,6 +127,8 @@ function HomePage() {
             <input type="radio" id="1" disabled = {filterDis} onClick={filterByAll} name="filter" defaultChecked /><label for="1">All</label>
             <input type="radio" id="2" disabled = {filterDis} onClick={filterByFriends} name="filter"/><label for="2">Friends</label>
             <input type="radio" id="3" disabled = {filterDis} onClick={filterByLikes} name="filter"/><label for="3">Popular</label>
+            <input type="radio" id="4" disabled = {filterDis} onClick={filterByCategory} name="filter"/><label for="4">Category</label>
+
           </div>
           <hr align="center" className="hr-line"></hr>
         </div>

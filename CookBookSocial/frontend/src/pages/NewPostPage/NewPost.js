@@ -13,6 +13,7 @@ function NewPost() {
         stepList: [],
         stepText: "",
         image: "",
+        categories: [],
     };
 
     const handleSubmit = async (image, recipe, imageChanged) => {
