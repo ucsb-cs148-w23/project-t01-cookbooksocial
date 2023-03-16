@@ -244,13 +244,13 @@ function RecipePage() {
                         {isSaved ? (
                             <IconContext.Provider value={{ color: "black" }}>
                                 <div>
-                                    <BsFillBookmarkFill onClick={unSaveRecipe} size="2em" />{" "}
+                                    <BsFillBookmarkFill className={styles.icon} onClick={unSaveRecipe} size="2em" />{" "}
                                 </div>
                             </IconContext.Provider>
                         ) : (
                             <IconContext.Provider value={{ color: "black" }}>
                                 <div>
-                                    <BsBookmark onClick={SaveRecipe} size="2em" />
+                                    <BsBookmark className={styles.icon} onClick={SaveRecipe} size="2em" />
                                 </div>
                             </IconContext.Provider>
                         )}
