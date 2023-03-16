@@ -13,9 +13,11 @@ import {
     collection,
     serverTimestamp,
     orderBy,
+    setDoc,
 } from "firebase/firestore";
 
 import { getStorage, deleteObject, ref } from "firebase/storage";
+
 
 const addRecipe = async (req, res, next) => {
     /*
@@ -116,10 +118,16 @@ const deleteRecipe = async (req, res, next) => {
 const getRecipe = async (req, res, next) => {
     try {
         const id = req.params.id;
+
         const docRef = doc(db, "recipes", id);
         const docSnap = await getDoc(docRef);
+        let recipe = docSnap.data()
+        if (Object.hasOwn(docSnap.data(), "uid")) {
+            const user = await getUser(docSnap.data().uid);
+            recipe["user"] = user;
+        }
         if (docSnap.exists()) {
-            res.status(200).send(docSnap.data());
+            res.status(200).send(recipe);
         } else {
             // doc.data() will be undefined in this case
             res.status(400).send("Document not found");
@@ -129,7 +137,7 @@ const getRecipe = async (req, res, next) => {
     }
 };
 
-// Gets all recipes, then gets the user for each recipe through getUser function
+
 const getAllRecipes = async (req, res, next) => {
     try {
         const querySnapshot = await getDocs(query(collection(db, "recipes"), orderBy("createdAt","desc")));
@@ -149,4 +157,170 @@ const getAllRecipes = async (req, res, next) => {
     }
 };
 
-export { addRecipe, updateRecipe, deleteRecipe, getRecipe, getAllRecipes, addFile };
+/////////////////////// save recipe api  ///////////////////////
+
+const addSavedPost = async (req, res, next) => {
+    try {
+        const id = req.params['id'];
+        const uid = req.params['uid'];
+        const docRef = await doc(db, "users", uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            let docSnapData = docSnap.data();
+            let savedPosts =[];
+            
+            if('savedPosts' in docSnapData){
+                savedPosts = docSnapData['savedPosts']
+            }
+            if (!( savedPosts.includes(id))){
+                savedPosts = [id,...savedPosts];
+            }
+            
+            docSnapData['savedPosts'] = savedPosts
+           
+            await setDoc(docRef, docSnapData); 
+            res.status(200).send("successful to save");
+        } else {
+            res.status(400).send("Document not found");
+        }
+    }catch(e){
+        res.status(400).send(e);
+    }
+}
+
+const deleteSavedPost = async (req, res, next) => {
+
+    try {
+        const id = req.params['id'];
+        const uid = req.params['uid'];
+        const docRef = await doc(db, "users", uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            let docSnapData = docSnap.data();
+            let savedPosts =[];
+            
+            if('savedPosts' in docSnapData){
+                savedPosts = docSnapData['savedPosts']
+            }
+            savedPosts = savedPosts.filter((postId, index) => (postId !== id))
+            
+            
+            docSnapData['savedPosts'] = savedPosts
+           
+            await setDoc(docRef, docSnapData); 
+            res.status(200).send("successful to delete");
+        } else {
+            res.status(400).send("Document not found");
+        }
+    }catch(e){
+        res.status(400).send(e);
+    }
+}
+
+const showSavedPost = async (req, res, next) => {
+
+    try {
+        const uid = req.params['uid'];
+        const docRef = await doc(db, "users", uid);
+        const docSnap = await getDoc(docRef);
+        let docSnapData = docSnap.data();        
+        if ( docSnapData != null) {
+            let savedPostsId =[]; //id array
+            if('savedPosts' in docSnapData){
+                savedPostsId = docSnapData['savedPosts']
+            }
+            const savedRecipesDatas = [];
+            const deletedPostsId  = [];
+            for (const postId of savedPostsId) {
+                const idRef = await doc(db, "recipes", postId);
+                const idSnap = await getDoc(idRef);
+                if (idSnap.exists()){
+                    let savedRecipeData = idSnap.data();
+                    savedRecipeData["id"]= postId; //Preserve the firebase document ID to be able to match recipes
+                    if (Object.hasOwn(savedRecipeData, "uid")) {
+                        const user = await getUser(savedRecipeData['uid']);
+                        savedRecipeData["user"] = user;
+                    }
+                    savedRecipesDatas.push(savedRecipeData);
+                }
+                else{
+                    deletedPostsId.push(postId)
+                }
+            }           
+            //delete "deleted Posts" and update data
+            if (deletedPostsId != []){
+                savedPostsId = savedPostsId.filter((savedId, index) => (!(deletedPostsId.includes(savedId)))) 
+                docSnapData['savedPosts'] = savedPostsId
+                setDoc(docRef, docSnapData);
+            }
+            res.status(200).send(savedRecipesDatas);
+        } else {
+            res.status(400).send("Document not found");
+        }
+    }catch(e){
+        res.status(400).send(e);
+    }
+}
+
+const reorderSavedPost = async (req, res, next) => {
+
+    try {
+        const indexBefore = req.params['indexBefore'];
+        const indexAfter = req.params['indexAfter'];
+        const uid = req.params['uid'];
+        const docRef = await doc(db, "users", uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            let docSnapData = docSnap.data();
+            let savedPosts =[];  
+            if('savedPosts' in docSnapData){
+                savedPosts = docSnapData['savedPosts']
+            }
+            const [removed] =  savedPosts.splice(indexBefore, 1);
+            savedPosts.splice(indexAfter, 0, removed);
+            docSnapData['savedPosts'] = savedPosts
+            await setDoc(docRef, docSnapData); 
+            res.status(200).send("successful to reorder");
+        } else {
+
+            res.status(400).send("Document not found");
+        }
+    }catch(e){
+        res.status(400).send(e);
+    }
+}
+
+const checkSavedPost = async (req, res, next) => {
+
+    try {
+        const id = req.params['id'];
+        const uid = req.params['uid'];
+        const docRef = await doc(db, "users", uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            let docSnapData = docSnap.data();
+            let savedPosts =[];  
+            if('savedPosts' in docSnapData){
+                savedPosts = docSnapData['savedPosts']
+            }
+
+            const result = (savedPosts.includes(id))
+            
+            res.status(200).send(result);
+        } else {
+
+            res.status(400).send("Document not found");
+        }
+    }catch(e){
+        res.status(400).send(e);
+    }
+}
+
+
+
+
+export
+{ 
+    addRecipe, updateRecipe, deleteRecipe, getRecipe, getAllRecipes, addFile, 
+    addSavedPost,deleteSavedPost,showSavedPost,reorderSavedPost,checkSavedPost,
+};

@@ -30,6 +30,40 @@
     margin-top: 1rem;
     animation: spin 1s linear infinite;
   }
+
+ 
+
+  .hr-line{
+    width: 100%;
+    border-top: 2px solid orange;
+    border-bottom: 2px solid #ebebeb;
+    margin-bottom: 5px;
+  }
+
+  .filterBox{
+    display: flex;
+    justify-content: center;
+  }
+  .filterBox label{
+      display: block;
+      width: 150px;
+      background: rgb(255, 220, 156);
+      color: #000;
+      padding: 10px;
+      margin: 10px;
+      box-sizing: border-box;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 30px;
+      cursor: pointer;
+  }
+  .filterBox input:checked+label{
+      background: orange;
+      color: #FFF;
+  }
+  .filterBox input{
+      display: none;
+  }
   
   
   @keyframes spin {

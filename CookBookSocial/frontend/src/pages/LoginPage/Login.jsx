@@ -35,6 +35,15 @@ export default function Login() {
 
     return (
         <div className={styles.container}>
+
+            <div className={styles.slider}>
+                <div className={styles.slide}></div>
+                <div className={styles.slide}></div>
+                <div className={styles.slide}></div>
+                <div className={styles.slide}></div>
+                <div className={styles.slide}></div>
+            </div>
+
             <div className={styles.rectangle}>
                 <div className={styles.topText}>
                     <h2>Login to your account</h2>
@@ -104,6 +113,9 @@ export default function Login() {
                     </Link>
                 </div>
             </div>
+
+
+            
         </div>
     );
 }

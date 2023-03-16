@@ -47,8 +47,8 @@ Located at:
 
 ### Test implementation:
 
-- Note: The location of this file is at:
-  `CookBookSocial/frontend/src/tests/components/RecipePost/RecipePost.test.js`
+-   Note: The location of this file is at:
+    `CookBookSocial/frontend/src/tests/components/RecipePost/RecipePost.test.js`
 
  </br>
 
@@ -60,8 +60,8 @@ Located at:
 
 ### Component that is being tested:
 
-- Note: The location of this file is at:
-  `CookBookSocial/frontend/src/components/recipe_posts/RecipePost.jsx`
+-   Note: The location of this file is at:
+    `CookBookSocial/frontend/src/components/RecipePosts/RecipePost.jsx`
 
  </br>
 

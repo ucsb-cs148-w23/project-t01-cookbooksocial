@@ -9,6 +9,7 @@ import dotenv from "dotenv";
 import recipeRouter from "./routes/recipe.js";
 import userRouter from "./routes/user.js";
 import bodyParser from "body-parser";
+import commentsRouter from "./routes/comment.js";
 
 const app = express();
 
@@ -29,21 +30,21 @@ const jsonParser = bodyParser.json();
 app.use(jsonParser);
 
 var corsOptions = {
-    origin: "http://localhost:3000",
-    optionsSuccessStatus: 200,
+  origin: "http://localhost:3000",
+  optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
 
 // Set up Swagger UI
 const swaggerOptions = {
-    swaggerDefinition: {
-        info: {
-            title: "Serves Up API",
-            version: "1.0.0",
-        },
+  swaggerDefinition: {
+    info: {
+      title: "Serves Up API",
+      version: "1.0.0",
     },
-    apis: ["index.js", "./routes/recipe.js"],
+  },
+  apis: ["index.js", "./routes/recipe.js"],
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
@@ -51,12 +52,13 @@ app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 app.use("/api/recipe", recipeRouter);
 app.use("/api/user", userRouter);
+app.use("/api/comments", commentsRouter);
 
 app.listen(port, () => {
-    console.log(`Example Express app listening at http://localhost:${port}`);
+  console.log(`Example Express app listening at http://localhost:${port}`);
 });
 
 //Anything that does not match the above api routes will be rerouted to the static pages (frontend)
 app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname + "/../frontend/build/index.html"));
+  res.sendFile(path.join(__dirname + "/../frontend/build/index.html"));
 });

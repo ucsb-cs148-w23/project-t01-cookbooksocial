@@ -5,7 +5,6 @@ import { XCircleIcon } from "@heroicons/react/solid";
 import { useAuth } from "../../contexts/AuthContext";
 import styles from "./ErrorMessage.module.css"
 
-
 export default function ErrorMessage() {
   const { error, setError } = useAuth();
 

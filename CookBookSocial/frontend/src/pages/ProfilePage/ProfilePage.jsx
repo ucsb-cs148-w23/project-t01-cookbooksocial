@@ -1,28 +1,27 @@
 import React, { useEffect, useState } from "react";
-import RecipePost from "../../components/recipe_posts/RecipePost";
-import Navbars from "../../components/navbars/Navbars";
-import PostModal from "../../components/postModal/postModal";
+import RecipePost from "../../components/RecipePosts/RecipePost";
+import Navbar from "../../components/Navbar/Navbar";
 import "./ProfilePage.css";
 import { useAuth } from "../../contexts/AuthContext";
-import FriendRequestsDisplay from "../../components/friendRequestsDisplay/FriendRequestsDisplay";
-import FriendsListModal from '../../components/FriendsList/FriendsListModal';
-
-// import { useParams } from "react-router-dom";
-
-// import renderRecipePostComponents from "./pages/HomePage/HomePage";
-//FIXME: ProfilePage is very similar to HomePage code so probably a way to re-use
+import { db } from "../../config/firebase";
+import { doc, getDoc } from "firebase/firestore";
+import FriendRequestsDisplay from "../../components/Friends/friendRequestsDisplay/FriendRequestsDisplay";
+import FriendsListModal from "../../components/Friends/FriendsList/FriendsListModal";
 
 function ProfilePage() {
     const [profileRecipePostsList, updateProfileRecipePostsList] = useState([]);
     const { currentUser } = useAuth();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [profileInfo, updateProfileInfo] = useState([]);
+    const POSTS_AT_A_TIME = 5;
+    const [numPosts, setNumPosts] = useState(POSTS_AT_A_TIME);
 
     function handleOpenModal() {
-      setIsModalOpen(true);
+        setIsModalOpen(true);
     }
-  
+
     function handleCloseModal() {
-      setIsModalOpen(false);
+        setIsModalOpen(false);
     }
 
     let username = "No Username Found";
@@ -49,7 +48,6 @@ function ProfilePage() {
     const URL_GET_PROFILE_RECIPE_POSTS_DATA = "/api/recipe/all";
     const URL_RESET_NOTIFICATIONS = `/api/user/notifications/${currentUser.uid}`
 
-    console.log("Current User: ", currentUser);
     useEffect(() => {
         fetch(URL_GET_PROFILE_RECIPE_POSTS_DATA)
             .then((response) => response.json())
@@ -64,13 +62,38 @@ function ProfilePage() {
         
         
     }, []);
+    //get profile info
+    useEffect(() => {
+        getProfileInfo();
+    }, []);
+    useEffect(() => {}, [profileInfo]);
+
+    //get user's data from firestore doc identified with their userID
+    function getProfileInfo() {
+        const userInfoRef = doc(db, "users", currentUser.uid);
+
+        getDoc(userInfoRef)
+            .then((snapshot) => {
+                if (!snapshot.exists()) {
+                    console.log("invalid user");
+                    window.location.href = "/Invalid";
+                }
+                const profileInfData = {
+                    data: snapshot.data(),
+                    id: snapshot.id,
+                };
+                updateProfileInfo(profileInfData);
+            })
+            .catch((error) => console.log(error.message));
+    }
 
     function renderProfileRecipePostComponents() {
         const arrComponents = [];
-        for (let i = 0; i < profileRecipePostsList.length; i++) {
+        let profilePostCount = 0; //count number of profile posts rendered, and keep less than numPosts
+        for (let i = 0; i < profileRecipePostsList.length && profilePostCount < numPosts; i++) {
             if (profileRecipePostsList[i].uid === currentUser.uid) {
-                console.log("This is the recipe in Profile Page", profileRecipePostsList[i]);
-                arrComponents.unshift(<RecipePost key={i} recipe={profileRecipePostsList[i]} />);
+                arrComponents.push(<RecipePost key={i} recipe={profileRecipePostsList[i]} />);
+                profilePostCount += 1;
             }
         }
         if (arrComponents.size === 0) {
@@ -81,11 +104,26 @@ function ProfilePage() {
             return arrComponents;
         }
     }
+    const scrollCheck = () => {
+        const scrollTop = document.documentElement.scrollTop; //amount scrolled from the top
+        const scrollHeight = document.documentElement.scrollHeight; //total height of rendered
+        const clientHeight = document.documentElement.clientHeight; //height of the window we see
+
+        if (scrollTop + clientHeight >= scrollHeight && numPosts <= profileRecipePostsList.length) {
+            //if we are at bottom, and there are more recipes, update number of recipes to show
+            setNumPosts(numPosts + POSTS_AT_A_TIME);
+        }
+    };
+    useEffect(() => {
+        //when scrolling, call function to check if need to update number of posts
+        document.addEventListener("scroll", scrollCheck);
+        return () => document.removeEventListener("scroll", scrollCheck);
+    });
 
     //have user info at top
     return (
         <div>
-            <Navbars />
+            <Navbar />
             <div className="max-w-2xl mx-auto mt-8">
                 <div className="bg-gray-100 h-32 w-32 rounded">
                     <img src={currentUser?.photoURL} className="" alt="No-Pic" />
@@ -95,26 +133,31 @@ function ProfilePage() {
                     {username ? username : "No username"}
                 </div>
                 <div className="text-xl text-gray-600 text-left ">{currentUser.email}</div>
-                <button 
-  onClick={handleOpenModal}
-  style={{
-    backgroundColor: '#007bff',
-    color: '#fff',
-    padding: '0.5rem 1rem',
-    border: 'none',
-    borderRadius: '0.25rem',
-    cursor: 'pointer',
-  }}
->
-  View Friends List
-</button>
+                <div className="text-m text-gray-600 text-left whitespace-pre-line mb-2">
+                    {profileInfo.data?.profile
+                        ? profileInfo.data?.profile?.biography
+                            ? profileInfo.data?.profile?.biography
+                            : "No Bio"
+                        : "No Bio"}
+                </div>
+                <button
+                    onClick={handleOpenModal}
+                    style={{
+                        backgroundColor: "#007bff",
+                        color: "#fff",
+                        padding: "0.5rem 1rem",
+                        border: "none",
+                        borderRadius: "0.25rem",
+                        cursor: "pointer",
+                    }}
+                >
+                    View Friends List
+                </button>
 
-
-      <FriendsListModal isOpen={isModalOpen} onRequestClose={handleCloseModal} />
+                <FriendsListModal isOpen={isModalOpen} onRequestClose={handleCloseModal} />
                 <FriendRequestsDisplay currentUserId={currentUser.uid} />
                 <h2 className="mt-4 text-left text-xl font-bold">Recent posts</h2>
                 <div className="profile-page">
-                    <PostModal></PostModal>
                     <ul>{renderProfileRecipePostComponents()}</ul>
                 </div>
             </div>
