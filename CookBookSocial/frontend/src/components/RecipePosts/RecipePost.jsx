@@ -10,7 +10,7 @@ import addCommentIcon from "../../images/sendComment.png";
 import likeIcon from "../../images/likeIcon.png";
 
 import { BsHeart, BsHeartFill, BsBookmark, BsFillBookmarkFill, BsBrush } from "react-icons/bs";
-
+import LikeListModal from "../LikeList/LikeList.jsx"
 import axios from "axios";
 
 import "./RecipePost.css";
@@ -23,6 +23,7 @@ What does calling useState do? It declares a “state variable”. Our variable 
 function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
     const [showFullRecipe, toggleShowFullRecipe] = useState(false);
     const [editPostPath, setEditPostPath] = useState(`/edit-recipe/${recipe.id}`);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const [isLiked, setIsLiked] = useState(false);
     const [numLikes, updateNumLikes] = useState(0);
@@ -157,9 +158,19 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
             return 0;
         }
     }
+    function handleOpenModal() {
+        setIsModalOpen(true);
+    }
+
+    function handleCloseModal() {
+        setIsModalOpen(false);
+    }
 
     return (
+ 
         <div className="border-2 rounded-md border-orange-400 mb-10">
+                  <LikeListModal RecipeId={recipe.id} isOpen={isModalOpen} onRequestClose={handleCloseModal} />
+
             <div className="bg-white overflow-hidden divide-y" onClick={toggleShowFull}>
                 <h2 className="font-extrabold text-orange-400 text-4xl pt-2">
                     {displayRecipeTitle(recipe)}
@@ -194,38 +205,47 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
                 </div>
 
                 <div className="bottomContainer">
-                    <div className="likes-element">
-                        {isLiked ? (
-                            <IconContext.Provider value={{ color: "red" }}>
-                                <div>
-                                    <BsHeartFill
-                                        className="likeIcon"
-                                        onClick={toggleLiked}
-                                        size="2em"
-                                    />
-                                    {" " + numLikes + " likes"}
-                                </div>
-                            </IconContext.Provider>
-                        ) : (
-                            <IconContext.Provider value={{ color: "black" }}>
-                                <div>
-                                    <BsHeart
-                                        className="likeIcon"
-                                        onClick={toggleLiked}
-                                        size="2em"
-                                    />
-                                    {" " + numLikes + " likes"}
-                                </div>
-                            </IconContext.Provider>
-                        )}
-                    </div>
-                    <div className="comment-element">
-                        {" "}
-                        <img
-                            className="imgContainer"
-                            src={commentIcon}
-                        /> {displayNumberComments()} Comments
-                    </div>
+                <div className="likes-element" onClick={handleOpenModal} style={{cursor: 'pointer'}}>
+    {isLiked ? (
+        <IconContext.Provider value={{ color: "red" }}>
+            <div>
+                <BsHeartFill
+                    className="likeIcon"
+                    onClick={(e) => { e.stopPropagation(); toggleLiked(); }}
+                    size="1.6em"
+                />
+                {" "}
+                <span className="likes-text" onMouseOver={(e) => e.target.style.textDecoration = 'underline'} onMouseOut={(e) => e.target.style.textDecoration = 'none'}>
+                    {numLikes} likes
+                </span>
+            </div>
+        </IconContext.Provider>
+    ) : (
+        <IconContext.Provider value={{ color: "black" }}>
+            <div>
+                <BsHeart
+                    className="likeIcon"
+                    onClick={(e) => { e.stopPropagation(); toggleLiked(); }}
+                    size="1.6em"
+                />
+                {" "}
+                <span className="likes-text" onMouseOver={(e) => e.target.style.textDecoration = 'underline'} onMouseOut={(e) => e.target.style.textDecoration = 'none'}>
+                    {numLikes} likes
+                </span>
+            </div>
+        </IconContext.Provider>
+    )}
+</div>
+
+
+
+<div className="comment-element">
+    {" "}
+    <Link to={`/recipe/${recipe.id}#comments`} style={{ textDecoration: "none" }}>
+        <img className="imgContainer" src={commentIcon} /> <span style={{ textDecoration: "none" }} onMouseOver={(e) => e.target.style.textDecoration = "underline"} onMouseOut={(e) => e.target.style.textDecoration = "none"}>{displayNumberComments()} Comments</span>
+    </Link>
+</div>
+
 
                     <div className="edit-element">
                         {currentUser.uid === recipe.uid && (
