@@ -70,21 +70,19 @@ function HomePage() {
             setFilterDis(false);
             const scrollPosition = sessionStorage.getItem("scrollPosition");
             if (scrollPosition !== null) {
-                console.log(scrollPosition);
                 document.documentElement.style.scrollBehavior = "smooth";
                 setTimeout(function () {
                     window.scrollTo(0, parseInt(scrollPosition));
                 }, 200);
             }
-             //Remove dupes from the categories and sort alhphabetically
+            //Remove dupes from the categories and sort alhphabetically
             const categories = new Set();
             for (const recipe of recipeData) {
-              if (recipe.categories) {
-                recipe.categories.forEach((cat) => categories.add(cat));
-              }
+                if (recipe.categories) {
+                    recipe.categories.forEach((cat) => categories.add(cat));
+                }
             }
             setCategoriesList([...categories].sort().map((cat) => ({ value: cat, label: cat })));
-            
         }
     }, [recipeData, recipeLoading]);
 
