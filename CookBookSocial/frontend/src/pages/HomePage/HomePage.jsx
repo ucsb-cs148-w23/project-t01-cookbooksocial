@@ -12,9 +12,12 @@ import { db } from "../../config/firebase";
 import { useNavigate } from "react-router-dom";
 
 function HomePage() {
+    const [recipePostsList, setRecipePostsList] = useState([]);
     const [filteredRecipePostList, setFilteredRecipePostList] = useState([]);
+    const [searchState, setSearchState] = useState({});
     const [isLoading, setIsLoading] = useState(true);
-    const [filterDis, setFilterDis] = useState(false);
+    const [filterDis, setFilterDis] = useState(true);
+    const [friendsList, setFriendsList] = useState({});
     const { currentUser } = useAuth();
 
     const [categoriesList, setCategoriesList] = useState([]);

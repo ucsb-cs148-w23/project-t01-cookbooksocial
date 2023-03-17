@@ -84,6 +84,7 @@ const sendFriendRequest = async (req, res, next) => {
         const updateDataRec = docSnapRec.data();
 
 
+
         if("friends" in updateDataSend){
             if (idSentTo in updateDataSend['friends']) {
                 throw new Error("Already friended");
@@ -155,6 +156,27 @@ const sendFriendRequest = async (req, res, next) => {
             updateDataRec['receivedFriendRequests'][`${idSentFrom}`] = infoForRec;
         }
 
+        let count = 0;
+        if('notifications' in updateDataRec){
+            if('count' in updateDataRec['notifications']){
+                count = updateDataRec['notifications']['count'];
+            }
+        } else {
+            updateDataRec['notifications'] = {};
+        }
+
+        updateDataRec['notifications']['count'] = count + 1;
+
+        if ('friends' in updateDataRec['notifications']) {
+            if (!(updateDataRec['notifications']['friends'].includes(idSentFrom))) {
+                updateDataRec['notifications']['friends'].push(idSentFrom);
+            }
+        } else {
+            updateDataRec['notifications']['friends'] = [];
+            updateDataRec['notifications']['friends'].push(idSentFrom);
+        }
+
+
         await updateDoc(docRefSent, updateDataSend);
         await updateDoc(docRefReceived, updateDataRec);
         // console.log(updateDataRec);
@@ -168,9 +190,63 @@ const sendFriendRequest = async (req, res, next) => {
 
     } catch(e){
         res.status(400).send(`Error: ${e}`);
-        console.log(e);
+        // console.log(e);
         return;
     }
+}
+
+const resetNotifications = async (req, res, next) => {
+    try{
+
+        const id = req.params['id'];
+
+        const docRef = doc(db, "users", id);
+        const docSnap = await getDoc(docRef);
+
+        if(!docSnap.exists()){
+            throw new Error("User does not exist!");
+        }
+
+        const updateData = docSnap.data();
+
+        if('notifications' in updateData){
+            updateData['notifications']['count'] = 0;
+            updateData['notifications']['friends'] = [];
+            await updateDoc(docRef, updateData);
+        }
+        res.status(200).send(`Success.  Notifications reset.`);
+
+
+    } catch(e){
+        res.status(400).send(`Error: ${e}`);
+        return;
+    }
+}
+
+const getNotifications = async (req, res, next) => {
+    try{
+        const id = req.params.id;
+        const docRef = doc(db, "users", id);
+        const docSnap = await getDoc(docRef);
+
+
+        if (docSnap.exists()) {
+            const docSnapData = docSnap.data();
+            if("notifications" in docSnapData){
+                res.status(200).send(JSON.stringify({'notifications' : docSnapData['notifications']}));
+            } else {
+                res.status(200).send(JSON.stringify({'notifications': {
+                    'count': 0
+                }}));
+            }
+        } else {
+            // doc.data() will be undefined in this case
+            res.status(400).send("Document not found");
+        }
+    } catch(e){
+        res.status(400).send(e);
+    }
+
 }
 
 const acceptFriendRequest = async (req, res, next) => {
@@ -245,6 +321,18 @@ const acceptFriendRequest = async (req, res, next) => {
             sendProfile = updateDataSend['email'];
         }
 
+        let notifCount = 0;
+        if('notifications' in updateDataSend){
+            if('count' in updateDataSend['notifications']){
+                notifCount = updateDataSend['notifications']['count'];
+            }
+        } else {
+            updateDataSend['notifications'] = {};
+        }
+
+        updateDataSend['notifications']['count'] = notifCount + 1;
+
+
         const infoForSender = {
             uid: idReceiver,
             profile: recProfile
@@ -264,6 +352,13 @@ const acceptFriendRequest = async (req, res, next) => {
         } else {
             updateDataSend['friends'] = {};
             updateDataSend['friends'][idReceiver] = infoForSender;
+        }
+
+        if('friends' in updateDataSend['notifications']){
+            updateDataSend['notifications']['friends'].push(idReceiver);
+        } else {
+            updateDataSend['notifications']['friends'] = [];
+            updateDataSend['notifications']['friends'].push(idReceiver);
         }
 
         if ("friends" in updateDataRec) {
@@ -354,6 +449,22 @@ const rejectFriendRequest = async (req, res, next) => {
             throw new Error("Friend Request was Canceled");
         }
 
+        if('notifications' in updateDataRec){
+
+            if('friends' in updateDataRec['notifications']){
+
+                if((updateDataRec['notifications']['friends'].includes(idSender))){
+
+                    updateDataRec['notifications']['friends'] = updateDataRec['notifications']['friends'].filter(i => i !== idSender);
+                    if(updateDataRec['notifications']['count'] > 0){
+                        updateDataRec['notifications']['count']--;
+                    }
+                }
+            } 
+        }
+
+
+    
 
 
         await updateDoc(docRefSender, updateDataSend);
@@ -449,4 +560,4 @@ const getFriendsList = async (req, res, next) =>{
     }
 }
 
-export { addUser, deleteUser, sendFriendRequest, acceptFriendRequest, getFriendRequests, rejectFriendRequest, unfriend,getFriendsList };
+export { addUser, deleteUser, sendFriendRequest, acceptFriendRequest, getFriendRequests, rejectFriendRequest, unfriend,getFriendsList, resetNotifications, getNotifications };

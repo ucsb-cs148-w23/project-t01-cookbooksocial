@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import RecipePost from "../../components/RecipePosts/RecipePost";
+import MiniRecipePost from "../../components/MiniRecipePosts/MiniRecipePost";
 import Navbar from "../../components/Navbar/Navbar";
 import "./ProfilePage.css";
 import { useAuth } from "../../contexts/AuthContext";
@@ -14,7 +14,7 @@ function ProfilePage() {
     const { currentUser } = useAuth();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [profileInfo, updateProfileInfo] = useState([]);
-    const POSTS_AT_A_TIME = 5;
+    const POSTS_AT_A_TIME = 6;
     const [numPosts, setNumPosts] = useState(POSTS_AT_A_TIME);
     const navigate = useNavigate();
 
@@ -42,12 +42,27 @@ function ProfilePage() {
   "URL_GET_PROFILE_RECIPE_POSTS_DATA" will be replaced by the actual api endpoint for GET once it is created by
   the backend.
   */
+
+//   Make a sidebar to display the notifications ********
+
+
+
     const URL_GET_PROFILE_RECIPE_POSTS_DATA = "/api/recipe/all";
+    const URL_RESET_NOTIFICATIONS = `/api/user/notifications/${currentUser.uid}`
 
     useEffect(() => {
         fetch(URL_GET_PROFILE_RECIPE_POSTS_DATA)
             .then((response) => response.json())
             .then((data) => updateProfileRecipePostsList(data));
+
+        fetch(URL_RESET_NOTIFICATIONS, {
+            method: 'DELETE',
+            headers: {
+                'Content-type': 'application/json'
+            }
+        });
+        
+        
     }, []);
     //get profile info
     useEffect(() => {
@@ -86,7 +101,7 @@ function ProfilePage() {
         let profilePostCount = 0; //count number of profile posts rendered, and keep less than numPosts
         for (let i = 0; i < profileRecipePostsList.length && profilePostCount < numPosts; i++) {
             if (profileRecipePostsList[i].uid === currentUser.uid) {
-                arrComponents.push(<RecipePost key={i} recipe={profileRecipePostsList[i]} />);
+                arrComponents.push(<MiniRecipePost key={i} recipe={profileRecipePostsList[i]} />);
                 profilePostCount += 1;
             }
         }
@@ -152,7 +167,7 @@ function ProfilePage() {
                 <FriendRequestsDisplay currentUserId={currentUser.uid} />
                 <h2 className="mt-4 text-left text-xl font-bold">Recent posts</h2>
                 <div className="profile-page">
-                    <ul>{renderProfileRecipePostComponents()}</ul>
+                    <ul className="grid grid-cols-3 gap-x-2 gap-y-0.5px">{renderProfileRecipePostComponents()}</ul>
                 </div>
             </div>
         </div>
