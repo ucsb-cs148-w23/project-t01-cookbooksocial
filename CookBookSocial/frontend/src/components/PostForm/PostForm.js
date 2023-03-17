@@ -164,7 +164,7 @@ const CategoriesList = (props) => {
             <table>
                 {
                     <tbody id="">
-                        {props.categories.map((categ, index) => (
+                        {props.categories && props.categories.map((categ, index) => (
                             <tr key={index}>
                                 <td className="text-m text-chef-orange">{categ}</td>
                                 <td>

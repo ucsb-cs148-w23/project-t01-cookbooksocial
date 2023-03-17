@@ -35,6 +35,9 @@ export default function EditPost() {
                     stepList: data.instructions,
                     stepText: "",
                     image: data.image,
+                    
+                    // Checks if the recipe has a category field already. Otherwhise it sets a default value
+                    categories: data.categories ? data.categories : [],
                 });
                 setOldImage(data.image);
             });
