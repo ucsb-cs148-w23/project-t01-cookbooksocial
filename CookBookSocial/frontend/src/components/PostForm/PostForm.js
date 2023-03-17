@@ -131,6 +131,72 @@ const StepLists = (props) => {
     );
 };
 
+
+
+// recipe categories
+const CategoriesList = (props) => {
+    // categories List
+    const [categText, setCategText] = useState("");
+
+    // manage input form
+    const onChangeCategText = (event) => {
+        setCategText(event.target.value);
+    };
+
+    // add category to list
+    const onClickAdd = () => {
+        if (categText === "") return;
+
+        props.categories.push(categText);
+        setCategText("");
+    };
+
+    // delete categories form list
+    const onClickDelete = (index) => {
+        const deletedCategories = [...props.categories];
+        deletedCategories.splice(index, 1);
+        props.setCategories(deletedCategories);
+    };
+
+    return (
+        <>
+            <h2 className="font-bold text-xl mb-4 text-gray-900">Categories:</h2>
+            <table>
+                {
+                    <tbody id="">
+                        {props.categories && props.categories.map((categ, index) => (
+                            <tr key={index}>
+                                <td className="text-m text-chef-orange">{categ}</td>
+                                <td>
+                                    <button
+                                        className="delIngButton"
+                                        onClick={() => onClickDelete(index)}
+                                    >
+                                        -
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                }
+            </table>
+            <div className="flex">
+                <input
+                    className="mt-2 border border-gray-300 text-gray-900 text-m rounded-lg focus:ring-chef-orange focus:outline-none focus:border-chef-orange 
+                    block w-full p-2.5 transition duration-200 ease-in-out"
+                    value={categText}
+                    onChange={onChangeCategText}
+                />
+                <button className="align-center ml-4" onClick={onClickAdd}>
+                    Add
+                </button>
+            </div>
+        </>
+    );
+};
+
+
+
 function PostForm({ initialValues, onSumbit, heading }) {
     const [isError, setIsError] = useState(false);
     const [errorOutput, setErrorOutput] = useState("");
@@ -140,7 +206,7 @@ function PostForm({ initialValues, onSumbit, heading }) {
     const [imageChanged, setImageChanged] = useState(false);
 
     const [formData, setFormData] = useState(initialValues);
-    const { title, description, stepText, stepList, ingredientList } = formData;
+    const { title, description, stepText, stepList, ingredientList, categories } = formData;
 
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -160,6 +226,7 @@ function PostForm({ initialValues, onSumbit, heading }) {
         ingredients: [],
         instructions: [],
         likesByUid: [],
+        categories: [],
     });
 
     useEffect(() => {
@@ -170,8 +237,9 @@ function PostForm({ initialValues, onSumbit, heading }) {
             uid: currentUser.uid,
             ingredients: ingredientList,
             instructions: stepList,
+            categories: categories,
         });
-    }, [title, description, currentUser.uid, ingredientList, stepList]);
+    }, [title, description, currentUser.uid, ingredientList, categories, stepList]);
 
     function validate(input) {
         const errorMessages = [];
@@ -346,6 +414,15 @@ function PostForm({ initialValues, onSumbit, heading }) {
                         ></textarea>
                     </div>
 
+                    <div className="mb-8">
+                        <CategoriesList
+                            categories={categories}
+                            setCategories={(categories) =>
+                                setFormData({ ...formData, categories })
+                            }
+                        />
+                    </div>
+
                     {/* second Part */}
 
                     <div className="mb-8">
@@ -356,7 +433,8 @@ function PostForm({ initialValues, onSumbit, heading }) {
                             }
                         />
                     </div>
-                    <div className="">
+
+                    <div className="mb-8">
                         <StepLists
                             stepList={stepList}
                             setStepList={(stepList) => setFormData({ ...formData, stepList })}
@@ -366,6 +444,9 @@ function PostForm({ initialValues, onSumbit, heading }) {
                             }}
                         />
                     </div>
+
+
+
                 </div>
             </div>
         </>
