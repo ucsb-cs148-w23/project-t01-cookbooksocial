@@ -6,7 +6,8 @@ import Navbar from "../../components/Navbar/Navbar";
 import { FaSpinner } from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";
 import "./HomePage.css";
-
+import { db } from "../../config/firebase";
+import { useNavigate } from "react-router-dom";
 
 function HomePage() {
   const [recipePostsList, setRecipePostsList] = useState([]);
@@ -16,6 +17,7 @@ function HomePage() {
   const [filterDis, setFilterDis] = useState(false);
   const [friendsList, setFriendsList] = useState({});
   const { currentUser } = useAuth();
+  const navigate = useNavigate();
 
   const POSTS_AT_A_TIME = 5;
   const [numPosts, setNumPosts] = useState(
@@ -23,6 +25,15 @@ function HomePage() {
   );
 
   useEffect(() => {
+
+    if (currentUser) {
+
+      // If the user does not already have user data, we redirect them to the edit-profile
+      if (!currentUser.displayName) {
+        navigate("/edit-profile");
+      }
+    }
+
     const handleBeforeUnload = () => {
       sessionStorage.setItem("scrollPosition", window.scrollY);
     };
