@@ -3,8 +3,22 @@ import Navbar from "../../components/Navbar/Navbar";
 import PostForm from "../../components/PostForm/PostForm";
 import { useNavigate } from "react-router-dom";
 import { firebaseUpload } from "../../utils/Api";
+import { useAuth } from "../../contexts/AuthContext";
 
 function NewPost() {
+    const { currentUser } = useAuth();
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (currentUser) {
+            // If the user does not already have user data, we redirect them to the edit-profile
+            if (!currentUser.displayName) {
+              navigate("/edit-profile");
+            }
+          }
+    }, []);
+
     const initialValues = {
         title: "",
         description: "",
@@ -26,7 +40,6 @@ function NewPost() {
             });
     };
 
-    let navigate = useNavigate();
 
     return (
         <>
