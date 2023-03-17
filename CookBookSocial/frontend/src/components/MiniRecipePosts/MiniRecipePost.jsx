@@ -94,7 +94,7 @@ function MiniRecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
                         </li>
                         <li>
                         <img
-                            className="imgContainer"
+                            className="imgContainerComment"
                             src={commentIcon}
                         /> {" " + displayNumberComments()}
                         </li>
