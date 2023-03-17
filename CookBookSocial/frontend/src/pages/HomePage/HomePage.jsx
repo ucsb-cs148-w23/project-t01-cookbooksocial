@@ -72,17 +72,15 @@ function HomePage() {
                 document.documentElement.style.scrollBehavior = "smooth";
                 window.scrollTo(0, parseInt(scrollPosition));
             }
-            const categories = [];
-            for (let i = 0; i < recipeData.length; i++) {
-                if (recipeData[i]["categories"]) {
-                    const cat = recipeData[i]["categories"];
-
-                    for (let j = 0; j < cat.length; j++) {
-                        categories.push({ value: cat[j], label: cat[j] });
-                    }
-                }
+             //Remove dupes from the categories and sort alhphabetically
+            const categories = new Set();
+            for (const recipe of recipeData) {
+              if (recipe.categories) {
+                recipe.categories.forEach((cat) => categories.add(cat));
+              }
             }
-            setCategoriesList(categories);
+            setCategoriesList([...categories].sort().map((cat) => ({ value: cat, label: cat })));
+            
         }
     }, [recipeData, recipeLoading]);
 
