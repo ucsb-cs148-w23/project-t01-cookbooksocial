@@ -16,7 +16,7 @@ function HomePage() {
   const [filteredRecipePostList, setFilteredRecipePostList] = useState([]);
   const [searchState, setSearchState] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [filterDis, setFilterDis] = useState(false);
+  const [filterDis, setFilterDis] = useState(true);
   const [friendsList, setFriendsList] = useState({});
   const { currentUser } = useAuth();
 
@@ -68,7 +68,7 @@ function HomePage() {
       }
       return categories;
     };
-
+    
     const URL_GET_FRIENDS_LIST = `/api/user/friendsList/${currentUser.uid}`;
     fetch(URL_GET_FRIENDS_LIST)
       .then((response) => response.json())
