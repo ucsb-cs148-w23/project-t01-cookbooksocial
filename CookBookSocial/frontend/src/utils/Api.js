@@ -9,10 +9,16 @@ Larger images would make more duplicate posts, which I am assume is because the 
 
 */
 
-import { ref, getDownloadURL, uploadBytesResumable, deleteObject, getStorage } from "firebase/storage";
+import {
+    ref,
+    getDownloadURL,
+    uploadBytesResumable,
+    deleteObject,
+    getStorage,
+} from "firebase/storage";
 import { storage, db } from "../config/firebase";
 import { doc, addDoc, updateDoc, collection, serverTimestamp } from "firebase/firestore";
-import {v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 async function postToFirebase(stringURL, fullRecipeInfo) {
     let postInfo = fullRecipeInfo;
@@ -21,10 +27,8 @@ async function postToFirebase(stringURL, fullRecipeInfo) {
 
     const res = await addDoc(collection(db, "recipes"), postInfo);
 
-
     return res;
 }
-
 
 async function putToFirebase(id, stringURL, fullRecipeInfo) {
     let postInfo = fullRecipeInfo;
@@ -33,89 +37,88 @@ async function putToFirebase(id, stringURL, fullRecipeInfo) {
     const docRef = doc(db, "recipes", id);
     const res = await updateDoc(docRef, postInfo);
 
-
     return res;
 }
 
-export function firebaseUpload(image, fullRecipeInfo){
+export function firebaseUpload(image, fullRecipeInfo) {
     return new Promise((resolve, reject) => {
-      const storageRef = ref(storage, `images/${uuidv4()}`);
-  
-      const uploadTask = uploadBytesResumable(storageRef, image);
-  
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress = Math.round(
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-          );
-          console.log(progress);
-        },
-        (error) => {
-          console.log("ERROR IN UPLOAD TASK");
-          reject(error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-  
-            let response = postToFirebase(downloadURL, fullRecipeInfo);
-  
-            response.then(() => {
-              console.log("Upload Completed:\n");
-              resolve();
-            });
-          });
-        }
-      );
-    });
-  }
-  
+        const storageRef = ref(storage, `images/${uuidv4()}`);
 
-export function firebaseUpdateWithImage(id, image, fullRecipeInfo, oldImgURL){
+        const uploadTask = uploadBytesResumable(storageRef, image);
+
+        uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+                const progress = Math.round(
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                );
+                console.log(progress);
+            },
+            (error) => {
+                console.log("ERROR IN UPLOAD TASK");
+                reject(error);
+            },
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    let response = postToFirebase(downloadURL, fullRecipeInfo);
+
+                    response.then(() => {
+                        console.log("Upload Completed:\n");
+                        resolve();
+                    });
+                });
+            }
+        );
+    });
+}
+
+export async function firebaseUpdate(id, image, fullRecipeInfo, oldImage, imageChanged) {
+    if (!imageChanged) {
+        console.log(oldImage);
+        await putToFirebase(id, oldImage, fullRecipeInfo);
+        return;
+    }
     const storageRef = ref(storage, `images/${uuidv4()}`);
-    console.log(oldImgURL);
     const storageDeleteFrom = getStorage();
-    const oldImageRef = ref(storageDeleteFrom, oldImgURL);
+    const oldImageRef = ref(storageDeleteFrom, oldImage);
     // Delete the file
-    deleteObject(oldImageRef).then(() => {
-        // File deleted successfully
+    try {
+        // Delete the file
+        await deleteObject(oldImageRef);
         console.log("deleted old image successfully");
-    }).catch((error) => {
+    } catch (error) {
         console.log("failed to delete old image: ", error);
-    });
-
-
+    }
 
     const uploadTask = uploadBytesResumable(storageRef, image);
 
-    uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-            const progress = Math.round(
-                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-            );
-            console.log(progress);
-        },
-        (error) => {
-            console.log("ERROR IN UPLOAD TASK");
-            alert(error);
-        },
-        () => {
-            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-
-                let response = putToFirebase(id, downloadURL, fullRecipeInfo);
-
-                // console.log("This is the response: ", response);
-                response.then(() => {
+    await new Promise((resolve, reject) => {
+        uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+                const progress = Math.round(
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                );
+                console.log(progress);
+            },
+            (error) => {
+                console.log("ERROR IN UPLOAD TASK");
+                alert(error);
+                reject(error);
+            },
+            async () => {
+                try {
+                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                    await putToFirebase(id, downloadURL, fullRecipeInfo);
                     console.log("Upload Completed:\n");
-                });
-            });
-        }
-    );
+                    resolve();
+                } catch (error) {
+                    console.log("failed to upload new image: ", error);
+                    reject(error);
+                }
+            }
+        );
+    });
 
     return uploadTask;
-}
-
-export function firebaseUpdateWithOutImage(id, imageURL, fullRecipeInfo) {
-    putToFirebase(id, imageURL, fullRecipeInfo);
 }

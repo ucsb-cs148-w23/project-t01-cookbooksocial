@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import algoliasearch from "algoliasearch";
 import { InstantSearch, SearchBox, Hits, Highlight } from "react-instantsearch-dom";
 import "./Search.css";
+import { Link } from "react-router-dom";
 
 const searchClient = algoliasearch("DEKII3BH6O", "fa19416e21b2be5963a65ad53ce49612");
 
@@ -56,8 +57,8 @@ const InstantSearchComponent = () => {
 const Hit = ({ hit }) => {
     const recipeUrl = `/recipe/${hit.objectID}`;
     return (
-        <a
-            href={recipeUrl}
+        <Link
+            to={recipeUrl}
             style={{
                 display: "block",
                 border: "1px solid gray",
@@ -86,7 +87,7 @@ const Hit = ({ hit }) => {
                     <Highlight attribute="title" hit={hit} />
                 </div>
             </div>
-        </a>
+        </Link>
     );
 };
 

@@ -4,7 +4,6 @@ import { collection, doc, getDoc, getFirestore } from "firebase/firestore";
 import styles from "./RecipePage.module.css";
 import Navbar from "../../components/Navbar/Navbar";
 import { useAuth } from "../../contexts/AuthContext";
-
 import DeleteButton from "../../components/deleteModal/deleteModal";
 
 import Comments from "../../components/Comments/Comments/Comments";
@@ -232,10 +231,10 @@ function RecipePage() {
                     <div className={styles.editElement}>
                         {currentUser.uid === recipe.uid && (
                             <IconContext.Provider value={{ color: "black" }}>
-                                <a href={editPostPath}>
+                                <Link to={editPostPath}>
                                     <BsBrush className="editIcon" size="2em" />
                                     Edit
-                                </a>
+                                </Link>
                             </IconContext.Provider>
                         )}
                     </div>

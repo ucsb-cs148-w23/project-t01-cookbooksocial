@@ -5,21 +5,29 @@ import { useAuth } from "../../contexts/AuthContext";
 import Navbar from "../../components/Navbar/Navbar";
 import { FaSpinner } from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useQuery } from "@tanstack/react-query";
 import "./HomePage.css";
 
 function HomePage() {
-    const [recipePostsList, setRecipePostsList] = useState([]);
     const [filteredRecipePostList, setFilteredRecipePostList] = useState([]);
-    const [searchState, setSearchState] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [filterDis, setFilterDis] = useState(false);
-    const [friendsList, setFriendsList] = useState([]);
     const { currentUser } = useAuth();
 
     const POSTS_AT_A_TIME = 5;
     const [numPosts, setNumPosts] = useState(
         parseInt(sessionStorage.getItem("numPosts")) || POSTS_AT_A_TIME
     );
+
+    const { data: recipeData, isLoading: recipeLoading } = useQuery({
+        queryKey: ["recipes"],
+        queryFn: () => fetch("/api/recipe/all").then((res) => res.json()),
+    });
+
+    const { data: friendsData, isLoading: friendsLoading } = useQuery({
+        queryKey: ["friends"],
+        queryFn: () => fetch(`/api/user/friendsList/${currentUser.uid}`).then((res) => res.json()),
+    });
 
     useEffect(() => {
         const handleBeforeUnload = () => {
@@ -33,39 +41,23 @@ function HomePage() {
             window.scrollTo(0, parseInt(scrollPosition));
         }
 
-        const URL_GET_FRIENDS_LIST = `/api/user/friendsList/${currentUser.uid}`;
-        fetch(URL_GET_FRIENDS_LIST)
-            .then((response) => response.json())
-            .then((data) => {
-                var friendsID = Object.keys(data);
-                setFriendsList(friendsID);
-            })
-            .catch((error) => console.log(error));
-
-        fetch("/api/recipe/all")
-            .then((response) => response.json())
-            .then((data) => {
-                //console.log("FETCHING")
-                setRecipePostsList(data);
-                setFilteredRecipePostList(data);
-                setIsLoading(false);
-                setFilterDis(false);
-                //  console.log("done fetchin")
-            })
-            .catch((error) => console.log(error));
-
         return () => {
             window.removeEventListener("beforeunload", handleBeforeUnload);
         };
     }, []);
 
     useEffect(() => {
-        const scrollPosition = sessionStorage.getItem("scrollPosition");
-        if (scrollPosition !== null) {
-            document.documentElement.style.scrollBehavior = "smooth";
-            window.scrollTo(0, parseInt(scrollPosition));
+        if (recipeData && !recipeLoading) {
+            setFilteredRecipePostList(recipeData);
+            setIsLoading(false);
+            setFilterDis(false);
+            const scrollPosition = sessionStorage.getItem("scrollPosition");
+            if (scrollPosition !== null) {
+                document.documentElement.style.scrollBehavior = "smooth";
+                window.scrollTo(0, parseInt(scrollPosition));
+            }
         }
-    }, [recipePostsList]);
+    }, [recipeData]);
 
     const fetchMoreData = () => {
         setNumPosts((prevNumPosts) => prevNumPosts + POSTS_AT_A_TIME);
@@ -75,7 +67,7 @@ function HomePage() {
     const filterByAll = async () => {
         setFilterDis(true);
         setIsLoading(true);
-        await setFilteredRecipePostList(recipePostsList);
+        await setFilteredRecipePostList(recipeData);
         await new Promise((resolve) => setTimeout(resolve, 400));
         setIsLoading(false);
         setFilterDis(false);
@@ -85,7 +77,13 @@ function HomePage() {
         setFilterDis(true);
         setIsLoading(true);
         await setFilteredRecipePostList(
-            recipePostsList.filter((recipePost) => friendsList.includes(recipePost.uid))
+            friendsLoading
+                ? []
+                : !friendsData
+                ? []
+                : recipeData.filter((recipePost) =>
+                      Object.keys(friendsData).includes(recipePost.uid)
+                  )
         );
 
         await new Promise((resolve) => setTimeout(resolve, 400));
@@ -95,7 +93,7 @@ function HomePage() {
     const filterByLikes = async () => {
         setFilterDis(true);
         setIsLoading(true);
-        const recipePostsCopy = recipePostsList.slice();
+        const recipePostsCopy = recipeData.slice();
         const top10Posts = recipePostsCopy
             .sort((postA, postB) => postB.likesByUid.length - postA.likesByUid.length)
             .slice(0, 10);
@@ -112,7 +110,7 @@ function HomePage() {
             <div className="mt-8"></div>
             <div className="max-w-2xl mx-auto my-2">
                 <div>
-                    <div class="filterBox">
+                    <div className="filterBox">
                         <input
                             type="radio"
                             id="1"
@@ -121,7 +119,7 @@ function HomePage() {
                             name="filter"
                             defaultChecked
                         />
-                        <label for="1">All</label>
+                        <label htmlFor="1">All</label>
                         <input
                             type="radio"
                             id="2"
@@ -129,7 +127,7 @@ function HomePage() {
                             onClick={filterByFriends}
                             name="filter"
                         />
-                        <label for="2">Friends</label>
+                        <label htmlFor="2">Friends</label>
                         <input
                             type="radio"
                             id="3"
@@ -137,7 +135,7 @@ function HomePage() {
                             onClick={filterByLikes}
                             name="filter"
                         />
-                        <label for="3">Popular</label>
+                        <label htmlFor="3">Popular</label>
                     </div>
                     <hr align="center" className="hr-line"></hr>
                 </div>

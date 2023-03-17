@@ -176,12 +176,14 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
                 </p>
                 <p className="pl-5 pt-2 text-orange-400 text-left">
                     Date:
-                    <p className="text-gray-500 pl-2 inline">{timeStamptoDate(recipe.createdAt)}</p>
+                    <span className="text-gray-500 pl-2 inline">
+                        {timeStamptoDate(recipe.createdAt)}
+                    </span>
                 </p>
                 <p className="text-orange-400 text-left pl-5 pt-2">
                     {" "}
                     Description:
-                    <p className="inline text-gray-500 pl-2">{recipe.description}</p>
+                    <span className="inline text-gray-500 pl-2">{recipe.description}</span>
                 </p>
                 <div className="pb-2/3">
                     <Link to={`/recipe/${recipe.id}`}>
@@ -230,10 +232,10 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
                     <div className="edit-element">
                         {currentUser.uid === recipe.uid && (
                             <IconContext.Provider value={{ color: "black" }}>
-                                <a href={editPostPath}>
+                                <Link to={editPostPath}>
                                     <BsBrush className="editIcon" size="2em" />
                                     Edit
-                                </a>
+                                </Link>
                             </IconContext.Provider>
                         )}
                     </div>
