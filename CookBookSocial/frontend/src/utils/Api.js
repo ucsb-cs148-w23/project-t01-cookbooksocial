@@ -17,7 +17,7 @@ import {
     getStorage,
 } from "firebase/storage";
 import { storage, db } from "../config/firebase";
-import { doc, addDoc, updateDoc, collection, serverTimestamp } from "firebase/firestore";
+import { doc, setDoc, addDoc, updateDoc, collection, serverTimestamp } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 
 async function postToFirebase(stringURL, fullRecipeInfo) {
@@ -26,6 +26,14 @@ async function postToFirebase(stringURL, fullRecipeInfo) {
     postInfo["image"] = stringURL;
 
     const res = await addDoc(collection(db, "recipes"), postInfo);
+
+    if (postInfo["categories"].length > 0) {
+        for (let i = 0; i < postInfo["categories"].length; i++) {
+            await setDoc(doc(db, "categories", postInfo["categories"][i]), {
+                body: postInfo["categories"][i],
+            });
+        }
+    }
 
     return res;
 }

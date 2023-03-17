@@ -7,12 +7,21 @@ import { FaSpinner } from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useQuery } from "@tanstack/react-query";
 import "./HomePage.css";
+import Select from "react-select";
+import { db } from "../../config/firebase";
+import { useNavigate } from "react-router-dom";
 
 function HomePage() {
     const [filteredRecipePostList, setFilteredRecipePostList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [filterDis, setFilterDis] = useState(false);
     const { currentUser } = useAuth();
+
+    const [categoriesList, setCategoriesList] = useState([]);
+
+    const [selected, setSelected] = useState(null);
+
+    const navigate = useNavigate();
 
     const POSTS_AT_A_TIME = 5;
     const [numPosts, setNumPosts] = useState(
@@ -30,6 +39,13 @@ function HomePage() {
     });
 
     useEffect(() => {
+        if (currentUser) {
+            // If the user does not already have user data, we redirect them to the edit-profile
+            if (!currentUser.displayName) {
+                navigate("/edit-profile");
+            }
+        }
+
         const handleBeforeUnload = () => {
             sessionStorage.setItem("scrollPosition", window.scrollY);
         };
@@ -41,12 +57,20 @@ function HomePage() {
             window.scrollTo(0, parseInt(scrollPosition));
         }
 
-        return () => {
-            window.removeEventListener("beforeunload", handleBeforeUnload);
-        };
-    }, []);
+        const getCategories = (postsArray) => {
+            const categories = [];
+            for (let i = 0; i < postsArray.length; i++) {
+                if (postsArray[i]["categories"]) {
+                    const cat = postsArray[i]["categories"];
 
-    useEffect(() => {
+                    for (let j = 0; j < cat.length; j++) {
+                        categories.push({ value: cat[j], label: cat[j] });
+                    }
+                }
+            }
+            return categories;
+        };
+
         if (recipeData && !recipeLoading) {
             setFilteredRecipePostList(recipeData);
             setIsLoading(false);
@@ -57,15 +81,58 @@ function HomePage() {
                 window.scrollTo(0, parseInt(scrollPosition));
             }
         }
-    }, [recipeData]);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+    }, []);
 
     const fetchMoreData = () => {
         setNumPosts((prevNumPosts) => prevNumPosts + POSTS_AT_A_TIME);
         sessionStorage.setItem("numPosts", numPosts + POSTS_AT_A_TIME);
     };
 
+    const customStyles = {
+        option: (defaultStyles, state) => ({
+            ...defaultStyles,
+            color: state.isSelected ? "white" : "black",
+            backgroundColor: state.isSelected ? "orange" : "#FFDC9C",
+            backgroundColor: state.isFocused ? "orange" : "#FFDC9C",
+        }),
+        placeholder: (defaultStyles) => ({
+            ...defaultStyles,
+            color: "black",
+            fontWeight: "bold",
+        }),
+        dropdownIndicator: (defaultStyles) => ({
+            ...defaultStyles,
+            color: "black",
+        }),
+
+        indicatorSeparator: (defaultStyles) => ({
+            ...defaultStyles,
+            display: "none",
+        }),
+
+        control: (defaultStyles) => ({
+            ...defaultStyles,
+            backgroundColor: "#FFDC9C",
+            marginTop: "10px",
+            paddingTop: "3px",
+            paddingBottom: "3px",
+            paddingRight: "10px",
+            paddingLeft: "10px",
+            border: "none",
+            boxShadow: "none",
+            color: "white",
+            fontWeight: "bold",
+        }),
+        singleValue: (defaultStyles) => ({ ...defaultStyles, color: "black" }),
+    };
+
     const filterByAll = async () => {
         setFilterDis(true);
+        setSelected(null);
         setIsLoading(true);
         await setFilteredRecipePostList(recipeData);
         await new Promise((resolve) => setTimeout(resolve, 400));
@@ -75,15 +142,10 @@ function HomePage() {
 
     const filterByFriends = async () => {
         setFilterDis(true);
+        setSelected("");
         setIsLoading(true);
         await setFilteredRecipePostList(
-            friendsLoading
-                ? []
-                : !friendsData
-                ? []
-                : recipeData.filter((recipePost) =>
-                      Object.keys(friendsData).includes(recipePost.uid)
-                  )
+            recipeData.filter((recipePost) => Object.keys(friendsData).includes(recipePost.uid))
         );
 
         await new Promise((resolve) => setTimeout(resolve, 400));
@@ -92,6 +154,7 @@ function HomePage() {
     };
     const filterByLikes = async () => {
         setFilterDis(true);
+        setSelected("");
         setIsLoading(true);
         const recipePostsCopy = recipeData.slice();
         const top10Posts = recipePostsCopy
@@ -104,13 +167,31 @@ function HomePage() {
         setFilterDis(false);
     };
 
+    const filterByCategory = async (selectedOption) => {
+        setIsLoading(true);
+
+        await setFilteredRecipePostList(
+            recipeData.filter((recipePost) => {
+                if (recipePost["categories"]) {
+                    return recipePost["categories"].includes(selectedOption.value);
+                }
+            })
+        );
+
+        setSelected(selectedOption);
+
+        await new Promise((resolve) => setTimeout(resolve, 400));
+        setIsLoading(false);
+        setFilterDis(false);
+    };
+
     return (
         <div>
             <Navbar />
             <div className="mt-8"></div>
             <div className="max-w-2xl mx-auto my-2">
                 <div>
-                    <div className="filterBox">
+                    <div class="filterBox">
                         <input
                             type="radio"
                             id="1"
@@ -119,7 +200,7 @@ function HomePage() {
                             name="filter"
                             defaultChecked
                         />
-                        <label htmlFor="1">All</label>
+                        <label for="1">All</label>
                         <input
                             type="radio"
                             id="2"
@@ -127,7 +208,7 @@ function HomePage() {
                             onClick={filterByFriends}
                             name="filter"
                         />
-                        <label htmlFor="2">Friends</label>
+                        <label for="2">Friends</label>
                         <input
                             type="radio"
                             id="3"
@@ -135,7 +216,14 @@ function HomePage() {
                             onClick={filterByLikes}
                             name="filter"
                         />
-                        <label htmlFor="3">Popular</label>
+                        <label for="3">Popular</label>
+                        <Select
+                            options={categoriesList}
+                            value={selected || ""}
+                            onChange={filterByCategory}
+                            placeholder="Categories"
+                            styles={customStyles}
+                        />
                     </div>
                     <hr align="center" className="hr-line"></hr>
                 </div>

@@ -45,6 +45,8 @@ Known Problems:
 - NPM and Node should be in their latest versions
 - Environment variables must be correct in .env file
 
+## Team
+
 | Name | Github |
 |------|--------|
 | Bryan Zamora| bzamora020 |
@@ -54,3 +56,15 @@ Known Problems:
 | Gita Supramaniam | gitasupra |
 | Daoyi Ji | Daoyijiucsb |
 | Terry Pi | tai-jui |
+
+## Deployment
+
+### Hosted on Heroku:
+
+#### https://dashboard.heroku.com/apps/cookbook-social
+
+### More information on deployment is in docs/DEPLOY.md
+
+#### https://github.com/ucsb-cs148-w23/project-t01-cookbooksocial/blob/main/docs/DEPLOY.md
+
+

@@ -1,15 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import { collection, doc, getDoc, getFirestore } from "firebase/firestore";
 import styles from "./RecipePage.module.css";
-import Navbar from "../../components/Navbar/Navbar";
+import Navbars from "../../components/Navbar/Navbar";
 import { useAuth } from "../../contexts/AuthContext";
 import DeleteButton from "../../components/deleteModal/deleteModal";
-
 import Comments from "../../components/Comments/Comments/Comments";
+import LikeListModal from "../../components/LikeList/LikeList";
+
+import commentIcon from "../../images/commentIcon.png";
 
 import { BsHeart, BsHeartFill, BsBookmark, BsFillBookmarkFill, BsBrush } from "react-icons/bs";
-import commentIcon from "../../images/commentIcon.png";
 import { IconContext } from "react-icons/lib";
 import axios from "axios";
 
@@ -23,19 +24,37 @@ function RecipePage() {
     const [numLikes, updateNumLikes] = useState(0);
     const [isLikedAnimation, setIsLikedAnimation] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
+    const [likesByUidArray, setLikesByUidArray] = useState([]);
 
     const [initialRender, setInitialRender] = useState(true);
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     const { currentUser } = useAuth();
 
-    const Recipe_URL = `/api/recipe/${id}`;
-    useEffect(() => {
-        fetch(Recipe_URL)
-            .then((response) => response.json())
-            .then((data) => {
-                setRecipe(data);
-            });
-    }, []);
+    function handleCommentsMount() {
+        // function to pass to comments modal that will scroll to the comments once they load
+        try {
+            if (window.location.hash === "#comments") {
+                setTimeout(() => {
+                    window.scrollTo({
+                        top: document.getElementsByName("comments")[0].offsetTop,
+                        behavior: "smooth",
+                    });
+                }, 100); //Small 100ms buffer to ensure the comments have rendered so that we can scroll to them properly
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+    function handleOpenModal() {
+        setIsModalOpen(true);
+    }
+
+    function handleCloseModal() {
+        setIsModalOpen(false);
+    }
+
     useEffect(() => {
         setRecipId(id);
         const db = getFirestore();
@@ -44,7 +63,7 @@ function RecipePage() {
             .then((doc) => {
                 if (doc.exists()) {
                     const data = doc.data();
-                    //setRecipe(data)
+                    setRecipe(data);
                     setEditPostPath(`/edit-recipe/${id}`);
                     if (data["comments"]) {
                         setCommentsArr(data["comments"]);
@@ -59,6 +78,8 @@ function RecipePage() {
                 window.location.href = "/Invalid";
             });
     }, [id]);
+
+    const Recipe_URL = `/api/recipe/${id}`;
 
     useEffect(() => {
         if (initialRender) {
@@ -78,7 +99,10 @@ function RecipePage() {
         if (recipeId) {
             fetch(Recipe_URL)
                 .then((response) => response.json())
-                .then((data) => updateNumLikes(data.likesByUid.length));
+                .then((data) => {
+                    updateNumLikes(data.likesByUid.length);
+                    setLikesByUidArray(data.likesByUid);
+                });
         }
     }, [isLiked]);
 
@@ -92,21 +116,6 @@ function RecipePage() {
             })
             .catch((error) => console.log(error));
     }, []);
-
-    function displayName(recipe) {
-        // There is no 'user' in the recipe.
-
-        if ("user" in recipe && "profile" in recipe.user) {
-            if ("displayName" in recipe.user.profile) {
-                return recipe.user.profile.displayName;
-            }
-        }
-        if ("email" in recipe) {
-            return recipe.email;
-        } else {
-            return "No author found!";
-        }
-    }
 
     async function toggleLiked() {
         setIsLikedAnimation(!isLikedAnimation);
@@ -169,30 +178,20 @@ function RecipePage() {
         }, 1000);
     };
 
-    function timeStamptoDate(createdAt) {
-        const date = new Date(createdAt.seconds * 1000 + createdAt.nanoseconds / 1000000);
-        const options = { year: "numeric", month: "long", day: "numeric" };
-        return date.toLocaleDateString("en-US", options);
-    }
-
     if (!recipe) {
         return <div>Loading recipe...</div>;
     }
 
     return (
         <>
-            <Navbar />
+            <LikeListModal
+                RecipeId={recipeId}
+                isOpen={isModalOpen}
+                onRequestClose={handleCloseModal}
+            />
+            <Navbars />
             <div className={styles.recipePage}>
-                <div className={styles.headeritem}>
-                    <div className={styles.titleElement}>
-                        <h1 className={styles.recipeTitle}>{recipe.title}</h1>
-                    </div>
-                    <div className={styles.deleteElement}>
-                        {currentUser.uid === recipe.uid && (
-                            <DeleteButton recipeId={recipeId}></DeleteButton>
-                        )}
-                    </div>
-                </div>
+                <h1 className={styles.recipeTitle}>{recipe.title}</h1>
                 <div className={styles.recipeImageWrapper}>
                     <img className={styles.recipeImage} src={recipe.image} alt={recipe.title} />
                 </div>
@@ -204,9 +203,11 @@ function RecipePage() {
                                     <BsHeartFill
                                         className={styles.icon}
                                         onClick={toggleLiked}
-                                        size="2em"
-                                    />
-                                    {" " + numLikes + " likes"}
+                                        size="1.8em"
+                                    />{" "}
+                                    <div className={styles.numLikes} onClick={handleOpenModal}>
+                                        {numLikes + " likes"}
+                                    </div>
                                 </div>
                             </IconContext.Provider>
                         ) : (
@@ -215,13 +216,16 @@ function RecipePage() {
                                     <BsHeart
                                         className={styles.icon}
                                         onClick={toggleLiked}
-                                        size="2em"
-                                    />
-                                    {" " + numLikes + " likes"}
+                                        size="1.8em"
+                                    />{" "}
+                                    <div className={styles.numLikes} onClick={handleOpenModal}>
+                                        {numLikes + " likes"}
+                                    </div>
                                 </div>
                             </IconContext.Provider>
                         )}
                     </div>
+
                     <div className={styles.commentElement}>
                         {" "}
                         <img className={styles.commentIcon} src={commentIcon} />{" "}
@@ -231,10 +235,10 @@ function RecipePage() {
                     <div className={styles.editElement}>
                         {currentUser.uid === recipe.uid && (
                             <IconContext.Provider value={{ color: "black" }}>
-                                <Link to={editPostPath}>
+                                <a href={editPostPath}>
                                     <BsBrush className="editIcon" size="2em" />
                                     Edit
-                                </Link>
+                                </a>
                             </IconContext.Provider>
                         )}
                     </div>
@@ -243,13 +247,21 @@ function RecipePage() {
                         {isSaved ? (
                             <IconContext.Provider value={{ color: "black" }}>
                                 <div>
-                                    <BsFillBookmarkFill onClick={unSaveRecipe} size="2em" />{" "}
+                                    <BsFillBookmarkFill
+                                        className="saveIcon"
+                                        onClick={unSaveRecipe}
+                                        size="2em"
+                                    />{" "}
                                 </div>
                             </IconContext.Provider>
                         ) : (
                             <IconContext.Provider value={{ color: "black" }}>
                                 <div>
-                                    <BsBookmark onClick={SaveRecipe} size="2em" />
+                                    <BsBookmark
+                                        className="saveIcon"
+                                        onClick={SaveRecipe}
+                                        size="2em"
+                                    />
                                 </div>
                             </IconContext.Provider>
                         )}
@@ -259,11 +271,10 @@ function RecipePage() {
                     <p className={styles.recipeDescription}>{recipe.description}</p>
                     <div className={styles.recipeMetadata}>
                         <p className={styles.recipeMetadataItem}>
-                            Posted by:{" "}
-                            <Link to={"/profile/" + recipe.uid}>{displayName(recipe)}</Link>
+                            Posted by: <Link to={`/profile/` + recipe.uid}>{recipe.email}</Link>
                         </p>
                         <p className={styles.recipeMetadataItem}>
-                            Posted on {timeStamptoDate(recipe.createdAt)}
+                            Posted on {recipe.createdAt.toDate().toLocaleDateString()}
                         </p>
                         <button className={styles.shareButton} onClick={handleShareClick}>
                             Share
@@ -290,8 +301,31 @@ function RecipePage() {
                         </ol>
                     </div>
                 </div>
+                {currentUser.uid === recipe.uid && (
+                    <div>
+                        <DeleteButton recipeId={recipeId}></DeleteButton>
+                    </div>
+                )}
             </div>
-            <Comments currentUserId={currentUser.uid} recipeId={recipeId} comments={commentsArr} />
+            <a name="comments"></a>
+            <Comments
+                currentUserId={currentUser.uid}
+                recipeId={recipeId}
+                comments={commentsArr}
+                onMount={handleCommentsMount}
+            />
+            {currentUser.uid === recipe.uid && (
+                <div>
+                    <a
+                        type="button"
+                        className="text-white bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-lg px-5 py-2.5 text-center mr-2 mb-2 mt-4"
+                        href={editPostPath}
+                    >
+                        Edit
+                    </a>
+                    <DeleteButton recipeId={recipeId}></DeleteButton>
+                </div>
+            )}
         </>
     );
 }
