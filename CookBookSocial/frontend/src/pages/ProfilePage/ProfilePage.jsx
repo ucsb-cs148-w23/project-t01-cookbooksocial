@@ -42,12 +42,27 @@ function ProfilePage() {
   "URL_GET_PROFILE_RECIPE_POSTS_DATA" will be replaced by the actual api endpoint for GET once it is created by
   the backend.
   */
+
+//   Make a sidebar to display the notifications ********
+
+
+
     const URL_GET_PROFILE_RECIPE_POSTS_DATA = "/api/recipe/all";
+    const URL_RESET_NOTIFICATIONS = `/api/user/notifications/${currentUser.uid}`
 
     useEffect(() => {
         fetch(URL_GET_PROFILE_RECIPE_POSTS_DATA)
             .then((response) => response.json())
             .then((data) => updateProfileRecipePostsList(data));
+
+        fetch(URL_RESET_NOTIFICATIONS, {
+            method: 'DELETE',
+            headers: {
+                'Content-type': 'application/json'
+            }
+        });
+        
+        
     }, []);
     //get profile info
     useEffect(() => {
