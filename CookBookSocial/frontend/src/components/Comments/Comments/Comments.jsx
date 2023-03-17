@@ -11,7 +11,7 @@ import { useAuth } from "../../../contexts/AuthContext";
 
 // make api
 
-const Comments = ({ currentUserId, recipeId, comments }) => {
+const Comments = ({ currentUserId, recipeId, comments,onMount }) => {
   const [backendComments, setBackendComments] = useState([]);
 
   const [activeComment, setActiveComment] = useState(null);
@@ -127,8 +127,9 @@ const Comments = ({ currentUserId, recipeId, comments }) => {
       })
       .then((comments) => {
         setBackendComments(comments.data);
+        onMount()
       });
-  }, []);
+    }, []);
 
   return (
     <div className="comments">

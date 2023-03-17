@@ -4,6 +4,8 @@ import RecipePost from "../../components/RecipePosts/RecipePost";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useAuth } from "../../contexts/AuthContext";
 import { FaSpinner } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
 
 // reorder item function
 const reorder = (list, startIndex, endIndex) => {
@@ -20,8 +22,17 @@ export default function SavedPage() {
     const [recipePostsList, updateRecipePostsList] = useState([]);
     const { currentUser } = useAuth();
     const URL_GET_SAVED_RECIPE_POSTS_DATA = `/api/recipe/savedPost/${currentUser.uid}`;
+    const navigate = useNavigate();
 
     useEffect(() => {
+        if (currentUser) {
+            // If the user does not already have user data, we redirect them to the edit-profile
+            if (!currentUser.displayName) {
+              navigate("/edit-profile");
+            }
+          }
+
+
         const handleBeforeUnload = () => {
             sessionStorage.setItem("scrollPosition", window.scrollY);
         };

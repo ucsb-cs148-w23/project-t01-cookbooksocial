@@ -53,7 +53,7 @@ export default function ProfilePic() {
         getDoc(userInfoRef)
             .then((snapshot) => {
                 if (!snapshot.exists()) {
-                    console.log("invalid user");
+                    // console.log("invalid user");
                     // window.location.href = "/Invalid";
                 }
                 const profileInfData = {

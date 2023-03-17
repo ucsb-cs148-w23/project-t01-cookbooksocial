@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import RecipePost from "../../components/RecipePosts/RecipePost";
+import MiniRecipePost from "../../components/MiniRecipePosts/MiniRecipePost";
 import Navbar from "../../components/Navbar/Navbar";
 import "./PeoplePage.css";
 import { useAuth } from "../../contexts/AuthContext";
@@ -16,7 +16,7 @@ function PeoplePage() {
     const { userId } = useParams();
 
     const { currentUser } = useAuth();
-    const POSTS_AT_A_TIME = 5;
+    const POSTS_AT_A_TIME = 6;
     const [numPosts, setNumPosts] = useState(POSTS_AT_A_TIME);
 
     //useAuth has information from Firebase about user, we will get email from here
@@ -71,7 +71,7 @@ function PeoplePage() {
         let profilePostCount = 0; //count number of profile posts rendered, and keep under numPosts
         for (let i = 0; i < profileRecipePostsList.length && profilePostCount < numPosts; i++) {
             if (profileRecipePostsList[i].uid === userId) {
-                arrComponents.push(<RecipePost key={i} recipe={profileRecipePostsList[i]} />);
+                arrComponents.push(<MiniRecipePost key={i} recipe={profileRecipePostsList[i]} />);
                 profilePostCount += 1;
             }
         }
@@ -133,7 +133,7 @@ function PeoplePage() {
                 </ul>
             </div>
             <div className="profile-page">
-                <ul>{renderProfileRecipePostComponents()}</ul>
+                <ul className="grid grid-cols-3 gap-x-2 gap-y-0.5px">{renderProfileRecipePostComponents()}</ul>
             </div>
         </div>
     );
