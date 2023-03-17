@@ -83,14 +83,6 @@ const sendFriendRequest = async (req, res, next) => {
         const updateDataSend = docSnapSend.data();
         const updateDataRec = docSnapRec.data();
 
-        if('friends' in updateDataRec['notifications']){
-            if(!(idSentFrom in updateDataRec['notifications']['friends'])){
-                updateDataRec['notifications']['friends'].push(idSentFrom);
-            }
-        } else {
-            updateDataRec['notifications']['friends'] = [];
-            updateDataRec['notifications']['friends'].push(idSentFrom);
-        }
 
 
         if("friends" in updateDataSend){
@@ -174,6 +166,16 @@ const sendFriendRequest = async (req, res, next) => {
         }
 
         updateDataRec['notifications']['count'] = count + 1;
+
+        if ('friends' in updateDataRec['notifications']) {
+            if (!(updateDataRec['notifications']['friends'].includes(idSentFrom))) {
+                updateDataRec['notifications']['friends'].push(idSentFrom);
+            }
+        } else {
+            updateDataRec['notifications']['friends'] = [];
+            updateDataRec['notifications']['friends'].push(idSentFrom);
+        }
+
 
         await updateDoc(docRefSent, updateDataSend);
         await updateDoc(docRefReceived, updateDataRec);
