@@ -33,10 +33,9 @@ export default function EditPost() {
         if (currentUser) {
             // If the user does not already have user data, we redirect them to the edit-profile
             if (!currentUser.displayName) {
-              navigate("/edit-profile");
+                navigate("/edit-profile");
             }
-          }
-
+        }
 
         fetch(URL_GET_RECIPE_BY_ID)
             .then((response) => response.json())
@@ -44,7 +43,6 @@ export default function EditPost() {
                 if (currentUser && currentUser.uid !== data.uid) {
                     navigate("/home");
                 }
-                console.log(data);
                 setInitialValues({
                     title: data.title,
                     description: data.description,
@@ -53,7 +51,7 @@ export default function EditPost() {
                     stepList: data.instructions,
                     stepText: "",
                     image: data.image,
-                    
+
                     // Checks if the recipe has a category field already. Otherwhise it sets a default value
                     categories: data.categories ? data.categories : [],
                 });

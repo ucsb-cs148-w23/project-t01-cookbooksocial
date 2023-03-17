@@ -71,6 +71,12 @@ function HomePage() {
             return categories;
         };
 
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+    }, []);
+
+    useEffect(() => {
         if (recipeData && !recipeLoading) {
             setFilteredRecipePostList(recipeData);
             setIsLoading(false);
@@ -81,11 +87,7 @@ function HomePage() {
                 window.scrollTo(0, parseInt(scrollPosition));
             }
         }
-
-        return () => {
-            window.removeEventListener("beforeunload", handleBeforeUnload);
-        };
-    }, []);
+    }, [recipeData, recipeLoading]);
 
     const fetchMoreData = () => {
         setNumPosts((prevNumPosts) => prevNumPosts + POSTS_AT_A_TIME);
@@ -134,7 +136,7 @@ function HomePage() {
         setFilterDis(true);
         setSelected(null);
         setIsLoading(true);
-        await setFilteredRecipePostList(recipeData);
+        setFilteredRecipePostList(recipeData);
         await new Promise((resolve) => setTimeout(resolve, 400));
         setIsLoading(false);
         setFilterDis(false);
@@ -144,7 +146,7 @@ function HomePage() {
         setFilterDis(true);
         setSelected("");
         setIsLoading(true);
-        await setFilteredRecipePostList(
+        setFilteredRecipePostList(
             recipeData.filter((recipePost) => Object.keys(friendsData).includes(recipePost.uid))
         );
 
@@ -160,7 +162,7 @@ function HomePage() {
         const top10Posts = recipePostsCopy
             .sort((postA, postB) => postB.likesByUid.length - postA.likesByUid.length)
             .slice(0, 10);
-        await setFilteredRecipePostList(top10Posts);
+        setFilteredRecipePostList(top10Posts);
         /// console.log(top10Posts)
         await new Promise((resolve) => setTimeout(resolve, 400));
         setIsLoading(false);
@@ -170,7 +172,7 @@ function HomePage() {
     const filterByCategory = async (selectedOption) => {
         setIsLoading(true);
 
-        await setFilteredRecipePostList(
+        setFilteredRecipePostList(
             recipeData.filter((recipePost) => {
                 if (recipePost["categories"]) {
                     return recipePost["categories"].includes(selectedOption.value);
@@ -191,7 +193,7 @@ function HomePage() {
             <div className="mt-8"></div>
             <div className="max-w-2xl mx-auto my-2">
                 <div>
-                    <div class="filterBox">
+                    <div className="filterBox">
                         <input
                             type="radio"
                             id="1"
@@ -200,7 +202,7 @@ function HomePage() {
                             name="filter"
                             defaultChecked
                         />
-                        <label for="1">All</label>
+                        <label htmlFor="1">All</label>
                         <input
                             type="radio"
                             id="2"
@@ -208,7 +210,7 @@ function HomePage() {
                             onClick={filterByFriends}
                             name="filter"
                         />
-                        <label for="2">Friends</label>
+                        <label htmlFor="2">Friends</label>
                         <input
                             type="radio"
                             id="3"
@@ -216,7 +218,7 @@ function HomePage() {
                             onClick={filterByLikes}
                             name="filter"
                         />
-                        <label for="3">Popular</label>
+                        <label htmlFor="3">Popular</label>
                         <Select
                             options={categoriesList}
                             value={selected || ""}
