@@ -57,20 +57,6 @@ function HomePage() {
             window.scrollTo(0, parseInt(scrollPosition));
         }
 
-        const getCategories = (postsArray) => {
-            const categories = [];
-            for (let i = 0; i < postsArray.length; i++) {
-                if (postsArray[i]["categories"]) {
-                    const cat = postsArray[i]["categories"];
-
-                    for (let j = 0; j < cat.length; j++) {
-                        categories.push({ value: cat[j], label: cat[j] });
-                    }
-                }
-            }
-            return categories;
-        };
-
         return () => {
             window.removeEventListener("beforeunload", handleBeforeUnload);
         };
@@ -86,6 +72,17 @@ function HomePage() {
                 document.documentElement.style.scrollBehavior = "smooth";
                 window.scrollTo(0, parseInt(scrollPosition));
             }
+            const categories = [];
+            for (let i = 0; i < recipeData.length; i++) {
+                if (recipeData[i]["categories"]) {
+                    const cat = recipeData[i]["categories"];
+
+                    for (let j = 0; j < cat.length; j++) {
+                        categories.push({ value: cat[j], label: cat[j] });
+                    }
+                }
+            }
+            setCategoriesList(categories);
         }
     }, [recipeData, recipeLoading]);
 

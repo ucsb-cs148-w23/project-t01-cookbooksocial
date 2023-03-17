@@ -10,7 +10,7 @@ import addCommentIcon from "../../images/sendComment.png";
 import likeIcon from "../../images/likeIcon.png";
 
 import { BsHeart, BsHeartFill, BsBookmark, BsFillBookmarkFill, BsBrush } from "react-icons/bs";
-import LikeListModal from "../LikeList/LikeList.jsx"
+import LikeListModal from "../LikeList/LikeList.jsx";
 import axios from "axios";
 
 import "./RecipePost.css";
@@ -48,7 +48,6 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
                 return;
             }
         }
-        setIsLiked(false);
     }, []);
     useEffect(() => {
         //get isSaved
@@ -167,9 +166,12 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
     }
 
     return (
- 
         <div className="border-2 rounded-md border-orange-400 mb-10">
-                  <LikeListModal RecipeId={recipe.id} isOpen={isModalOpen} onRequestClose={handleCloseModal} />
+            <LikeListModal
+                RecipeId={recipe.id}
+                isOpen={isModalOpen}
+                onRequestClose={handleCloseModal}
+            />
 
             <div className="bg-white overflow-hidden divide-y" onClick={toggleShowFull}>
                 <h2 className="font-extrabold text-orange-400 text-4xl pt-2">
@@ -197,22 +199,22 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
                     <span className="inline text-gray-500 pl-2">{recipe.description}</span>
                 </p>
 
-
                 {recipe.categories && recipe.categories.length > 0 && (
-  <div className="pt-2">
-    <div className="flex items-center">
-      <p className="text-orange-400 text-left pl-5">Categories:</p>
-      {recipe.categories.map((category) => (
-        <div key={category} className="inline-flex items-center px-3 py-1 mr-2 rounded-full bg-orange-400 text-white">
-          <p className="text-sm">{category}</p>
-        </div>
-      ))}
-    </div>
-  </div>
-)}
+                    <div className="pt-2">
+                        <div className="flex items-center">
+                            <p className="text-orange-400 text-left pl-5">Categories:</p>
+                            {recipe.categories.map((category) => (
+                                <div
+                                    key={category}
+                                    className="inline-flex items-center px-3 py-1 mr-2 rounded-full bg-orange-400 text-white"
+                                >
+                                    <p className="text-sm">{category}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
 
-
-                
                 <div className="pb-2/3">
                     <Link to={`/recipe/${recipe.id}`}>
                         <img
@@ -224,47 +226,74 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
                 </div>
 
                 <div className="bottomContainer">
-                <div className="likes-element" onClick={handleOpenModal} style={{cursor: 'pointer'}}>
-    {isLiked ? (
-        <IconContext.Provider value={{ color: "red" }}>
-            <div>
-                <BsHeartFill
-                    className="likeIcon"
-                    onClick={(e) => { e.stopPropagation(); toggleLiked(); }}
-                    size="1.6em"
-                />
-                {" "}
-                <span className="likes-text" onMouseOver={(e) => e.target.style.textDecoration = 'underline'} onMouseOut={(e) => e.target.style.textDecoration = 'none'}>
-                    {numLikes} likes
-                </span>
-            </div>
-        </IconContext.Provider>
-    ) : (
-        <IconContext.Provider value={{ color: "black" }}>
-            <div>
-                <BsHeart
-                    className="likeIcon"
-                    onClick={(e) => { e.stopPropagation(); toggleLiked(); }}
-                    size="1.6em"
-                />
-                {" "}
-                <span className="likes-text" onMouseOver={(e) => e.target.style.textDecoration = 'underline'} onMouseOut={(e) => e.target.style.textDecoration = 'none'}>
-                    {numLikes} likes
-                </span>
-            </div>
-        </IconContext.Provider>
-    )}
-</div>
+                    <div
+                        className="likes-element"
+                        onClick={handleOpenModal}
+                        style={{ cursor: "pointer" }}
+                    >
+                        {isLiked ? (
+                            <IconContext.Provider value={{ color: "red" }}>
+                                <div>
+                                    <BsHeartFill
+                                        className="likeIcon"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            toggleLiked();
+                                        }}
+                                        size="1.6em"
+                                    />{" "}
+                                    <span
+                                        className="likes-text"
+                                        onMouseOver={(e) =>
+                                            (e.target.style.textDecoration = "underline")
+                                        }
+                                        onMouseOut={(e) => (e.target.style.textDecoration = "none")}
+                                    >
+                                        {numLikes} likes
+                                    </span>
+                                </div>
+                            </IconContext.Provider>
+                        ) : (
+                            <IconContext.Provider value={{ color: "black" }}>
+                                <div>
+                                    <BsHeart
+                                        className="likeIcon"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            toggleLiked();
+                                        }}
+                                        size="1.6em"
+                                    />{" "}
+                                    <span
+                                        className="likes-text"
+                                        onMouseOver={(e) =>
+                                            (e.target.style.textDecoration = "underline")
+                                        }
+                                        onMouseOut={(e) => (e.target.style.textDecoration = "none")}
+                                    >
+                                        {numLikes} likes
+                                    </span>
+                                </div>
+                            </IconContext.Provider>
+                        )}
+                    </div>
 
-
-
-<div className="comment-element">
-    {" "}
-    <Link to={`/recipe/${recipe.id}#comments`} style={{ textDecoration: "none" }}>
-        <img className="imgContainer" src={commentIcon} /> <span style={{ textDecoration: "none" }} onMouseOver={(e) => e.target.style.textDecoration = "underline"} onMouseOut={(e) => e.target.style.textDecoration = "none"}>{displayNumberComments()} Comments</span>
-    </Link>
-</div>
-
+                    <div className="comment-element">
+                        {" "}
+                        <Link
+                            to={`/recipe/${recipe.id}#comments`}
+                            style={{ textDecoration: "none" }}
+                        >
+                            <img className="imgContainer" src={commentIcon} />{" "}
+                            <span
+                                style={{ textDecoration: "none" }}
+                                onMouseOver={(e) => (e.target.style.textDecoration = "underline")}
+                                onMouseOut={(e) => (e.target.style.textDecoration = "none")}
+                            >
+                                {displayNumberComments()} Comments
+                            </span>
+                        </Link>
+                    </div>
 
                     <div className="edit-element">
                         {currentUser.uid === recipe.uid && (
