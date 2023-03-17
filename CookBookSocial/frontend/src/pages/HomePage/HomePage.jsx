@@ -70,8 +70,11 @@ function HomePage() {
             setFilterDis(false);
             const scrollPosition = sessionStorage.getItem("scrollPosition");
             if (scrollPosition !== null) {
+                console.log(scrollPosition);
                 document.documentElement.style.scrollBehavior = "smooth";
-                window.scrollTo(0, parseInt(scrollPosition));
+                setTimeout(function () {
+                    window.scrollTo(0, parseInt(scrollPosition));
+                }, 200);
             }
              //Remove dupes from the categories and sort alhphabetically
             const categories = new Set();
