@@ -12,9 +12,12 @@ import { db } from "../../config/firebase";
 import { useNavigate } from "react-router-dom";
 
 function HomePage() {
+    const [recipePostsList, setRecipePostsList] = useState([]);
     const [filteredRecipePostList, setFilteredRecipePostList] = useState([]);
+    const [searchState, setSearchState] = useState({});
     const [isLoading, setIsLoading] = useState(true);
-    const [filterDis, setFilterDis] = useState(false);
+    const [filterDis, setFilterDis] = useState(true);
+    const [friendsList, setFriendsList] = useState({});
     const { currentUser } = useAuth();
 
     const [categoriesList, setCategoriesList] = useState([]);
@@ -31,6 +34,7 @@ function HomePage() {
     const { data: recipeData, isLoading: recipeLoading } = useQuery({
         queryKey: ["recipes"],
         queryFn: () => fetch("/api/recipe/all").then((res) => res.json()),
+        initialData: [],
     });
 
     const { data: friendsData, isLoading: friendsLoading } = useQuery({
@@ -57,20 +61,6 @@ function HomePage() {
             window.scrollTo(0, parseInt(scrollPosition));
         }
 
-        const getCategories = (postsArray) => {
-            const categories = [];
-            for (let i = 0; i < postsArray.length; i++) {
-                if (postsArray[i]["categories"]) {
-                    const cat = postsArray[i]["categories"];
-
-                    for (let j = 0; j < cat.length; j++) {
-                        categories.push({ value: cat[j], label: cat[j] });
-                    }
-                }
-            }
-            return categories;
-        };
-
         return () => {
             window.removeEventListener("beforeunload", handleBeforeUnload);
         };
@@ -84,8 +74,18 @@ function HomePage() {
             const scrollPosition = sessionStorage.getItem("scrollPosition");
             if (scrollPosition !== null) {
                 document.documentElement.style.scrollBehavior = "smooth";
-                window.scrollTo(0, parseInt(scrollPosition));
+                setTimeout(function () {
+                    window.scrollTo(0, parseInt(scrollPosition));
+                }, 200);
             }
+            //Remove dupes from the categories and sort alhphabetically
+            const categories = new Set();
+            for (const recipe of recipeData) {
+                if (recipe.categories) {
+                    recipe.categories.forEach((cat) => categories.add(cat));
+                }
+            }
+            setCategoriesList([...categories].sort().map((cat) => ({ value: cat, label: cat })));
         }
     }, [recipeData, recipeLoading]);
 
@@ -99,7 +99,6 @@ function HomePage() {
             ...defaultStyles,
             color: state.isSelected ? "white" : "black",
             backgroundColor: state.isSelected ? "orange" : "#FFDC9C",
-            backgroundColor: state.isFocused ? "orange" : "#FFDC9C",
         }),
         placeholder: (defaultStyles) => ({
             ...defaultStyles,

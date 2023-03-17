@@ -1,14 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
 import SearchBar from "../Search/Search";
 import { Link } from "react-router-dom";
 
 import { useAuth } from "../../contexts/AuthContext";
+import styles from "./Navbars.module.css";
 
 export default function Navbar() {
     const { currentUser, setError, logout } = useAuth();
+    const [notifications, setNotifications] = useState(0);
 
     const navigate = useNavigate();
+
+    const URL_GET_NOTIFICATIONS = `/api/user/notifications/${currentUser?.uid}`;
+    useEffect(() => {
+        fetch(URL_GET_NOTIFICATIONS, {
+            method: "GET",
+            headers: {
+                "Content-type": "application/json",
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                // console.log(data?.notifications.count);
+                setNotifications(data?.notifications?.count);
+            });
+    }, []);
 
     async function handleLogout() {
         try {
@@ -129,6 +147,12 @@ export default function Navbar() {
                                 >
                                     Profile
                                 </Link>
+
+                                {notifications > 0 && (
+                                    <span className={styles.navbarNotification}>
+                                        {notifications}
+                                    </span>
+                                )}
                             </li>
                             <li>
                                 <Link
