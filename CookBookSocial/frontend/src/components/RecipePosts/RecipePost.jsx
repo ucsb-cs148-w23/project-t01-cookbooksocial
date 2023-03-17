@@ -194,6 +194,23 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
                     Description:
                     <p className="inline text-gray-500 pl-2">{recipe.description}</p>
                 </p>
+
+
+                {recipe.categories && recipe.categories.length > 0 && (
+  <div className="pt-2">
+    <div className="flex items-center">
+      <p className="text-orange-400 text-left pl-5">Categories:</p>
+      {recipe.categories.map((category) => (
+        <div key={category} className="inline-flex items-center px-3 py-1 mr-2 rounded-full bg-orange-400 text-white">
+          <p className="text-sm">{category}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+
+
+                
                 <div className="pb-2/3">
                     <Link to={`/recipe/${recipe.id}`}>
                         <img
