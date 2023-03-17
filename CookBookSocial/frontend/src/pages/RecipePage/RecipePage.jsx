@@ -32,13 +32,21 @@ function RecipePage() {
 
   const { currentUser } = useAuth();
   
-function  handleCommentsMount(){//function to pass to comments modal that will scroll to the comments once they load
-  setTimeout(() => {
-    window.scrollTo({
-      top: document.getElementsByName('comments')[0].offsetTop,
-      behavior: 'smooth'
-    });
-  }, 100);}//Small 100ms buffer to ensure the comments have rendered so that we can scroll to them properly
+  function handleCommentsMount() {
+    // function to pass to comments modal that will scroll to the comments once they load
+    try {
+      if (window.location.hash === '#comments') {
+        setTimeout(() => {
+          window.scrollTo({
+            top: document.getElementsByName('comments')[0].offsetTop,
+            behavior: 'smooth'
+          });
+        }, 100);//Small 100ms buffer to ensure the comments have rendered so that we can scroll to them properly
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
   function handleOpenModal() {
     setIsModalOpen(true);
   }
