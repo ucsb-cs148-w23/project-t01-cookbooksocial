@@ -108,13 +108,15 @@ export default function Signup() {
             </div>
           </div>
           <div className={styles.inputFields}>
-                        <button type="submit" disabled={loading} className={styles.submit_button}>
-                            Register
-                        </button>
-                    </div>
+            <button type="submit" disabled={loading} className={styles.submit_button}>
+              Register
+            </button>
+          </div>
         </form>
 
         <div className={styles.inputFields}>
+
+          {/* Note, this br tag adds space between the previous and next object */}
           <br />
           <div className={styles.orText}>Or sign up with:</div>
           <button
@@ -131,7 +133,7 @@ export default function Signup() {
         </div>
 
         <div className="flex items-center justify-center">
-          <div className="text-sm">
+          <div className="text-sm mt-2">
             <Link to="/login" className="text-blue-600">
               Sign in instead
             </Link>

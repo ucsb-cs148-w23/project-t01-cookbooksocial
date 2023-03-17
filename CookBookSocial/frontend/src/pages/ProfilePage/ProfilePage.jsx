@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import RecipePost from "../../components/RecipePosts/RecipePost";
+import MiniRecipePost from "../../components/MiniRecipePosts/MiniRecipePost";
 import Navbar from "../../components/Navbar/Navbar";
 import "./ProfilePage.css";
 import { useAuth } from "../../contexts/AuthContext";
@@ -7,14 +7,16 @@ import { db } from "../../config/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import FriendRequestsDisplay from "../../components/Friends/friendRequestsDisplay/FriendRequestsDisplay";
 import FriendsListModal from "../../components/Friends/FriendsList/FriendsListModal";
+import { useNavigate } from "react-router-dom";
 
 function ProfilePage() {
     const [profileRecipePostsList, updateProfileRecipePostsList] = useState([]);
     const { currentUser } = useAuth();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [profileInfo, updateProfileInfo] = useState([]);
-    const POSTS_AT_A_TIME = 5;
+    const POSTS_AT_A_TIME = 6;
     const [numPosts, setNumPosts] = useState(POSTS_AT_A_TIME);
+    const navigate = useNavigate();
 
     function handleOpenModal() {
         setIsModalOpen(true);
@@ -64,6 +66,13 @@ function ProfilePage() {
     }, []);
     //get profile info
     useEffect(() => {
+        if (currentUser) {
+            // If the user does not already have user data, we redirect them to the edit-profile
+            if (!currentUser.displayName) {
+              navigate("/edit-profile");
+            }
+              
+          }
         getProfileInfo();
     }, []);
     useEffect(() => {}, [profileInfo]);
@@ -92,7 +101,7 @@ function ProfilePage() {
         let profilePostCount = 0; //count number of profile posts rendered, and keep less than numPosts
         for (let i = 0; i < profileRecipePostsList.length && profilePostCount < numPosts; i++) {
             if (profileRecipePostsList[i].uid === currentUser.uid) {
-                arrComponents.push(<RecipePost key={i} recipe={profileRecipePostsList[i]} />);
+                arrComponents.push(<MiniRecipePost key={i} recipe={profileRecipePostsList[i]} />);
                 profilePostCount += 1;
             }
         }
@@ -158,7 +167,7 @@ function ProfilePage() {
                 <FriendRequestsDisplay currentUserId={currentUser.uid} />
                 <h2 className="mt-4 text-left text-xl font-bold">Recent posts</h2>
                 <div className="profile-page">
-                    <ul>{renderProfileRecipePostComponents()}</ul>
+                    <ul className="grid grid-cols-3 gap-x-2 gap-y-0.5px">{renderProfileRecipePostComponents()}</ul>
                 </div>
             </div>
         </div>

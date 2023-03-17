@@ -11,15 +11,23 @@ Larger images would make more duplicate posts, which I am assume is because the 
 
 import { ref, getDownloadURL, uploadBytesResumable, deleteObject, getStorage } from "firebase/storage";
 import { storage, db } from "../config/firebase";
-import { doc, addDoc, updateDoc, collection, serverTimestamp } from "firebase/firestore";
+import { doc, setDoc, addDoc, updateDoc, collection, serverTimestamp } from "firebase/firestore";
 import {v4 as uuidv4} from 'uuid';
 
 async function postToFirebase(stringURL, fullRecipeInfo) {
     let postInfo = fullRecipeInfo;
     postInfo["createdAt"] = serverTimestamp();
     postInfo["image"] = stringURL;
+    
 
     const res = await addDoc(collection(db, "recipes"), postInfo);
+
+    if ((postInfo["categories"]).length > 0 ){
+      for (let i = 0; i < (postInfo["categories"]).length; i++)
+      {
+      await setDoc(doc(db, "categories", (postInfo["categories"])[i]), {body: (postInfo["categories"])[i]})
+      }
+    }
 
 
     return res;
