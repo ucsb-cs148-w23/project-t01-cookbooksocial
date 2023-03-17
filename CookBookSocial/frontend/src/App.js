@@ -19,14 +19,12 @@ import RecipePage from "./pages/RecipePage/RecipePage";
 import InvalidURL from "./pages/Invalid URL/InvalidURL";
 import NewPost from "./pages/NewPostPage/NewPost";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 function App() {
     const queryClient = new QueryClient();
     return (
         <AuthProvider>
             <QueryClientProvider client={queryClient}>
-                <ReactQueryDevtools initialIsOpen={false} />
                 <div className="App">
                     <ErrorMessage />
                     <Routes>

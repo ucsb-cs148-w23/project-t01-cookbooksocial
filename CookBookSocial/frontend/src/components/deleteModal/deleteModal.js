@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./deleteModal.css";
 
@@ -6,7 +7,20 @@ export function DeleteModal({ recipeId, show, setShow }) {
     const [isLoading, setIsLoading] = useState(false);
     const [hasErrorDelete, setHasErrorDelete] = useState(false);
 
-    const URL_DELETE_RECIPE = `/api/recipe/${recipeId}`;
+    const queryClient = useQueryClient();
+
+    const mutation = useMutation({
+        mutationFn: (recipeId) =>
+            fetch(`/api/recipe/${recipeId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-type": "application/json",
+                },
+            }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["recipes"] });
+        },
+    });
 
     function modalClosing() {
         setShow(false);
@@ -18,15 +32,14 @@ export function DeleteModal({ recipeId, show, setShow }) {
 
     async function deletePost() {
         setIsLoading(true);
-        const response = await fetch(URL_DELETE_RECIPE, {
-            method: "DELETE",
-            headers: {
-                "Content-type": "application/json",
+        mutation.mutate(recipeId, {
+            onError: (error) => {
+                console.log("Backend failed to delete post.");
+                setHasErrorDelete(true);
             },
-        }).then(function (data) {
-            setIsLoading(false);
-            console.log(data);
-            if (data.status === 200) {
+            onSuccess: (data) => {
+                setIsLoading(false);
+                console.log(data);
                 setShow(false);
                 if (location.pathname === "/profile") {
                     window.location.reload();
@@ -35,12 +48,8 @@ export function DeleteModal({ recipeId, show, setShow }) {
                     let path = "/profile";
                     navigate(path);
                 }
-            } else {
-                console.log("Backend failed to delete post.");
-                setHasErrorDelete(true);
-            }
+            },
         });
-        console.log(response);
     }
 
     if (show) {
