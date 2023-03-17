@@ -31,6 +31,7 @@ function HomePage() {
     const { data: recipeData, isLoading: recipeLoading } = useQuery({
         queryKey: ["recipes"],
         queryFn: () => fetch("/api/recipe/all").then((res) => res.json()),
+        initialData: [],
     });
 
     const { data: friendsData, isLoading: friendsLoading } = useQuery({
