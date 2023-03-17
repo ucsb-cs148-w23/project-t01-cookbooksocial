@@ -32,7 +32,13 @@ function RecipePage() {
 
   const { currentUser } = useAuth();
   
-
+function  handleCommentsMount(){//function to pass to comments modal that will scroll to the comments once they load
+  setTimeout(() => {
+    window.scrollTo({
+      top: document.getElementsByName('comments')[0].offsetTop,
+      behavior: 'smooth'
+    });
+  }, 100);}//Small 100ms buffer to ensure the comments have rendered so that we can scroll to them properly
   function handleOpenModal() {
     setIsModalOpen(true);
   }
@@ -142,21 +148,7 @@ function RecipePage() {
     return commentsArr.length;
     
   }
-  async function scroll()
-  { //buffer  for comments to load
-    await new Promise(resolve => setTimeout(resolve,200 ));
-    try {
-      if (window.location.hash === '#comments') {
-        window.scrollTo({
-          top: document.getElementsByName('comments')[0].offsetTop + window.innerHeight,
-          behavior: 'smooth'
-        });
-      }
-      return commentsArr.length;
-    } catch (error) {
-    }
-    
-  }
+ 
 
   //save function
   function SaveRecipe() {
@@ -214,7 +206,6 @@ function RecipePage() {
   className={styles.recipeImage}
   src={recipe.image}
   alt={recipe.title}
-  onLoad={scroll}
 />
 
         </div>
@@ -236,7 +227,6 @@ function RecipePage() {
                       </IconContext.Provider>
                   )}
           </div>
-          <a name="comments"></a>
 
           <div className={styles.commentElement}>  <img className={styles.commentIcon} src={commentIcon} />  {displayNumberComments()} Comments</div>
 
@@ -291,10 +281,12 @@ function RecipePage() {
           </div>
         )}
       </div>
+      <a name="comments"></a>
       <Comments
         currentUserId={currentUser.uid}
         recipeId={recipeId}
         comments={commentsArr}
+        onMount={handleCommentsMount}
       />
       {currentUser.uid === recipe.uid && (
         <div>
