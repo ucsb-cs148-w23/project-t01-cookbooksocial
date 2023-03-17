@@ -99,7 +99,6 @@ function HomePage() {
             ...defaultStyles,
             color: state.isSelected ? "white" : "black",
             backgroundColor: state.isSelected ? "orange" : "#FFDC9C",
-            backgroundColor: state.isFocused ? "orange" : "#FFDC9C",
         }),
         placeholder: (defaultStyles) => ({
             ...defaultStyles,
