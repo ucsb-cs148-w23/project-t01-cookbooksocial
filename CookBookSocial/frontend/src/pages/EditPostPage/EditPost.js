@@ -20,6 +20,14 @@ export default function EditPost() {
     const URL_GET_RECIPE_BY_ID = `/api/recipe/${id}`;
 
     useEffect(() => {
+        if (currentUser) {
+            // If the user does not already have user data, we redirect them to the edit-profile
+            if (!currentUser.displayName) {
+              navigate("/edit-profile");
+            }
+          }
+
+
         fetch(URL_GET_RECIPE_BY_ID)
             .then((response) => response.json())
             .then((data) => {

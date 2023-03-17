@@ -7,6 +7,7 @@ import { db } from "../../config/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import FriendRequestsDisplay from "../../components/Friends/friendRequestsDisplay/FriendRequestsDisplay";
 import FriendsListModal from "../../components/Friends/FriendsList/FriendsListModal";
+import { useNavigate } from "react-router-dom";
 
 function ProfilePage() {
     const [profileRecipePostsList, updateProfileRecipePostsList] = useState([]);
@@ -15,6 +16,7 @@ function ProfilePage() {
     const [profileInfo, updateProfileInfo] = useState([]);
     const POSTS_AT_A_TIME = 5;
     const [numPosts, setNumPosts] = useState(POSTS_AT_A_TIME);
+    const navigate = useNavigate();
 
     function handleOpenModal() {
         setIsModalOpen(true);
@@ -49,6 +51,13 @@ function ProfilePage() {
     }, []);
     //get profile info
     useEffect(() => {
+        if (currentUser) {
+            // If the user does not already have user data, we redirect them to the edit-profile
+            if (!currentUser.displayName) {
+              navigate("/edit-profile");
+            }
+              
+          }
         getProfileInfo();
     }, []);
     useEffect(() => {}, [profileInfo]);
