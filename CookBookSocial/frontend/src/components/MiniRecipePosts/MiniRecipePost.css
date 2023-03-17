@@ -1,0 +1,78 @@
+
+.iconList{
+    display: flex;
+    padding: 10px;
+    padding-top: 0;
+}
+
+.comment-element {
+  position:absolute;
+  max-width: 20%;
+  margin-top: 22px;
+  margin-left: 20px;
+}
+
+/* .number-comments {
+  float: left;
+  margin-left: 5%;
+} */
+
+.imgContainer {
+  max-width: 30%;
+  height: auto;
+  display: inline;
+  filter:invert() ;
+}
+.img_overlay{
+  position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.6);
+  display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	opacity: 0;
+	transition: opacity 0.25s;
+	color: #ffffff;
+}
+
+.img_overlay:hover {
+	opacity: 1;
+}
+
+.likesContainer {
+  max-width: 50%;
+  height: auto;
+  display: flex;
+  width: 15%;
+}
+
+.commentsCon {
+  margin-left: 1%;
+  display: inline;
+}
+
+.numberLikes {
+  display: inline-block;
+  margin-left: 4%;
+}
+.likeIcon {
+  max-width: 250%;
+  display: inline;
+  cursor: pointer;
+}
+
+.swingAnimation {
+  animation-name: swing;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+.likes-element {
+  margin-top: 20px;
+}
