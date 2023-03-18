@@ -198,7 +198,6 @@ function HomePage() {
         }),
         singleValue: (defaultStyles) => ({ ...defaultStyles, color: "black" }),
     };
-
     const filterByCategory = async (selectedOption) => {
         setSelected(selectedOption);
     };
@@ -226,13 +225,13 @@ function HomePage() {
                     }
                 >
                     {recipeList.map((recipe, i) => (
-                        <RecipePost key={i} recipe={recipe} />
+                        <RecipePost key={recipe.id} recipe={recipe} />
                     ))}
                 </InfiniteScroll>
             );
         } else {
             return recipeList.map((recipe, index) => (
-                <RecipePost key={index + 2000} recipe={recipe} />
+                <RecipePost key={recipe.id} recipe={recipe} />
             ));
         }
     };
