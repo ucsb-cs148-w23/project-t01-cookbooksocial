@@ -80,7 +80,7 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
                 newLikesByUid.push(currentUser.uid);
             }
         }
-        const newBody = { likesByUid: newLikesByUid };
+        const newBody = { likesByUid: newLikesByUid, likeCount: newLikesByUid.length };
         const response = await axios.put(Recipe_URL, newBody);
         setIsLiked(!isLiked);
     }

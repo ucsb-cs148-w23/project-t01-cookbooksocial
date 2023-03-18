@@ -14,6 +14,8 @@ import {
     serverTimestamp,
     orderBy,
     setDoc,
+    startAfter,
+    limit,
 } from "firebase/firestore";
 
 import { getStorage, deleteObject, ref } from "firebase/storage";
@@ -120,7 +122,6 @@ const getRecipe = async (req, res, next) => {
         const id = req.params.id;
 
         const docRef = doc(db, "recipes", id);
-        console.log(docRef, id);
         const docSnap = await getDoc(docRef);
         let recipe = docSnap.data();
         if (Object.hasOwn(docSnap.data(), "uid")) {
@@ -135,6 +136,69 @@ const getRecipe = async (req, res, next) => {
         }
     } catch (e) {
         res.status(400).send(`Error: ${e.message}`);
+    }
+};
+
+const getRecipeByCursor = async (req, res, next) => {
+    const { lastVisible, limit: maxRecipes, sortBy } = req.query;
+    const recipesRef = collection(db, "recipes");
+    const amount = parseInt(maxRecipes) + 1;
+
+    const order = sortBy === "recent" ? "createdAt" : "likeCount";
+
+    const first = query(recipesRef, orderBy(order, "desc"), limit(amount));
+
+    try {
+        let result = [];
+        if (lastVisible != "null") {
+            const lastVisibleDoc = await getDoc(doc(recipesRef, lastVisible));
+            const nextQuery = query(
+                recipesRef,
+                orderBy(order, "desc"),
+                startAfter(lastVisibleDoc),
+                limit(amount)
+            );
+            const nextQuerySnapshot = await getDocs(nextQuery);
+            const docs = nextQuerySnapshot.docs.map(async (docSnap) => {
+                const doc = { id: docSnap.id, ...docSnap.data() };
+                if (Object.hasOwn(docSnap.data(), "uid")) {
+                    const user = await getUser(docSnap.data().uid);
+                    doc["user"] = user;
+                }
+                return doc;
+            });
+            result = await Promise.all(docs);
+            let lastVisibleDocIdUpdated = undefined;
+
+            if (result.length > parseInt(maxRecipes)) {
+                result.pop();
+                lastVisibleDocIdUpdated =
+                    nextQuerySnapshot.docs[nextQuerySnapshot.docs.length - 2].id;
+            }
+
+            res.status(200).send({ lastCursor: lastVisibleDocIdUpdated, data: result });
+        } else {
+            const firstQuerySnapshot = await getDocs(first);
+            const docs = firstQuerySnapshot.docs.map(async (docSnap) => {
+                const doc = { id: docSnap.id, ...docSnap.data() };
+                if (Object.hasOwn(docSnap.data(), "uid")) {
+                    const user = await getUser(docSnap.data().uid);
+                    doc["user"] = user;
+                }
+                return doc;
+            });
+            result = await Promise.all(docs);
+            let lastVisibleDocIdUpdated = undefined;
+
+            if (result.length > parseInt(maxRecipes)) {
+                result.pop();
+                lastVisibleDocIdUpdated =
+                    firstQuerySnapshot.docs[firstQuerySnapshot.docs.length - 2].id;
+            }
+            res.status(200).send({ lastCursor: lastVisibleDocIdUpdated, data: result });
+        }
+    } catch (error) {
+        next(error);
     }
 };
 
@@ -341,6 +405,7 @@ export {
     updateRecipe,
     deleteRecipe,
     getRecipe,
+    getRecipeByCursor,
     getAllRecipes,
     addFile,
     addSavedPost,

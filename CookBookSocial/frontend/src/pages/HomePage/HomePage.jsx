@@ -5,19 +5,16 @@ import { useAuth } from "../../contexts/AuthContext";
 import Navbar from "../../components/Navbar/Navbar";
 import { FaSpinner } from "react-icons/fa";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import "./HomePage.css";
 import Select from "react-select";
 import { db } from "../../config/firebase";
 import { useNavigate } from "react-router-dom";
 
 function HomePage() {
-    const [recipePostsList, setRecipePostsList] = useState([]);
-    const [filteredRecipePostList, setFilteredRecipePostList] = useState([]);
-    const [searchState, setSearchState] = useState({});
+    const [recipes, setRecipes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [filterDis, setFilterDis] = useState(true);
-    const [friendsList, setFriendsList] = useState({});
     const { currentUser } = useAuth();
 
     const [categoriesList, setCategoriesList] = useState([]);
@@ -31,16 +28,53 @@ function HomePage() {
         parseInt(sessionStorage.getItem("numPosts")) || POSTS_AT_A_TIME
     );
 
-    const { data: recipeData, isLoading: recipeLoading } = useQuery({
-        queryKey: ["recipes"],
-        queryFn: () => fetch("/api/recipe/all").then((res) => res.json()),
-        initialData: [],
+    const fetchRecipes = async ({ pageParam = null }) => {
+        const res = await fetch(
+            "/api/recipe/cursor?limit=10&sortBy=recent&lastVisible=" + pageParam
+        );
+        return res.json();
+    };
+
+    const {
+        data: recipeData,
+        error,
+        fetchNextPage,
+        hasNextPage,
+        isFetching: recipeLoading,
+        isFetchingNextPage,
+        status,
+    } = useInfiniteQuery({
+        queryKey: ["projects"],
+        queryFn: fetchRecipes,
+        getNextPageParam: (lastPage, pages) => lastPage.lastCursor,
     });
 
     const { data: friendsData, isLoading: friendsLoading } = useQuery({
         queryKey: ["friends"],
         queryFn: () => fetch(`/api/user/friendsList/${currentUser.uid}`).then((res) => res.json()),
     });
+    useEffect(() => {
+        // set numPosts to number of posts within recipeData.pages, an array of pages with variable length
+        if (recipeData) {
+            let numPosts = 0;
+            recipeData.pages.forEach((page) => {
+                numPosts += page.data.length;
+            });
+            setNumPosts(numPosts);
+            sessionStorage.setItem("numPosts", numPosts);
+        }
+
+        // Flatten recipeData into a single array of recipes.
+        if (recipeData) {
+            let recipes = [];
+            recipeData.pages.forEach((page) => {
+                page.data.forEach((recipe) => {
+                    recipes.push(recipe);
+                });
+            });
+            setRecipes(recipes);
+        }
+    }, [recipeData]);
 
     useEffect(() => {
         if (currentUser) {
@@ -68,31 +102,31 @@ function HomePage() {
 
     useEffect(() => {
         if (recipeData && !recipeLoading) {
-            setFilteredRecipePostList(recipeData);
+            // setFilteredRecipePostList(recipeData);
             setIsLoading(false);
             setFilterDis(false);
-            const scrollPosition = sessionStorage.getItem("scrollPosition");
-            if (scrollPosition !== null) {
-                document.documentElement.style.scrollBehavior = "smooth";
-                setTimeout(function () {
-                    window.scrollTo(0, parseInt(scrollPosition));
-                }, 200);
-            }
+            // const scrollPosition = sessionStorage.getItem("scrollPosition");
+            // if (scrollPosition !== null) {
+            //     document.documentElement.style.scrollBehavior = "smooth";
+            //     setTimeout(function () {
+            //         window.scrollTo(0, parseInt(scrollPosition));
+            //     }, 200);
+            // }
             //Remove dupes from the categories and sort alhphabetically
             const categories = new Set();
-            for (const recipe of recipeData) {
-                if (recipe.categories) {
-                    recipe.categories.forEach((cat) => categories.add(cat));
-                }
-            }
-            setCategoriesList([...categories].sort().map((cat) => ({ value: cat, label: cat })));
+            // for (const recipe of recipeData) {
+            //     if (recipe.categories) {
+            //         recipe.categories.forEach((cat) => categories.add(cat));
+            //     }
+            // }
+            // setCategoriesList([...categories].sort().map((cat) => ({ value: cat, label: cat })));
         }
     }, [recipeData, recipeLoading]);
 
-    const fetchMoreData = () => {
-        setNumPosts((prevNumPosts) => prevNumPosts + POSTS_AT_A_TIME);
-        sessionStorage.setItem("numPosts", numPosts + POSTS_AT_A_TIME);
-    };
+    // const fetchMoreData = () => {
+    //     setNumPosts((prevNumPosts) => prevNumPosts + POSTS_AT_A_TIME);
+    //     sessionStorage.setItem("numPosts", numPosts + POSTS_AT_A_TIME);
+    // };
 
     const customStyles = {
         option: (defaultStyles, state) => ({
@@ -135,7 +169,7 @@ function HomePage() {
         setFilterDis(true);
         setSelected(null);
         setIsLoading(true);
-        setFilteredRecipePostList(recipeData);
+
         await new Promise((resolve) => setTimeout(resolve, 400));
         setIsLoading(false);
         setFilterDis(false);
@@ -145,9 +179,9 @@ function HomePage() {
         setFilterDis(true);
         setSelected("");
         setIsLoading(true);
-        setFilteredRecipePostList(
-            recipeData.filter((recipePost) => Object.keys(friendsData).includes(recipePost.uid))
-        );
+        // setFilteredRecipePostList(
+        //     recipeData.filter((recipePost) => Object.keys(friendsData).includes(recipePost.uid))
+        // );
 
         await new Promise((resolve) => setTimeout(resolve, 400));
         setIsLoading(false);
@@ -161,7 +195,7 @@ function HomePage() {
         const top10Posts = recipePostsCopy
             .sort((postA, postB) => postB.likesByUid.length - postA.likesByUid.length)
             .slice(0, 10);
-        setFilteredRecipePostList(top10Posts);
+        // setFilteredRecipePostList(top10Posts);
         /// console.log(top10Posts)
         await new Promise((resolve) => setTimeout(resolve, 400));
         setIsLoading(false);
@@ -171,13 +205,13 @@ function HomePage() {
     const filterByCategory = async (selectedOption) => {
         setIsLoading(true);
 
-        setFilteredRecipePostList(
-            recipeData.filter((recipePost) => {
-                if (recipePost["categories"]) {
-                    return recipePost["categories"].includes(selectedOption.value);
-                }
-            })
-        );
+        // setFilteredRecipePostList(
+        //     recipeData.filter((recipePost) => {
+        //         if (recipePost["categories"]) {
+        //             return recipePost["categories"].includes(selectedOption.value);
+        //         }
+        //     })
+        // );
 
         setSelected(selectedOption);
 
@@ -236,16 +270,16 @@ function HomePage() {
                     <>
                         <InfiniteScroll
                             dataLength={numPosts}
-                            next={fetchMoreData}
-                            hasMore={numPosts < filteredRecipePostList.length}
+                            next={fetchNextPage}
+                            hasMore={hasNextPage}
                             loader={
                                 <div className="loading-container">
                                     <FaSpinner className="loading-spinner" />
                                 </div>
                             }
                         >
-                            {filteredRecipePostList.slice(0, numPosts).map((recipe, index) => (
-                                <RecipePost key={index} recipe={recipe} />
+                            {recipes.map((recipe, i) => (
+                                <RecipePost key={i} recipe={recipe} />
                             ))}
                         </InfiniteScroll>
                     </>
