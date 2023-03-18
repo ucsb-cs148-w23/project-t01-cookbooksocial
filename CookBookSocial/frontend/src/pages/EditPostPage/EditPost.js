@@ -51,6 +51,7 @@ export default function EditPost() {
                     stepList: data.instructions,
                     stepText: "",
                     image: data.image,
+                    likesByUid: data.likesByUid,
 
                     // Checks if the recipe has a category field already. Otherwhise it sets a default value
                     categories: data.categories ? data.categories : [],
@@ -66,7 +67,10 @@ export default function EditPost() {
             {
                 id: id,
                 image: image,
-                recipe: recipe,
+                recipe: {
+                    recipe,
+                    likesByUid: initialValues.likesByUid, 
+                },
                 oldImage: oldImage,
                 imageChanged: imageChanged,
             },
