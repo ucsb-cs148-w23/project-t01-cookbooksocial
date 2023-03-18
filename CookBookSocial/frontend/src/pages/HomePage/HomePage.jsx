@@ -231,7 +231,9 @@ function HomePage() {
                 </InfiniteScroll>
             );
         } else {
-            return recipeList.map((recipe, index) => <RecipePost key={index} recipe={recipe} />);
+            return recipeList.map((recipe, index) => (
+                <RecipePost key={index + 2000} recipe={recipe} />
+            ));
         }
     };
 
