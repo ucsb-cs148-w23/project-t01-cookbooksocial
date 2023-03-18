@@ -239,8 +239,9 @@ function HomePage() {
 
     const updateFilter = async (type) => {
         setLoading(true);
-        await new Promise((resolve) => setTimeout(resolve, 400));
-        setFilter(type);
+       
+        await setFilter(type);
+        await new Promise((resolve) => setTimeout(resolve, 300));
         setLoading(false);
     };
 
