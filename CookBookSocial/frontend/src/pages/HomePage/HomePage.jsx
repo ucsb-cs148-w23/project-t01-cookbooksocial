@@ -240,8 +240,9 @@ function HomePage() {
     const updateFilter = async (type) => {
         setLoading(true);
         await new Promise((resolve) => setTimeout(resolve, 250));
-
         await setFilter(type);
+        await new Promise((resolve) => setTimeout(resolve, 250));
+
         setLoading(false);
     };
 
