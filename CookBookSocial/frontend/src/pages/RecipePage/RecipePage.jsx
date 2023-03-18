@@ -191,9 +191,20 @@ function RecipePage() {
             />
             <Navbars />
             <div className={styles.recipePage}>
-                <h1 className={styles.recipeTitle}>{recipe.title}</h1>
-                <div className={styles.recipeImageWrapper}>
-                    <img className={styles.recipeImage} src={recipe.image} alt={recipe.title} />
+            <div className={styles.headeritem}>
+        <div className= {styles.titleElement}>
+          <h1 className={styles.recipeTitle}>{recipe.title}</h1>
+        </div>
+        <div className={styles.deleteElement}>
+          {currentUser.uid === recipe.uid &&(<DeleteButton recipeId={recipeId} ></DeleteButton>)}
+        </div>
+      </div>
+            <div className={styles.recipeImageWrapper}>
+            <img
+            className={styles.recipeImage}
+            src={recipe.image}
+            alt={recipe.title}
+          />
                 </div>
                 <div className={styles.iconList}>
                     <div className={styles.likesElement}>
@@ -301,11 +312,7 @@ function RecipePage() {
                         </ol>
                     </div>
                 </div>
-                {currentUser.uid === recipe.uid && (
-                    <div>
-                        <DeleteButton recipeId={recipeId}></DeleteButton>
-                    </div>
-                )}
+
             </div>
             <a name="comments"></a>
             <Comments
@@ -314,18 +321,6 @@ function RecipePage() {
                 comments={commentsArr}
                 onMount={handleCommentsMount}
             />
-            {currentUser.uid === recipe.uid && (
-                <div>
-                    <a
-                        type="button"
-                        className="text-white bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-lg px-5 py-2.5 text-center mr-2 mb-2 mt-4"
-                        href={editPostPath}
-                    >
-                        Edit
-                    </a>
-                    <DeleteButton recipeId={recipeId}></DeleteButton>
-                </div>
-            )}
         </>
     );
 }
