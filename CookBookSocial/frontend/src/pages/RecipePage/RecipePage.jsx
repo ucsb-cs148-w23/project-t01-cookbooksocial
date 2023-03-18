@@ -56,15 +56,6 @@ function RecipePage() {
   }
 
 
-
-  const Recipe_URL = `/api/recipe/${id}`;
-  useEffect(() => {
-    fetch(Recipe_URL)
-      .then((response) => response.json())
-      .then((data) => {
-        setRecipe(data)});
-
-  }, [])
   useEffect(() => {
 
     setRecipId(id);
@@ -74,6 +65,7 @@ function RecipePage() {
       .then((doc) => {
         if (doc.exists()) {
           const data = doc.data();
+          setRecipe(data);
           setEditPostPath(`/edit-recipe/${id}`);
           if (data["comments"]) {
             setCommentsArr(data["comments"]);
@@ -90,6 +82,8 @@ function RecipePage() {
 
 
   }, [id]);
+
+  const Recipe_URL = `/api/recipe/${id}`;
 
   useEffect(() => {
     
@@ -130,20 +124,7 @@ function RecipePage() {
       .catch((error) => console.log(error));
 
   }, []);
-  
-  function displayName() {
-    // There is no 'user' in the recipe.
-    if ("user" in recipe && "profile" in recipe.user) {
-        if ("displayName" in recipe.user.profile) {
-            return recipe.user.profile.displayName;
-        }
-    }
-    if ("email" in recipe) {
-        return recipe.email;
-    } else {
-        return "No author found!";
-    }
-}
+
 
 
   async function toggleLiked() {
@@ -169,12 +150,6 @@ function RecipePage() {
     setIsLiked(!isLiked);
 
   }
-  
-  function timeStamptoDate(createdAt) {
-    const date = new Date(createdAt.seconds * 1000 + createdAt.nanoseconds / 1000000);
-    const options = { year: "numeric", month: "long", day: "numeric" };
-    return date.toLocaleDateString("en-US", options);
-}
 
    function displayNumberComments() {
 
@@ -277,14 +252,9 @@ function RecipePage() {
         <div className={styles.recipeDetails}>
           <p className={styles.recipeDescription}>{recipe.description}</p>
           <div className={styles.recipeMetadata}>
-          <p className={styles.recipeMetadataItem}>Posted by:  <Link
-                        className="pl-2"
-                        to={currentUser.uid === recipe.uid ? "/profile" : "/profile/" + recipe.uid}
-                    >
-                        {displayName(recipe)}
-                    </Link></p>
+            <p className={styles.recipeMetadataItem}>Posted by: <Link to={`/profile/` + recipe.uid}>{recipe.email}</Link></p>
             <p className={styles.recipeMetadataItem}>
-            Posted on {timeStamptoDate(recipe.createdAt)}
+              Posted on {recipe.createdAt.toDate().toLocaleDateString()}
             </p>
             <button className={styles.shareButton} onClick={handleShareClick}>
               Share
