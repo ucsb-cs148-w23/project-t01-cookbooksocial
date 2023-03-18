@@ -200,7 +200,7 @@ function HomePage() {
     };
 
     const filterByCategory = async (selectedOption) => {
-        setSelected(selectedOption);
+       await setSelected(selectedOption);
     };
 
     const renderList = (type) => {
