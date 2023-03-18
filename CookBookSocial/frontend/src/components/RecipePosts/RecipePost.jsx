@@ -168,7 +168,7 @@ function RecipePost({ recipe, isSavedPage, deleteinSavedPage }) {
     }
 
     return (
-        <div className="border-2 rounded-md border-orange-400 mb-10">
+        <div className="border-2 border-orange-400 mb-10">
             <LikeListModal
                 RecipeId={recipe.id}
                 isOpen={isModalOpen}

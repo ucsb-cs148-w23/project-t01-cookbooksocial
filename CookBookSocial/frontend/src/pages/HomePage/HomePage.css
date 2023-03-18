@@ -4,7 +4,6 @@
     margin-right: auto;
     margin-top: 10px;
     margin-bottom: 100px;
-
 }
 
 .new-post-btn {
@@ -24,51 +23,45 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-  }
-  .loading-spinner {
+}
+.loading-spinner {
     font-size: 6rem;
     margin-top: 1rem;
     animation: spin 1s linear infinite;
-  }
+}
 
- 
-
-  .hr-line{
+.hr-line {
     width: 100%;
-    border-top: 2px solid orange;
-    border-bottom: 2px solid #ebebeb;
-    margin-bottom: 5px;
-  }
+    border-top: 2px solid rgb(251 146 60);
+}
 
-  .filterBox{
+.filterBox {
     display: flex;
     justify-content: center;
-  }
-  .filterBox label{
-      display: block;
-      width: 150px;
-      background: rgb(255, 220, 156);
-      color: #000;
-      padding: 10px;
-      margin: 10px;
-      box-sizing: border-box;
-      text-align: center;
-      text-decoration: none;
-      border-radius: 30px;
-      cursor: pointer;
-  }
-  .filterBox input:checked+label{
-      background: orange;
-      color: #FFF;
-  }
-  .filterBox input{
-      display: none;
-  }
-  
-  
-  @keyframes spin {
+}
+.filterBox label {
+    display: block;
+    width: 150px;
+    background: rgb(255, 220, 156);
+    color: #000;
+    padding: 10px;
+    margin: 10px;
+    box-sizing: border-box;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 30px;
+    cursor: pointer;
+}
+.filterBox input:checked + label {
+    background: orange;
+    color: #fff;
+}
+.filterBox input {
+    display: none;
+}
+
+@keyframes spin {
     to {
-      transform: rotate(360deg);
+        transform: rotate(360deg);
     }
-  }
-  
+}
