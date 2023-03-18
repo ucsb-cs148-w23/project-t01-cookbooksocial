@@ -54,6 +54,11 @@ function RecipePage() {
     function handleCloseModal() {
         setIsModalOpen(false);
     }
+    function timeStamptoDate(createdAt) {
+        const date = new Date(createdAt.seconds * 1000 + createdAt.nanoseconds / 1000000);
+        const options = { year: "numeric", month: "long", day: "numeric" };
+        return date.toLocaleDateString("en-US", options);
+    }
 
     useEffect(() => {
         setRecipId(id);
@@ -152,6 +157,19 @@ function RecipePage() {
             headers: {},
         });
         setIsSaved(true);
+    }
+    function displayName() {
+        // There is no 'user' in the recipe.
+        if ("user" in recipe && "profile" in recipe.user) {
+            if ("displayName" in recipe.user.profile) {
+                return recipe.user.profile.displayName;
+            }
+        }
+        if ("email" in recipe) {
+            return recipe.email;
+        } else {
+            return "No author found!";
+        }
     }
 
     function unSaveRecipe() {
@@ -282,10 +300,10 @@ function RecipePage() {
                     <p className={styles.recipeDescription}>{recipe.description}</p>
                     <div className={styles.recipeMetadata}>
                         <p className={styles.recipeMetadataItem}>
-                            Posted by: <Link to={`/profile/` + recipe.uid}>{recipe.email}</Link>
+                            Posted by: <Link to={`/profile/` + recipe.uid}>{displayName(recipe)}</Link>
                         </p>
                         <p className={styles.recipeMetadataItem}>
-                            Posted on {recipe.createdAt.toDate().toLocaleDateString()}
+                            Posted on {timeStamptoDate(recipe.createdAt)}
                         </p>
                         <button className={styles.shareButton} onClick={handleShareClick}>
                             Share
