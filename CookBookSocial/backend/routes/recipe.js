@@ -4,13 +4,14 @@ import {
     updateRecipe,
     deleteRecipe,
     getRecipe,
+    getRecipeByCursor,
     getAllRecipes,
     addSavedPost,
     deleteSavedPost,
     showSavedPost,
     reorderSavedPost,
     checkSavedPost,
-    checkLikedPost
+    checkLikedPost,
 } from "../controllers/recipeController.js";
 
 const recipeRouter = express.Router();
@@ -25,6 +26,8 @@ const recipeRouter = express.Router();
  *         description: Returns an array of all recipes.
  */
 recipeRouter.get("/all", getAllRecipes);
+
+recipeRouter.get("/cursor", getRecipeByCursor);
 
 /**
  * @swagger
@@ -88,8 +91,7 @@ recipeRouter.put("/:id", updateRecipe);
  */
 recipeRouter.delete("/:id", deleteRecipe);
 
-
-//save recipe api 
+//save recipe api
 recipeRouter.put("/savedPost/:id/:uid", addSavedPost);
 recipeRouter.delete("/savedPost/:id/:uid", deleteSavedPost);
 recipeRouter.get("/savedPost/:uid", showSavedPost);

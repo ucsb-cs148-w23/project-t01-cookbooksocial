@@ -18,7 +18,7 @@ export function DeleteModal({ recipeId, show, setShow }) {
                 },
             }),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["recipes"] });
+            queryClient.invalidateQueries({ queryKey: ["recipes", "allRecipes"] });
         },
     });
 

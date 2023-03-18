@@ -12,7 +12,7 @@ function NewPost() {
     const mutation = useMutation({
         mutationFn: (obj) => firebaseUpload(obj.image, obj.recipe),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["recipes"] });
+            queryClient.invalidateQueries({ queryKey: ["recipes", "allRecipes"] });
         },
     });
     const { currentUser } = useAuth();

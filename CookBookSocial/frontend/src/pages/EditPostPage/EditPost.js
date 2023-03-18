@@ -15,7 +15,7 @@ export default function EditPost() {
         mutationFn: (obj) =>
             firebaseUpdate(obj.id, obj.image, obj.recipe, obj.oldImage, obj.imageChanged),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["recipes"] });
+            queryClient.invalidateQueries({ queryKey: ["recipes", "allRecipes"] });
         },
     });
 
