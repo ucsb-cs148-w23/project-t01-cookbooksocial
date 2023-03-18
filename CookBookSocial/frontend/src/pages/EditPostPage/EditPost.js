@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { firebaseUpdateWithImage, firebaseUpdateWithOutImage } from "../../utils/Api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { firebaseUpdate } from "../../utils/Api";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import Navbar from "../../components/Navbar/Navbar";
@@ -7,8 +8,17 @@ import Navbar from "../../components/Navbar/Navbar";
 import PostForm from "../../components/PostForm/PostForm";
 import { DeleteModal } from "../../components/deleteModal/deleteModal";
 
-
 export default function EditPost() {
+    const queryClient = useQueryClient();
+
+    const mutation = useMutation({
+        mutationFn: (obj) =>
+            firebaseUpdate(obj.id, obj.image, obj.recipe, obj.oldImage, obj.imageChanged),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["recipes", "allRecipes"] });
+        },
+    });
+
     const [initialValues, setInitialValues] = useState(null);
     const [oldImage, setOldImage] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -23,10 +33,9 @@ export default function EditPost() {
         if (currentUser) {
             // If the user does not already have user data, we redirect them to the edit-profile
             if (!currentUser.displayName) {
-              navigate("/edit-profile");
+                navigate("/edit-profile");
             }
-          }
-
+        }
 
         fetch(URL_GET_RECIPE_BY_ID)
             .then((response) => response.json())
@@ -34,7 +43,6 @@ export default function EditPost() {
                 if (currentUser && currentUser.uid !== data.uid) {
                     navigate("/home");
                 }
-                console.log(data);
                 setInitialValues({
                     title: data.title,
                     description: data.description,
@@ -43,7 +51,8 @@ export default function EditPost() {
                     stepList: data.instructions,
                     stepText: "",
                     image: data.image,
-                    
+                    likesByUid: data.likesByUid,
+
                     // Checks if the recipe has a category field already. Otherwhise it sets a default value
                     categories: data.categories ? data.categories : [],
                 });
@@ -54,16 +63,27 @@ export default function EditPost() {
     let navigate = useNavigate();
 
     const postRecipe = async (image, recipe, imageChanged) => {
-        if (imageChanged) {
-            firebaseUpdateWithImage(id, image, recipe, oldImage).then(() => {
-                let path = "/profile";
-                navigate(path);
-            });
-        } else {
-            firebaseUpdateWithOutImage(id, oldImage, recipe);
-            let path = "/profile";
-            navigate(path);
-        }
+        mutation.mutate(
+            {
+                id: id,
+                image: image,
+                recipe: {
+                    recipe,
+                    likesByUid: initialValues.likesByUid, 
+                },
+                oldImage: oldImage,
+                imageChanged: imageChanged,
+            },
+            {
+                onSuccess: () => {
+                    navigate("/");
+                },
+                onError: (error) => {
+                    console.error(error);
+                    alert("Error updating recipe");
+                },
+            }
+        );
     };
 
     const onClick = () => {

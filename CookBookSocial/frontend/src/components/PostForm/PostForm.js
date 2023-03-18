@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { firebaseUpload } from "../../utils/Api";
 import { FaSpinner } from "react-icons/fa";
 import { useAuth } from "../../contexts/AuthContext";
 

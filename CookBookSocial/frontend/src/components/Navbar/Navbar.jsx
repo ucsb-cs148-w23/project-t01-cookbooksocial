@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import SearchBar from "../Search/Search";
+import { Link } from "react-router-dom";
 
 import { useAuth } from "../../contexts/AuthContext";
-import styles from  './Navbars.module.css';
+import styles from "./Navbars.module.css";
 
 export default function Navbar() {
     const { currentUser, setError, logout } = useAuth();
@@ -15,18 +16,17 @@ export default function Navbar() {
     const URL_GET_NOTIFICATIONS = `/api/user/notifications/${currentUser?.uid}`;
     useEffect(() => {
         fetch(URL_GET_NOTIFICATIONS, {
-            method: 'GET',
+            method: "GET",
             headers: {
-                'Content-type': 'application/json'
-            }
+                "Content-type": "application/json",
+            },
         })
             .then((response) => response.json())
             .then((data) => {
                 // console.log(data?.notifications.count);
                 setNotifications(data?.notifications?.count);
             });
-        
-    },[]);
+    }, []);
 
     async function handleLogout() {
         try {
@@ -50,7 +50,7 @@ export default function Navbar() {
         <nav className="sticky top-0 z-50 bg-chef-orange border-gray-200 px-2 sm:px-4 md:py-4 py-2">
             <div className="container flex flex-wrap items-center justify-between mx-auto max-w-7xl">
                 <div className="flex items-center justify-between">
-                    <a href="/" className="flex mr-6">
+                    <Link to="/" className="flex mr-6">
                         <img
                             src="https://svgsilh.com/svg/2400338.svg"
                             className="h-6 mr-2 sm:h-9"
@@ -59,7 +59,7 @@ export default function Navbar() {
                         <span className="self-center text-xl font-bold whitespace-nowra">
                             Cookbook Social
                         </span>
-                    </a>
+                    </Link>
                     <div
                         className={`items-center mr-3 justify-between w-full md:border-0 md:flex md:w-auto absolute md:static top-full left-0 bg-chef-orange md:z-0 z-40 ${
                             navigationVisible ? "block" : "hidden"
@@ -68,29 +68,29 @@ export default function Navbar() {
                     >
                         <ul className=" flex flex-col p-2 rounded-lg  md:flex-row md:space-x-6 md:mt-0 md:text-m md:font-medium md:border-0  ">
                             <li>
-                                <a
-                                    href="/"
+                                <Link
+                                    to="/"
                                     className="block py-2 pl-3 pr-4 font-semibold md:text-gray-900 rounded md:bg-transparent md:p-0 hover:text-white hover:scale-110 transition ease-in-out duration-150"
                                     aria-current="page"
                                 >
                                     Home
-                                </a>
+                                </Link>
                             </li>
                             <li>
-                                <a
-                                    href="/new-post"
+                                <Link
+                                    to="/new-post"
                                     className="block py-2 pl-3 pr-4 font-semibold text-gray-900 rounded md:p-0 hover:text-white hover:scale-110 transition ease-in-out duration-150"
                                 >
                                     New Post
-                                </a>
+                                </Link>
                             </li>
                             <li>
-                                <a
-                                    href="/saved-post"
+                                <Link
+                                    to="/saved-post"
                                     className="block py-2 pl-3 pr-4 font-semibold text-gray-900 rounded md:p-0 hover:text-white hover:scale-110 transition ease-in-out duration-150"
                                 >
                                     Saved Posts
-                                </a>
+                                </Link>
                             </li>
                         </ul>
                     </div>
@@ -141,37 +141,34 @@ export default function Navbar() {
                         </div>
                         <ul className="py-2" aria-labelledby="user-menu-button">
                             <li>
-                                <a
-                                    href="/profile"
+                                <Link
+                                    to="/profile"
                                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                 >
                                     Profile
+                                </Link>
 
                                 {notifications > 0 && (
                                     <span className={styles.navbarNotification}>
-                                    {notifications}
+                                        {notifications}
                                     </span>
                                 )}
-                                    
-                                </a>
-                                
                             </li>
                             <li>
-                                <a
-                                    href="/edit-profile"
+                                <Link
+                                    to="/edit-profile"
                                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                 >
                                     Edit Profile
-                                </a>
+                                </Link>
                             </li>
                             <li>
-                                <a
-                                    href="#"
+                                <button
                                     onClick={handleLogout}
                                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                 >
                                     Logout
-                                </a>
+                                </button>
                             </li>
                         </ul>
                     </div>
