@@ -1,7 +1,7 @@
 # Deployment
 
 
-#### https://dashboard.heroku.com/apps/cookbook-social
+#### https://cookbook-social.herokuapp.com/
 
 
 ## Heroku Deployment Dashboard for Team Member Reference:
