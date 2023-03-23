@@ -106,10 +106,11 @@
   color: #555;
   position: relative;
   padding-left: 20px;
+  text-align: left;
 }
 .recipeInstruction:before {
   content: counter(step-counter) ". ";
-  position: absolute;
+ 
   left: 0;
   color: #ff8c00;
   font-weight: bold;
