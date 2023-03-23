@@ -61,7 +61,7 @@ Known Problems:
 
 ### Hosted on Heroku:
 
-#### https://dashboard.heroku.com/apps/cookbook-social
+#### https://cookbook-social.herokuapp.com/
 
 ### More information on deployment is in docs/DEPLOY.md
 
